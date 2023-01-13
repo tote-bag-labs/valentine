@@ -13,5 +13,5 @@ ValentineAudioProcessor testPlugin;
 TEST_CASE("Plugin instance name", "[name]")
 {
   CHECK_THAT(testPlugin.getName().toStdString(),
-             Catch::Matchers::Equals("Pamplejuce"));
+             Catch::Matchers::Equals("Valentine"));
 }
