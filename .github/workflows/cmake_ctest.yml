@@ -151,7 +151,7 @@ jobs:
       working-directory: ${{ env.ARTIFACTS_PATH }}
       run: 7z a -tzip ${{ env.PRODUCT_NAME }}.zip .
 
-    - name: Generate Installer and Sign with EV cert on Azure (Windows)
+    - name: Generate Installer (Windows) # and Sign with EV cert on Azure (Windows)
       if: ${{ matrix.name == 'Windows' }}
       shell: bash
       run: |
