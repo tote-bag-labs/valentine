@@ -80,7 +80,7 @@ set(SourceFiles
     libs/Common/DSP/AudioHelpers.h
     libs/Common/DSP/CircularBuffer.h
     libs/Common/DSP/Compressor.h
-    libs/Common/DSP/Digidegraders.h
+    libs/Common/DSP/DigiDegraders.h
     libs/Common/DSP/EnvelopeDetector.h
     libs/Common/DSP/Saturation.h
     libs/Common/DSP/ThiranAllpass.h
