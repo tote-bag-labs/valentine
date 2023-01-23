@@ -9,7 +9,7 @@ set(PROJECT_NAME "Valentine")
 
 # Set the plugin formats you'll be building here.
 # Valid formats: AAX Unity VST AU AUv3 Standalone
-set(FORMATS AU VST3 AUv3)
+set(FORMATS AU VST3)
 
 # Reads in VERSION file and sticks in it CURRENT_VERSION variable
 # Be sure the file has no newlines
@@ -40,13 +40,16 @@ option(JUCE_ENABLE_MODULE_SOURCE_GROUPS "Show all module sources in IDE projects
 # On Github Actions, it's managed by actions/checkout
 add_subdirectory(JUCE)
 
+# Also using Foley's Finest meters
+juce_add_module(libs/ff_meters)
+
 # Check the readme at `docs/CMake API.md` in the JUCE repo for full config
 juce_add_plugin("${PROJECT_NAME}"
     # VERSION ...                               # Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
-    COMPANY_NAME Valentine
-    BUNDLE_ID com.Valentine.Valentine
+    COMPANY_NAME ToteBagLabs
+    BUNDLE_ID com.ToteBagLabs.Valentine
     # IS_SYNTH FALSE                       # Is this a synth or an effect?
     # NEEDS_MIDI_INPUT FALSE               # Does the plugin need midi input?
     # NEEDS_MIDI_OUTPUT FALSE              # Does the plugin need midi output?
@@ -65,18 +68,72 @@ target_compile_features("${PROJECT_NAME}" PRIVATE cxx_std_20)
 set(SourceFiles
     Source/PluginEditor.h
     Source/PluginProcessor.h
+    Source/ValentineParameters.h
     Source/PluginEditor.cpp
-    Source/PluginProcessor.cpp)
+    Source/PluginProcessor.cpp
+    
+    Source/GUI/Panels/ValentineCenterPanel.h
+    Source/GUI/Panels/ValentineMainPanel.h
+    Source/GUI/Panels/ValentineCenterPanel.cpp
+    Source/GUI/Panels/ValentineMainPanel.cpp
+
+    libs/Common/DSP/AudioHelpers.h
+    libs/Common/DSP/CircularBuffer.h
+    libs/Common/DSP/Compressor.h
+    libs/Common/DSP/Digidegraders.h
+    libs/Common/DSP/EnvelopeDetector.h
+    libs/Common/DSP/Saturation.h
+    libs/Common/DSP/ThiranAllpass.h
+    libs/Common/DSP/Compressor.cpp
+    libs/Common/DSP/Digidegraders.cpp
+    libs/Common/DSP/EnvelopeDetector.cpp
+    libs/Common/DSP/Saturation.cpp
+    
+    libs/Common/GUI/Components/Panels/PresetPanel.h
+    libs/Common/GUI/Components/Panels/VerticalMeterPanel.h
+    libs/Common/GUI/Components/Panels/PresetPanel.cpp
+    libs/Common/GUI/Components/Panels/VerticalMeterPanel.cpp
+
+    libs/Common/GUI/Components/Widgets/FlatTextButton.h
+    libs/Common/GUI/Components/Widgets/FlatTextChooser.h
+    libs/Common/GUI/Components/Widgets/LabelSlider.h
+    libs/Common/GUI/Components/Widgets/ParameterSlider.h
+    libs/Common/GUI/Components/Widgets/ParameterTextButton.h
+    libs/Common/GUI/Components/Widgets/FlatTextButton.cpp
+    libs/Common/GUI/Components/Widgets/FlatTextChooser.cpp
+    libs/Common/GUI/Components/Widgets/LabelSlider.cpp
+    libs/Common/GUI/Components/Widgets/ParameterSlider.cpp
+    libs/Common/GUI/Components/Widgets/ParameterTextButton.cpp
+
+    libs/Common/GUI/LookAndFeel/LookAndFeel.h
+    libs/Common/GUI/LookAndFeel/LookAndFeelConstants.h
+    libs/Common/GUI/LookAndFeel/MeterLookAndFeelMethods.h
+    libs/Common/GUI/LookAndFeel/LookAndFeel.cpp
+
+    libs/Common/GUI/Managers/ToteBagPresetManager.h
+    libs/Common/GUI/Managers/RadioButtonGroupManager.h
+    libs/Common/GUI/Managers/ToteBagPresetManager.cpp
+    libs/Common/GUI/Managers/RadioButtonGroupManager.cpp
+
+    libs/Common/GUI/Utilities/GraphicsUtilities.h
+    libs/Common/GUI/Utilities/GraphicsUtilities.cpp
+    )
+
 target_sources("${PROJECT_NAME}" PRIVATE ${SourceFiles})
 
 # No, we don't want our source buried in extra nested folders
 set_target_properties("${PROJECT_NAME}" PROPERTIES FOLDER "")
 
 # The Xcode source tree should uhhh, still look like the source tree, yo
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/Source PREFIX "" FILES ${SourceFiles})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${SourceFiles})
+
+set(AssetFiles
+    Source/GUI/Assets/Fonts/Montserrat-Medium.ttf
+    Source/GUI/Assets/Images/logo_218x40.svg
+   )
 
 # Setup our binary data as a target
-juce_add_binary_data(Assets SOURCES pamplejuce.png)
+juce_add_binary_data(Assets SOURCES ${AssetFiles})
 
 # Required for Linux happiness:
 # See https://forum.juce.com/t/loading-pytorch-model-using-binarydata/39997/2
@@ -106,23 +163,39 @@ set_target_properties(Assets PROPERTIES FOLDER "Targets")
 
 # We'll need to link to these from our plugin as well as our tests
 set(JUCE_DEPENDENCIES
-    juce::juce_audio_utils)
+    juce::juce_audio_utils
+    juce::juce_dsp)
 
 target_compile_definitions("${PROJECT_NAME}"
     PUBLIC
     # JUCE_WEB_BROWSER and JUCE_USE_CURL would be on by default, but you might not need them.
     JUCE_WEB_BROWSER=0  # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_plugin` call
     JUCE_USE_CURL=0     # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_plugin` call
-    JUCE_VST3_CAN_REPLACE_VST2=0)
+    JUCE_VST3_CAN_REPLACE_VST2=0
+    JUCE_ENABLE_GPL_MODE=1
+    JUCE_DISPLAY_SPLASH_SCREEN=0
+    JUCE_REPORT_APP_USAGE=0
+    JUCE_MODAL_LOOPS_PERMITTED=1
+    )
+
+
+
+target_include_directories("${PROJECT_NAME}"
+                            PRIVATE
+                           "${CMAKE_CURRENT_SOURCE_DIR}/Source"
+                           "${CMAKE_CURRENT_SOURCE_DIR}/libs")
 
 target_link_libraries("${PROJECT_NAME}"
     PRIVATE
     Assets
     ${JUCE_DEPENDENCIES}
+    ff_meters
     PUBLIC
     juce::juce_recommended_config_flags
     juce::juce_recommended_lto_flags
     juce::juce_recommended_warning_flags)
+
+juce_generate_juce_header("${PROJECT_NAME}")
 
 # Required for ctest (which is just easier for cross-platform CI)
 # include(CTest) does this too, but adds tons of targets we don't want
@@ -150,7 +223,11 @@ add_executable(Tests ${TestFiles})
 target_compile_features(Tests PRIVATE cxx_std_20)
 
 # Our test executable also wants to know about our plugin code...
-target_include_directories(Tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Source)
+target_include_directories(Tests
+                           PRIVATE
+                          "${CMAKE_CURRENT_SOURCE_DIR}/Source"
+                          "${CMAKE_CURRENT_SOURCE_DIR}/libs")
+
 target_link_libraries(Tests PRIVATE Catch2::Catch2WithMain "${PROJECT_NAME}" ${JUCE_DEPENDENCIES})
 
 # Make an Xcode Scheme for the test executable so we can run tests in the IDE

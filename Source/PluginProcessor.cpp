@@ -1,25 +1,150 @@
+/*
+  ==============================================================================
+
+    This file was auto-generated!
+
+    It contains the basic framework code for a JUCE plugin processor.
+
+  ==============================================================================
+*/
+
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
 //==============================================================================
 ValentineAudioProcessor::ValentineAudioProcessor()
+#ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
                       #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
+                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
                       #endif
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
+                       .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+                      treeState (*this, nullptr, "PARAMETER", createParameterLayout()),
+                      presetManager(this)
+#endif
 {
+    initializeDSP();
+
+    // sign up parameter listeners
+    for (auto param : FFCompParameterID())
+    {
+        treeState.addParameterListener(param, this);
+    }
+
+    //initialize processor params
+    auto ratioIndex = static_cast<int>(FFCompParameterDefaults[VParameter::ratio]);
+    ffCompressor->setRatio(ratioValues[ratioIndex]);
+    ffCompressor->setKnee(kneeValues[ratioIndex]);
+    ffCompressor->setThreshold(thresholdValues[ratioIndex]);
+    bitCrush->setParams(17.0);
+    saturator->setParams(.001);
+    boundedSaturator->setParams(boundedSatGain);
+
 }
 
 ValentineAudioProcessor::~ValentineAudioProcessor()
 {
+    for (auto param : FFCompParameterID())
+    {
+        treeState.removeParameterListener(param, this);
+    }
+
+    testManager->deleteInstance();
 }
 
 //==============================================================================
-const juce::String ValentineAudioProcessor::getName() const
+
+AudioProcessorValueTreeState::ParameterLayout
+ValentineAudioProcessor::createParameterLayout()
+{
+    testManager = juce::MessageManager::getInstance();
+    std::vector<std::unique_ptr<RangedAudioParameter>> params;
+
+    for (int i = 0; i < numParams; ++i)
+    {
+        const auto paramType = static_cast<VParameter>(i);
+        if (paramType == VParameter::ratio)
+        {
+            juce::StringArray ratioChoices;
+            for (const auto ratio : ratioValues)
+            {
+                ratioChoices.add(juce::String(ratio));
+            }
+
+            params.push_back(std::make_unique<AudioParameterChoice>(ParameterID{FFCompParameterID()[VParameter::ratio], ValentineParameterVersion},
+                                                                    FFCompParameterLabel()[VParameter::ratio],
+                                                                    ratioChoices,
+                                                                    FFCompParameterDefaults[VParameter::ratio]));
+        }
+        else if (paramType == VParameter::nice ||
+                 paramType == VParameter::bypass)
+        {
+            params.push_back(std::make_unique<AudioParameterBool>(ParameterID{FFCompParameterID()[i], ValentineParameterVersion},
+                                                                  FFCompParameterLabel()[i],
+                                                                  false));
+
+        }
+
+        else
+        {
+            auto rangeToUse = NormalisableRange<float>(FFCompParameterMin[i],
+                                                       FFCompParameterMax[i],
+                                                       FFCompParameterIncrement[i]);
+            rangeToUse.setSkewForCentre(FFCompParamCenter[i]);
+            std::function<String(float value, int maximumStringLength)> stringFromValue = nullptr;
+
+            if ((paramType == VParameter::attack)    ||
+                (paramType == VParameter::release)   ||
+                (paramType == VParameter::inputGain) ||
+                (paramType == VParameter::makeupGain))
+            {
+                stringFromValue =
+                [](float value, int)
+                {
+                    const auto absValue = std::abs(value);
+
+                    if (absValue < 10.0f )
+                    {
+                        return juce::String(value, 2);
+                    }
+                    if (absValue < 100.0f)
+                    {
+                        return juce::String(value, 1);
+                    }
+                    return juce::String(static_cast<int>(value));
+                };
+            }
+            else
+            {
+                stringFromValue =
+                [](int value, int)
+                {
+                    return String(value);
+                };
+
+            }
+                params.push_back( std::make_unique<AudioParameterFloat>
+                                 (juce::ParameterID{FFCompParameterID()[i], ValentineParameterVersion},
+                                  FFCompParameterLabel()[i],
+                                  rangeToUse,
+                                  FFCompParameterDefaults[i],
+                                  VParameterUnit()[i],
+                                  AudioProcessorParameter::genericParameter,
+                                  stringFromValue,
+                                  nullptr));
+            }
+    }
+
+    return {params.begin(), params.end()};
+
+}
+
+//==============================================================================
+
+const String ValentineAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
@@ -69,26 +194,70 @@ int ValentineAudioProcessor::getCurrentProgram()
 
 void ValentineAudioProcessor::setCurrentProgram (int index)
 {
-    juce::ignoreUnused (index);
 }
 
-const juce::String ValentineAudioProcessor::getProgramName (int index)
+const String ValentineAudioProcessor::getProgramName (int index)
 {
-    juce::ignoreUnused (index);
     return {};
 }
 
-void ValentineAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void ValentineAudioProcessor::changeProgramName (int index, const String& newName)
 {
-    juce::ignoreUnused (index, newName);
 }
 
 //==============================================================================
 void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
-    juce::ignoreUnused (sampleRate, samplesPerBlock);
+
+    auto oversampleMultiplier = pow(2, oversampleFactor);
+
+    processBuffer.setSize(2, samplesPerBlock);
+    processBuffer.clear();
+
+    ffCompressor->setAttack(*treeState.getRawParameterValue(FFCompParameterID()[VParameter::attack]));
+    ffCompressor->setRelease(*treeState.getRawParameterValue(FFCompParameterID()[VParameter::release]));
+    ffCompressor->setSampleRate(sampleRate * oversampleMultiplier);
+    ffCompressor->reset(samplesPerBlock * oversampleMultiplier);
+    ffCompressor->setOversampleMultiplier (oversampleMultiplier);
+
+    oversampler->reset();
+    oversampler->initProcessing(samplesPerBlock);
+
+    saturator->reset(sampleRate);
+    boundedSaturator->reset(sampleRate);
+    simpleZOH->setParams(sampleRate / downSampleRate, false);
+
+    // Calculate delay, round up. That's the delay reported to host. subtract
+    // the original delay from that and you have the fractional delay
+    // for processed data. .5 for the the interpolated tanh() latency,
+    // .5 for the interp inverse sine latency
+    const auto overSamplingDelay = oversampler->getLatencyInSamples() + 1.0f;
+    const auto reportedDelay = std::ceil(overSamplingDelay);
+    const auto fracDelay = reportedDelay - overSamplingDelay;
+    setLatencySamples (reportedDelay);
+    circBuffDelay = reportedDelay;
+
+    for (auto& filter : fracDelayFilters)
+    {
+        filter->reset();
+        filter->prepare(fracDelay);
+    }
+
+    for (auto& buffer : unProcBuffers)
+    {
+        buffer->setSize(samplesPerBlock);
+        buffer->reset();
+    }
+
+    dryWet.reset (sampleRate, dryWetRampLength);
+
+    const auto rmsWindow = RMStime * 0.001f * sampleRate / samplesPerBlock;
+    inputMeterSource.resize(getTotalNumInputChannels(), rmsWindow);
+
+    grMeterSource.resize(1, rmsWindow);
+    ffCompressor->setMeterSource(&grMeterSource);
+
+    outputMeterSource.resize(getTotalNumOutputChannels(), rmsWindow);
 }
 
 void ValentineAudioProcessor::releaseResources()
@@ -97,16 +266,17 @@ void ValentineAudioProcessor::releaseResources()
     // spare memory, etc.
 }
 
+#ifndef JucePlugin_PreferredChannelConfigurations
 bool ValentineAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
-    juce::ignoreUnused (layouts);
+    ignoreUnused (layouts);
     return true;
   #else
     // This is the place where you check if the layout is supported.
     // In this template code we only support mono or stereo.
-    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+    if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
+     && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
         return false;
 
     // This checks if the input layout matches the output layout
@@ -118,36 +288,125 @@ bool ValentineAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
     return true;
   #endif
 }
+#endif
 
-void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
-                                              juce::MidiBuffer& midiMessages)
+void ValentineAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
-    juce::ignoreUnused (midiMessages);
-
-    juce::ScopedNoDenormals noDenormals;
+    ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
+    auto currentSamplesPerBlock = getBlockSize();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+    // We need to prepare the process buffer first. The input buffer is delayed to account for
+    // oversampling latency. Copying into the process buffer after this, then, would undo the
+    // purpose of the delay: maintaining phase coherence between processed and unprocessed
+    // signals.
+    processBuffer.setSize(totalNumOutputChannels, currentSamplesPerBlock, true, true, true);
+    for (auto channel = 0; channel < totalNumInputChannels; ++channel)
+        processBuffer.copyFrom(channel, 0, buffer.getReadPointer(channel), buffer.getNumSamples());
+
+    prepareInputBuffer(buffer,
+                       totalNumInputChannels,
+                       totalNumOutputChannels,
+                       currentSamplesPerBlock);
+
+    if (bypassOn.get())
+    {
+        return;
+    }
+
+    inputMeterSource.measureBlock (buffer);
+
+    // "Downsample" and Bitcrush processing
+    if (crushOn.get())
+    {
+        simpleZOH->processBlock(processBuffer, currentSamplesPerBlock, totalNumOutputChannels);
+
+        bitCrush->processBlock(processBuffer,
+                               currentSamplesPerBlock,
+                               totalNumOutputChannels);
+    }
+
+    auto g = compressValue.get();
+    for (int i = 0; i < totalNumOutputChannels; ++i)
+        processBuffer.applyGainRamp (i, 0, getBlockSize(), currentGain, g);
+    currentGain = g;
+
+    // Upsample then do non-linear processing
+    dsp::AudioBlock<float> processBlock (processBuffer);
+    dsp::AudioBlock<float> highSampleRateBlock = oversampler->processSamplesUp (processBlock);
+
+    ffCompressor->process(highSampleRateBlock);
+    saturator->processBlock(highSampleRateBlock);
+    boundedSaturator->processBlock(highSampleRateBlock);
+    oversampler->processSamplesDown(processBlock);
+
+    // Delay processed signal to produce a integral delay amount
+    for (int channel = 0; channel < totalNumOutputChannels; ++channel)
+    {
+        dsp::AudioBlock<float> channelBlock = processBlock.getSingleChannelBlock(channel);
+        fracDelayFilters[channel]->process(channelBlock);
+    }
+
+    // Apply Makeup
+    auto m = makeupValue.get();
+    for (int i = 0; i < totalNumOutputChannels; ++i)
+    {
+         processBuffer.applyGainRamp (i, 0, getBlockSize(), currentMakeup, m);
+    }
+     currentMakeup = m;
+
+    // Get and apply mix
+    auto mix = mixValue.get();
+    dryWet.setTargetValue(mix);
+    for (int j = 0; j < currentSamplesPerBlock; ++j)
+    {
+        auto mix = dryWet.getNextValue();
+
+        for (int i = 0; i < totalNumOutputChannels; ++i)
+        {
+            auto processed = processBuffer.getSample(i, j);
+            auto unprocessed = buffer.getSample(i, j);
+
+            buffer.setSample(i, j, mix * processed + (1.0f - mix) * unprocessed);
+        }
+    }
+
+    outputMeterSource.measureBlock (buffer);
+}
+
+void ValentineAudioProcessor::processBlockBypassed (AudioBuffer<float>& buffer, MidiBuffer&)
+{
+    ScopedNoDenormals noDenormals;
+
+    auto totalNumInputChannels  = getTotalNumInputChannels();
+    auto totalNumOutputChannels = getTotalNumOutputChannels();
+    auto currentSamplesPerBlock = getBlockSize();
+
+    prepareInputBuffer(buffer,
+                       totalNumInputChannels,
+                       totalNumOutputChannels,
+                       currentSamplesPerBlock);
+}
+
+void ValentineAudioProcessor::prepareInputBuffer (AudioBuffer<float>& buffer,
+                                                  const int numInputChannels,
+                                                  const int numOutputChannels,
+                                                  const int samplesPerBlock)
+{
+    buffer.setSize(numOutputChannels, samplesPerBlock, true, true, true);
+
+    for (auto i = numInputChannels; i < numOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    for (int channel = 0; channel < numOutputChannels; ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
-        juce::ignoreUnused (channelData);
-        // ..do something to the data...
+        auto channelData = buffer.getWritePointer(channel);
+        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+        {
+            unProcBuffers[channel]->writeBuffer(channelData[sample]);
+            channelData[sample] = unProcBuffers[channel]->readBuffer(circBuffDelay, false);
+        }
     }
 }
 
@@ -157,30 +416,158 @@ bool ValentineAudioProcessor::hasEditor() const
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* ValentineAudioProcessor::createEditor()
+AudioProcessorEditor* ValentineAudioProcessor::createEditor()
 {
     return new ValentineAudioProcessorEditor (*this);
 }
 
 //==============================================================================
-void ValentineAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+
+void ValentineAudioProcessor::parameterChanged (const String& parameter, float newValue)
+{
+
+    if (parameter == "Crush")
+    {
+        const auto bitCrushIndex = static_cast<int>(VParameter::bitCrush);
+        bitCrush->setParams(jmap(newValue,
+                                 FFCompParameterMin[bitCrushIndex],
+                                 FFCompParameterMax[bitCrushIndex],
+                                 17.0f,
+                                 3.0f)
+                            );
+        if (newValue >= 1.0001f)
+            crushOn.set(true);
+        else
+            crushOn.set(false);
+    }
+    else if (parameter == "Saturation")
+    {
+        const auto saturateIndex = static_cast<int>(VParameter::saturation);
+        saturator->setParams(jmap(newValue,
+                                  FFCompParameterMin[saturateIndex],
+                                  FFCompParameterMax[saturateIndex],
+                                  kMinSaturationGain,
+                                  kMaxSaturationGain));
+    }
+    else if (parameter == "AttackTime")
+    {
+        ffCompressor->setAttack(newValue);
+    }
+    else if (parameter == "ReleaseTime")
+    {
+        ffCompressor->setRelease(newValue);
+    }
+    else if (parameter == "Ratio")
+    {
+        ratioIndex = static_cast<int>(newValue);
+        ffCompressor->setRatio (ratioValues[ratioIndex]);
+        ffCompressor->setKnee (kneeValues[ratioIndex]);
+        ffCompressor->setThreshold (thresholdValues[ratioIndex]);
+    }
+    else if (parameter == "Compress")
+    {
+        compressValue.set(Decibels::decibelsToGain(newValue));
+    }
+    else if (parameter == "Mix")
+    {
+        mixValue.set(newValue * .01);
+    }
+    else if (parameter == "Makeup")
+    {
+        makeupValue.set(Decibels::decibelsToGain(newValue));
+    }
+    else if (parameter == "Nice")
+    {
+        if (newValue>0.5)
+            ffCompressor->setThreshold (thresholdValues[ratioIndex]+9.f);
+        else
+            ffCompressor->setThreshold (thresholdValues[ratioIndex]);
+    }
+    else if (parameter == "Bypass")
+    {
+        bypassOn.set(newValue > 0.5f);
+    }
+}
+
+//==============================================================================
+void ValentineAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
-    juce::ignoreUnused (destData);
+
+    auto state = treeState.copyState();
+
+    auto currentPresetName = presetManager.getCurrentPresetName();
+
+    if (currentPresetName.isNotEmpty())
+        state.setProperty(Identifier ("PresetName"), currentPresetName, nullptr);
+
+    std::unique_ptr<XmlElement> xml (state.createXml());
+
+    copyXmlToBinary (*xml, destData);
+
 }
 
 void ValentineAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
-    juce::ignoreUnused (data, sizeInBytes);
+    std::unique_ptr<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+    {
+        if (xmlState->hasTagName (treeState.state.getType()))
+        {
+            auto newTree = ValueTree::fromXml (*xmlState);
+
+            auto presetID = Identifier("PresetName");
+            if (newTree.hasProperty (presetID))
+            {
+                presetManager.setLastChosenPresetName (newTree.getPropertyAsValue ("PresetName", nullptr).toString());
+                newTree.removeProperty (presetID, nullptr);
+            }
+
+            presetIsLoading = true;
+            treeState.replaceState (newTree);
+            presetIsLoading = false;
+        }
+    }
 }
 
 //==============================================================================
+
+void ValentineAudioProcessor::initializeDSP()
+{
+
+    ffCompressor = std::make_unique<Compressor> (false, 3.84f);
+
+    saturator = std::make_unique<Saturation> (Saturation::Type::inverseHyperbolicSineInterp, .6f);
+
+    boundedSaturator = std::make_unique<Saturation> (Saturation::Type::interpolatedHyperbolicTangent, -.4f);
+
+    oversampler = std::make_unique<Oversampling> (2,
+                                                  oversampleFactor,
+                                                  Oversampling::filterHalfBandPolyphaseIIR);
+    simpleZOH = std::make_unique<SimpleZOH> ();
+    bitCrush = std::make_unique<Bitcrusher> ();
+
+    for(auto& filter : fracDelayFilters)
+        filter.reset(new ThiranAllPass<double>);
+
+    for(auto& buffer : unProcBuffers)
+    {
+        buffer.reset(new CircularBuffer<float>);
+    }
+}
+
+
+//==============================================================================
+
 // This creates new instances of the plugin..
-juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new ValentineAudioProcessor();
 }
+
+//==============================================================================

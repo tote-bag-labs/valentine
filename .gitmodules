@@ -2,3 +2,6 @@
 	path = JUCE
 	url = https://github.com/juce-framework/JUCE/
 	branch = develop
+[submodule "ff_meters"]
+	path = libs/ff_meters
+	url = https://github.com/ffAudio/ff_meters.git
