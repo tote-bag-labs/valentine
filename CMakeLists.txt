@@ -85,7 +85,7 @@ set(SourceFiles
     libs/Common/DSP/Saturation.h
     libs/Common/DSP/ThiranAllpass.h
     libs/Common/DSP/Compressor.cpp
-    libs/Common/DSP/Digidegraders.cpp
+    libs/Common/DSP/DigiDegraders.cpp
     libs/Common/DSP/EnvelopeDetector.cpp
     libs/Common/DSP/Saturation.cpp
     
