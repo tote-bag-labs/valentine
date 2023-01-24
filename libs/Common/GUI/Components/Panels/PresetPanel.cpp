@@ -97,11 +97,11 @@ void PresetPanel::savePreset()
     auto currentPresetName = presetManager.getCurrentPresetName();
 
     String currentPresetPath = presetManager.getCurrentPresetDirectory()
-                               + directorySeparator() + currentPresetName;
+                               + static_cast<std::string>(directorySeparator) + currentPresetName;
 
     FileChooser chooser ("Save a file: ",
                          File (currentPresetPath),
-                         presetFileExtensionWildcard());
+                         static_cast<std::string>(presetFileExtensionWildcard));
 
     if (chooser.browseForFileToSave (true))
     {
@@ -122,7 +122,7 @@ void PresetPanel::loadPreset()
 
         FileChooser chooser ("Load a file: ",
                             File (currentPresetDirectory),
-                            presetFileExtensionWildcard());
+                            static_cast<std::string>(presetFileExtensionWildcard));
 
         if (chooser.browseForFileToOpen())
         {

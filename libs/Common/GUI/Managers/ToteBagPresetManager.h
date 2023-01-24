@@ -15,38 +15,14 @@
 
 namespace
 {
-const juce::String& presetFileExtension()
-{
-    static const juce::String extension = ".tbp";
-    return extension;
-}
-
-const juce::String& presetFileExtensionWildcard()
-{
-    static const juce::String wildcard = "*.tbp";
-    return wildcard;
-}
-}
-
+constexpr std::string_view presetFileExtension = ".tbp";
+constexpr std::string_view presetFileExtensionWildcard = "*.tbp";
 #if JUCE_WINDOWS
-namespace
-{
-const juce::String& directorySeparator()
-{
-static const juce::String separator = "\\";
-return separator;
-}
-}
+constexpr std::string_view directorySeparator = "\\";
 #elif JUCE_MAC
-namespace
-{
-const juce::String& directorySeparator()
-{
-static const juce::String separator = "/";
-return separator;
-}
-}
+constexpr std::string_view directorySeparator = "/";
 #endif
+}
 
 namespace juce
 {
