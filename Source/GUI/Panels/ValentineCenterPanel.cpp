@@ -19,14 +19,14 @@
 //==============================================================================
 
 CenterPanel::CenterPanel(ValentineAudioProcessor& processor) :
- inputSlider(FFCompParameterID()[VParameter::inputGain], processor.treeState)
-,crushSlider(FFCompParameterID()[VParameter::bitCrush], processor.treeState)
-,saturateSlider(FFCompParameterID()[VParameter::saturation], processor.treeState)
-,ratioSlider(FFCompParameterID()[VParameter::ratio], processor.treeState)
-,attackSlider(FFCompParameterID()[VParameter::attack], processor.treeState)
-,releaseSlider(FFCompParameterID()[VParameter::release], processor.treeState)
-,mixSlider(FFCompParameterID()[VParameter::dryWet], processor.treeState)
-,outputSlider(FFCompParameterID()[VParameter::makeupGain], processor.treeState)
+ inputSlider(FFCompParameterID()[getParameterIndex(VParameter::inputGain)], processor.treeState)
+,crushSlider(FFCompParameterID()[getParameterIndex(VParameter::bitCrush)], processor.treeState)
+,saturateSlider(FFCompParameterID()[getParameterIndex(VParameter::saturation)], processor.treeState)
+,ratioSlider(FFCompParameterID()[getParameterIndex(VParameter::ratio)], processor.treeState)
+,attackSlider(FFCompParameterID()[getParameterIndex(VParameter::attack)], processor.treeState)
+,releaseSlider(FFCompParameterID()[getParameterIndex(VParameter::release)], processor.treeState)
+,mixSlider(FFCompParameterID()[getParameterIndex(VParameter::dryWet)], processor.treeState)
+,outputSlider(FFCompParameterID()[getParameterIndex(VParameter::makeupGain)], processor.treeState)
 {
     // Top left sliders
     addAndMakeVisible(inputSlider);
@@ -55,9 +55,9 @@ CenterPanel::CenterPanel(ValentineAudioProcessor& processor) :
     addAndMakeVisible(versionLabel);
 
     // Ratio box
-    if (auto ratioParam = dynamic_cast<AudioParameterChoice*>(processor.treeState.getParameter(FFCompParameterID()[VParameter::ratio])))
+    if (auto ratioParam = dynamic_cast<AudioParameterChoice*>(processor.treeState.getParameter(FFCompParameterID()[getParameterIndex(VParameter::ratio)])))
     {
-        mRatioBox = std::make_unique<tote_bag::FlatTextChooser>(FFCompParameterLabel()[VParameter::ratio],
+        mRatioBox = std::make_unique<tote_bag::FlatTextChooser>(FFCompParameterLabel()[getParameterIndex(VParameter::ratio)],
                                                                 std::vector<std::string>{
                                                                 k4_1RatioLabel.data(),
                                                                 k8_1RatioLabel.data(),

@@ -132,14 +132,14 @@ private:
     // used to maintain state for ApplyGainRamp
     // compress and makeup are addressed in dB, interface-wise, but handled linearly here
     float smoothedGain {1.0f},
-          currentGain {juce::Decibels::decibelsToGain(FFCompParameterDefaults[VParameter::inputGain])},
-          currentMakeup {juce::Decibels::decibelsToGain(FFCompParameterDefaults[VParameter::makeupGain])},
+          currentGain {juce::Decibels::decibelsToGain(FFCompParameterDefaults[getParameterIndex(VParameter::inputGain)])},
+          currentMakeup {juce::Decibels::decibelsToGain(FFCompParameterDefaults[getParameterIndex(VParameter::makeupGain)])},
           currentNiceGain {1.0f};
 
     // compress and makeup are addressed in dB, interface-wise, but handled linearly here
-    juce::Atomic<float> compressValue {juce::Decibels::decibelsToGain(FFCompParameterDefaults[VParameter::inputGain])},
+    juce::Atomic<float> compressValue {juce::Decibels::decibelsToGain(FFCompParameterDefaults[getParameterIndex(VParameter::inputGain)])},
                   mixValue {1.0f},
-                  makeupValue {juce::Decibels::decibelsToGain(FFCompParameterDefaults[VParameter::makeupGain])},
+                  makeupValue {juce::Decibels::decibelsToGain(FFCompParameterDefaults[getParameterIndex(VParameter::makeupGain)])},
                   currentWidth {0.0f},
                   currentHeight {0.0f},
                   newNiceGain {1.0f},

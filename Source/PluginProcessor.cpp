@@ -35,7 +35,7 @@ ValentineAudioProcessor::ValentineAudioProcessor()
     }
 
     //initialize processor params
-    auto ratioIndex = static_cast<int>(FFCompParameterDefaults[VParameter::ratio]);
+    auto ratioIndex = static_cast<int>(FFCompParameterDefaults[getParameterIndex(VParameter::ratio)]);
     ffCompressor->setRatio(ratioValues[ratioIndex]);
     ffCompressor->setKnee(kneeValues[ratioIndex]);
     ffCompressor->setThreshold(thresholdValues[ratioIndex]);
@@ -74,10 +74,11 @@ ValentineAudioProcessor::createParameterLayout()
                 ratioChoices.add(juce::String(ratio));
             }
 
-            params.push_back(std::make_unique<AudioParameterChoice>(ParameterID{FFCompParameterID()[VParameter::ratio], ValentineParameterVersion},
-                                                                    FFCompParameterLabel()[VParameter::ratio],
+            const auto ratioParameterIndex = getParameterIndex(VParameter::ratio);
+            params.push_back(std::make_unique<AudioParameterChoice>(ParameterID{FFCompParameterID()[ratioParameterIndex], ValentineParameterVersion},
+                                                                    FFCompParameterLabel()[ratioParameterIndex],
                                                                     ratioChoices,
-                                                                    FFCompParameterDefaults[VParameter::ratio]));
+                                                                    FFCompParameterDefaults[ratioParameterIndex]));
         }
         else if (paramType == VParameter::nice ||
                  paramType == VParameter::bypass)
@@ -214,8 +215,8 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     processBuffer.setSize(2, samplesPerBlock);
     processBuffer.clear();
 
-    ffCompressor->setAttack(*treeState.getRawParameterValue(FFCompParameterID()[VParameter::attack]));
-    ffCompressor->setRelease(*treeState.getRawParameterValue(FFCompParameterID()[VParameter::release]));
+    ffCompressor->setAttack(*treeState.getRawParameterValue(FFCompParameterID()[getParameterIndex(VParameter::attack)]));
+    ffCompressor->setRelease(*treeState.getRawParameterValue(FFCompParameterID()[getParameterIndex(VParameter::release)]));
     ffCompressor->setSampleRate(sampleRate * oversampleMultiplier);
     ffCompressor->reset(samplesPerBlock * oversampleMultiplier);
     ffCompressor->setOversampleMultiplier (oversampleMultiplier);

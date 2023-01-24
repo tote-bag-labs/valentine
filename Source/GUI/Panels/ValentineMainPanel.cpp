@@ -17,8 +17,8 @@
 
 VMainPanel::VMainPanel(ValentineAudioProcessor& processor) :
  presetPanel(processor.getPresetManager(),
-             FFCompParameterLabel()[VParameter::bypass],
-             FFCompParameterID()[VParameter::bypass],
+             FFCompParameterLabel()[getParameterIndex(VParameter::bypass)],
+             FFCompParameterID()[getParameterIndex(VParameter::bypass)],
              processor.treeState)
 ,inputMeterPanel("In",
                  ReductionMeterPlacement::Right,

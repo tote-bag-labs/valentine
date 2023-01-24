@@ -17,7 +17,7 @@
 
 constexpr int ValentineParameterVersion = 1;
 
-enum VParameter
+enum class VParameter
 {
     inputGain = 0,
     bitCrush,
@@ -32,6 +32,13 @@ enum VParameter
     TOTAL_NUM_PARAMETERS
 };
 
+namespace
+{
+const size_t getParameterIndex(VParameter param)
+{
+    return static_cast<size_t>(param);
+}
+} // namespace
 
 static constexpr auto numParams = static_cast<int>(VParameter::TOTAL_NUM_PARAMETERS);
 
