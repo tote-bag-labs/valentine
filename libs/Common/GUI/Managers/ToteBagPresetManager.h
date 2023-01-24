@@ -19,7 +19,7 @@ constexpr std::string_view presetFileExtension = ".tbp";
 constexpr std::string_view presetFileExtensionWildcard = "*.tbp";
 #if JUCE_WINDOWS
 constexpr std::string_view directorySeparator = "\\";
-#elif JUCE_MAC
+#else
 constexpr std::string_view directorySeparator = "/";
 #endif
 }
