@@ -17,10 +17,9 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 
-
 //==============================================================================
 
-class ValentineAudioProcessorEditor  : public juce::AudioProcessorEditor
+class ValentineAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
     ValentineAudioProcessorEditor (ValentineAudioProcessor&);
@@ -35,7 +34,7 @@ private:
     // access the processor object that created it.
     ValentineAudioProcessor& processor;
 
-    VMainPanel mainPanel {processor};
+    VMainPanel mainPanel { processor };
 
     // in figma ~ 5053 x 1741. ratio = 2.9 ish width to height
     static constexpr float ratio = 2.5f;

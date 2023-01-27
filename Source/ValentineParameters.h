@@ -14,11 +14,9 @@
 
 #include <juce_core/juce_core.h>
 
-
 constexpr int ValentineParameterVersion = 1;
 
-enum class VParameter
-{
+enum class VParameter {
     inputGain = 0,
     bitCrush,
     saturation,
@@ -34,18 +32,17 @@ enum class VParameter
 
 namespace
 {
-const size_t getParameterIndex(VParameter param)
+const size_t getParameterIndex (VParameter param)
 {
-    return static_cast<size_t>(param);
+    return static_cast<size_t> (param);
 }
 } // namespace
 
-static constexpr auto numParams = static_cast<int>(VParameter::TOTAL_NUM_PARAMETERS);
+static constexpr auto numParams = static_cast<int> (VParameter::TOTAL_NUM_PARAMETERS);
 
 inline const std::array<juce::String, numParams>& FFCompParameterID()
 {
-    static const std::array<juce::String, numParams> parameterIDs =
-    {
+    static const std::array<juce::String, numParams> parameterIDs = {
         "Compress",
         "Crush",
         "Saturation",
@@ -57,14 +54,13 @@ inline const std::array<juce::String, numParams>& FFCompParameterID()
         "Nice",
         "Bypass"
     };
-    
+
     return parameterIDs;
 }
 
 inline const std::array<juce::String, numParams>& FFCompParameterLabel()
 {
-    static const std::array<juce::String, numParams> parameterLabels =
-    {
+    static const std::array<juce::String, numParams> parameterLabels = {
         "Input",
         "Crush",
         "Saturation",
@@ -76,14 +72,13 @@ inline const std::array<juce::String, numParams>& FFCompParameterLabel()
         "Nice",
         "Bypass"
     };
-    
+
     return parameterLabels;
 }
 
 inline const std::array<juce::String, numParams>& VParameterUnit()
 {
-    static const std::array<juce::String, numParams> unitLabels =
-    {
+    static const std::array<juce::String, numParams> unitLabels = {
         " dB",
         " %",
         " %",
@@ -95,7 +90,7 @@ inline const std::array<juce::String, numParams>& VParameterUnit()
         "",
         ""
     };
-    
+
     return unitLabels;
 }
 
@@ -110,8 +105,7 @@ constexpr std::string_view k1000_1RatioLabel = "∞";
 
 }
 
-static constexpr std::array<float, numParams> FFCompParameterMin =
-{
+static constexpr std::array<float, numParams> FFCompParameterMin = {
     -24.0f,
     0.0f,
     0.0f,
@@ -124,8 +118,7 @@ static constexpr std::array<float, numParams> FFCompParameterMin =
     0.0f
 };
 
-static constexpr std::array<float, numParams> FFCompParameterMax =
-{
+static constexpr std::array<float, numParams> FFCompParameterMax = {
     48.0f,
     100.0f,
     100.0f,
@@ -138,8 +131,7 @@ static constexpr std::array<float, numParams> FFCompParameterMax =
     1.0f
 };
 
-static constexpr std::array<float, numParams> FFCompParameterDefaults =
-{
+static constexpr std::array<float, numParams> FFCompParameterDefaults = {
     0.0f,
     0.0f,
     0.0f,
@@ -152,8 +144,7 @@ static constexpr std::array<float, numParams> FFCompParameterDefaults =
     0.0f
 };
 
-static constexpr std::array<float, numParams> FFCompParameterIncrement =
-{
+static constexpr std::array<float, numParams> FFCompParameterIncrement = {
     0.00001f,
     0.00001f,
     0.00001f,
@@ -166,8 +157,7 @@ static constexpr std::array<float, numParams> FFCompParameterIncrement =
     1.0f
 };
 
-static constexpr std::array<float, numParams> FFCompParamCenter =
-{
+static constexpr std::array<float, numParams> FFCompParamCenter = {
     23.0f,
     60.0f,
     60.0f,
@@ -180,8 +170,7 @@ static constexpr std::array<float, numParams> FFCompParamCenter =
     0.5f
 };
 
-static constexpr std::array<int, numParams> VParamPrecision =
-{
+static constexpr std::array<int, numParams> VParamPrecision = {
     2,
     2,
     2,
@@ -196,8 +185,7 @@ static constexpr std::array<int, numParams> VParamPrecision =
 
 //==================================================================================
 
-static constexpr std::array<int, 5> ratioValues =
-{
+static constexpr std::array<int, 5> ratioValues = {
     4,
     8,
     12,
@@ -205,8 +193,7 @@ static constexpr std::array<int, 5> ratioValues =
     1000,
 };
 
-static constexpr std::array<float, 5> kneeValues =
-{
+static constexpr std::array<float, 5> kneeValues = {
     6.0f,
     3.84f,
     2.16f,
@@ -214,9 +201,7 @@ static constexpr std::array<float, 5> kneeValues =
     0.0f,
 };
 
-
-static constexpr std::array<float, 5> thresholdValues =
-{
+static constexpr std::array<float, 5> thresholdValues = {
     -18.0f,
     -14.0f,
     -13.0f,
