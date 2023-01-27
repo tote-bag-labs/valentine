@@ -25,7 +25,7 @@ inline float linearInterp (float x1, float x2, float frac)
 template <typename T>
 inline void checkUnderflow (T& x)
 {
-    if(abs(x) < std::numeric_limits<T>::epsilon())
+    if (abs (x) < std::numeric_limits<T>::epsilon())
         x = 0.0f;
 }
 
@@ -34,42 +34,41 @@ class SimpleOnePole
 {
 public:
     void reset() { prevValue = 0.0; }
-    
-    void prepare(T newCoeff){ coeff = newCoeff; }
-   
-    T processSample(T inputSample)
+
+    void prepare (T newCoeff) { coeff = newCoeff; }
+
+    T processSample (T inputSample)
     {
         // whoops! looks like you forgot to set the coefficient
-        assert(coeff != -1);
-        
+        assert (coeff != -1);
+
         auto output = coeff * (prevValue - inputSample) + inputSample;
         prevValue = output;
         return output;
     }
-  
+
 private:
     T prevValue, coeff = -1;
-    
 };
 
 template <typename FloatType>
 FloatType max (FloatType x, FloatType y)
 {
-   x -= y;
-   x += abs(x);
-   x *= 0.5;
-   x += y;
-   return (x);
+    x -= y;
+    x += abs (x);
+    x *= 0.5;
+    x += y;
+    return (x);
 }
 
 template <typename FloatType>
 FloatType min (FloatType x, FloatType y)
 {
     x = y - x;
-    x += abs(x);
+    x += abs (x);
     x *= 0.5;
     x = y - x;
-   return (x);
+    return (x);
 }
 
 /** a fast clipping algorithm source: https://www.musicdsp.org/en/latest/Other/81-clipping-without-branching.html
@@ -78,12 +77,12 @@ FloatType min (FloatType x, FloatType y)
 template <typename FloatType>
 FloatType fastClip (FloatType x, FloatType minimumValue, FloatType maximumValue)
 {
-   const FloatType x1 = abs(x - minimumValue);
-   const FloatType x2 = abs(x - maximumValue);
-   x = x1 + (minimumValue + maximumValue);
-   x -= x2;
-   x *= 0.5;
-   return (x);
+    const FloatType x1 = abs (x - minimumValue);
+    const FloatType x2 = abs (x - maximumValue);
+    x = x1 + (minimumValue + maximumValue);
+    x -= x2;
+    x *= 0.5;
+    return (x);
 }
 
 /** Returns cosh(x), clamping input beforehand to prevent overflow.
@@ -94,12 +93,12 @@ FloatType fastClip (FloatType x, FloatType minimumValue, FloatType maximumValue)
     if aliasing becomes an issue.
  */
 template <typename FloatType>
-inline FloatType ClampedCosh(FloatType x)
+inline FloatType ClampedCosh (FloatType x)
 {
     static constexpr FloatType coshMin = -710.0;
     static constexpr FloatType coshMax = 710.0;
 
-    return std::cosh(std::clamp(x, coshMin, coshMax));
+    return std::cosh (std::clamp (x, coshMin, coshMax));
 }
 
 } // namespace audio_helpers

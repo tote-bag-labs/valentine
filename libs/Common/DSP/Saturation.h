@@ -29,9 +29,7 @@
 class Saturation
 {
 public:
-    
-    enum class Type
-    {
+    enum class Type {
         inverseHyperbolicSine,
         sineArcTangent,
         hyperbolicTangent,
@@ -39,48 +37,46 @@ public:
         interpolatedHyperbolicTangent
     };
 
-    Saturation( Type sType, double asymm = 0.0 );
-  
-    void setParams(double inSaturation);
-    
-    void reset(double sampleRate);
-    
+    Saturation (Type sType, double asymm = 0.0);
+
+    void setParams (double inSaturation);
+
+    void reset (double sampleRate);
+
     inline double calcGain (double inputSample, double sat);
-    
+
     inline double processSample (double inputSample, int channel, double sat);
-    
-//==============================================================
-    
+
+    //==============================================================
+
     inline double inverseHyperbolicSine (double x, double gain);
-    
+
     inline float inverseHyperbolicSineInterp (float x, float gain, int channel);
-    
+
     inline float sineArcTangent (float x, float gain);
-    
+
     inline double hyperbolicTangent (double x, double gain, int channel);
-    
+
     inline double interpolatedHyperbolicTangent (double x, double gain, int channel);
-    
+
     inline double hyperTanFirstAntiDeriv (double x);
-    
-    inline float invHypeSineAntiDeriv(float x);
 
-//==============================================================
+    inline float invHypeSineAntiDeriv (float x);
 
-    void processBlock( juce::dsp::AudioBlock<float> &inAudio );
+    //==============================================================
+
+    void processBlock (juce::dsp::AudioBlock<float>& inAudio);
 
 private:
-
     Type saturationType;
 
-    double asymmetry {0.0};
+    double asymmetry { 0.0 };
 
-    const double gainRampSec {.005};
+    const double gainRampSec { .005 };
 
-    juce::SmoothedValue<double, juce::ValueSmoothingTypes::Linear> smoothedSat {1.0f};
+    juce::SmoothedValue<double, juce::ValueSmoothingTypes::Linear> smoothedSat { 1.0f };
     juce::AudioBuffer<double> xState;
     std::array<double, 2> antiderivState;
 
-   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Saturation)
-
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Saturation)
 };
