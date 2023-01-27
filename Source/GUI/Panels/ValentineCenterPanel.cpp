@@ -9,69 +9,69 @@
 */
 
 #include "ValentineCenterPanel.h"
+#include "BinaryData.h"
 #include "PluginProcessor.h"
 #include "ValentineParameters.h"
-#include "BinaryData.h"
 
-#include "Common/GUI/Utilities/GraphicsUtilities.h"
 #include "Common/GUI/LookAndFeel/LookAndFeel.h"
+#include "Common/GUI/Utilities/GraphicsUtilities.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
 //==============================================================================
 
-CenterPanel::CenterPanel(ValentineAudioProcessor& processor) :
- inputSlider(FFCompParameterID()[getParameterIndex(VParameter::inputGain)], processor.treeState)
-,crushSlider(FFCompParameterID()[getParameterIndex(VParameter::bitCrush)], processor.treeState)
-,saturateSlider(FFCompParameterID()[getParameterIndex(VParameter::saturation)], processor.treeState)
-,ratioSlider(FFCompParameterID()[getParameterIndex(VParameter::ratio)], processor.treeState)
-,attackSlider(FFCompParameterID()[getParameterIndex(VParameter::attack)], processor.treeState)
-,releaseSlider(FFCompParameterID()[getParameterIndex(VParameter::release)], processor.treeState)
-,mixSlider(FFCompParameterID()[getParameterIndex(VParameter::dryWet)], processor.treeState)
-,outputSlider(FFCompParameterID()[getParameterIndex(VParameter::makeupGain)], processor.treeState)
+CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
+    : inputSlider (FFCompParameterID()[getParameterIndex (VParameter::inputGain)], processor.treeState)
+    , crushSlider (FFCompParameterID()[getParameterIndex (VParameter::bitCrush)], processor.treeState)
+    , saturateSlider (FFCompParameterID()[getParameterIndex (VParameter::saturation)], processor.treeState)
+    , ratioSlider (FFCompParameterID()[getParameterIndex (VParameter::ratio)], processor.treeState)
+    , attackSlider (FFCompParameterID()[getParameterIndex (VParameter::attack)], processor.treeState)
+    , releaseSlider (FFCompParameterID()[getParameterIndex (VParameter::release)], processor.treeState)
+    , mixSlider (FFCompParameterID()[getParameterIndex (VParameter::dryWet)], processor.treeState)
+    , outputSlider (FFCompParameterID()[getParameterIndex (VParameter::makeupGain)], processor.treeState)
 {
     // Top left sliders
-    addAndMakeVisible(inputSlider);
-    addAndMakeVisible(crushSlider);
-    addAndMakeVisible(saturateSlider);
+    addAndMakeVisible (inputSlider);
+    addAndMakeVisible (crushSlider);
+    addAndMakeVisible (saturateSlider);
 
     // Bottom left sliders
-    addAndMakeVisible(ratioSlider);
-    addAndMakeVisible(attackSlider);
-    addAndMakeVisible(releaseSlider);
+    addAndMakeVisible (ratioSlider);
+    addAndMakeVisible (attackSlider);
+    addAndMakeVisible (releaseSlider);
 
     // Top right sliders
-    addAndMakeVisible(mixSlider);
-    addAndMakeVisible(outputSlider);
+    addAndMakeVisible (mixSlider);
+    addAndMakeVisible (outputSlider);
 
     // Logo
-    vLogo = juce::Drawable::createFromImageData(BinaryData::logo_218x40_svg,
-                                          BinaryData::logo_218x40_svgSize); 
-    addAndMakeVisible(vLogo.get());
+    vLogo = juce::Drawable::createFromImageData (BinaryData::logo_218x40_svg,
+                                                 BinaryData::logo_218x40_svgSize);
+    addAndMakeVisible (vLogo.get());
 
     // Version label
-    versionLabel.setText(JucePlugin_VersionString, juce::dontSendNotification);
-    versionLabel.setColour(juce::Label::ColourIds::textColourId,
-                           tote_bag::laf_constants::vPinkDark);
-    versionLabel.setJustificationType(juce::Justification::centredTop);
-    addAndMakeVisible(versionLabel);
+    versionLabel.setText (JucePlugin_VersionString, juce::dontSendNotification);
+    versionLabel.setColour (juce::Label::ColourIds::textColourId,
+                            tote_bag::laf_constants::vPinkDark);
+    versionLabel.setJustificationType (juce::Justification::centredTop);
+    addAndMakeVisible (versionLabel);
 
     // Ratio box
-    if (auto ratioParam = dynamic_cast<juce::AudioParameterChoice*>(processor.treeState.getParameter(FFCompParameterID()[getParameterIndex(VParameter::ratio)])))
+    if (auto ratioParam = dynamic_cast<juce::AudioParameterChoice*> (processor.treeState.getParameter (FFCompParameterID()[getParameterIndex (VParameter::ratio)])))
     {
-        mRatioBox = std::make_unique<tote_bag::FlatTextChooser>(FFCompParameterLabel()[getParameterIndex(VParameter::ratio)],
-                                                                std::vector<std::string>{
-                                                                k4_1RatioLabel.data(),
-                                                                k8_1RatioLabel.data(),
-                                                                k12_1RatioLabel.data(),
-                                                                k20_1RatioLabel.data(),
-                                                                k1000_1RatioLabel.data()},
-                                                                8001,
-                                                                ratioParam,
-                                                                true);
+        mRatioBox = std::make_unique<tote_bag::FlatTextChooser> (FFCompParameterLabel()[getParameterIndex (VParameter::ratio)],
+                                                                 std::vector<std::string> {
+                                                                     k4_1RatioLabel.data(),
+                                                                     k8_1RatioLabel.data(),
+                                                                     k12_1RatioLabel.data(),
+                                                                     k20_1RatioLabel.data(),
+                                                                     k1000_1RatioLabel.data() },
+                                                                 8001,
+                                                                 ratioParam,
+                                                                 true);
     }
 
-    addAndMakeVisible(mRatioBox.get());
+    addAndMakeVisible (mRatioBox.get());
 }
 
 CenterPanel::~CenterPanel()
@@ -82,40 +82,40 @@ void CenterPanel::paint (juce::Graphics& g)
 {
     using namespace tote_bag::laf_constants;
 
-    gui_utils::drawRoundedRect(g, topLeftRowBorderBounds.toFloat(), vPinkDark);
-    gui_utils::drawRoundedRect(g, bottomLeftRowBorderBounds.toFloat(), vPinkDark);
-    gui_utils::drawRoundedRect(g, topRightRowBorderBounds.toFloat(), vPinkDark);
+    gui_utils::drawRoundedRect (g, topLeftRowBorderBounds.toFloat(), vPinkDark);
+    gui_utils::drawRoundedRect (g, bottomLeftRowBorderBounds.toFloat(), vPinkDark);
+    gui_utils::drawRoundedRect (g, topRightRowBorderBounds.toFloat(), vPinkDark);
 }
 
 void CenterPanel::resized()
 {
     auto workingArea = getLocalBounds();
 
-    auto areaFunc = [](juce::Rectangle<int>& area, int numSliders, int sliderCount) -> juce::Rectangle<int> {
+    auto areaFunc = [] (juce::Rectangle<int>& area, int numSliders, int sliderCount) -> juce::Rectangle<int> {
         return area.removeFromLeft (area.getWidth() / (numSliders - sliderCount));
     };
 
-    const auto paramWidth = juce::roundToInt(workingArea.getWidth() / 5.0f);
+    const auto paramWidth = juce::roundToInt (workingArea.getWidth() / 5.0f);
 
     // Center slider rows vertically
     auto betweenRowMargin = paramWidth * .1f;
 
     // 1.65 to reflect that the bottom half is .65 the height of the top row
     auto totalParamHeight = (paramWidth * 1.65f) + betweenRowMargin;
-    auto verticalAlignmentSpacer = juce::roundToInt((workingArea.getHeight() - totalParamHeight) * .5f);
-    workingArea.removeFromTop(verticalAlignmentSpacer);
-    workingArea.removeFromBottom(verticalAlignmentSpacer);
+    auto verticalAlignmentSpacer = juce::roundToInt ((workingArea.getHeight() - totalParamHeight) * .5f);
+    workingArea.removeFromTop (verticalAlignmentSpacer);
+    workingArea.removeFromBottom (verticalAlignmentSpacer);
 
     const auto borderMargin = paramWidth * .05f;
 
     // Left side
     const auto numLeftColumns = 3;
-    auto leftSideBounds = workingArea.removeFromLeft(paramWidth * numLeftColumns);
+    auto leftSideBounds = workingArea.removeFromLeft (paramWidth * numLeftColumns);
 
     // Top
-    topLeftRowBorderBounds = leftSideBounds.removeFromTop(paramWidth);
+    topLeftRowBorderBounds = leftSideBounds.removeFromTop (paramWidth);
 
-    auto topLeftRowBounds = topLeftRowBorderBounds.reduced(borderMargin);
+    auto topLeftRowBounds = topLeftRowBorderBounds.reduced (borderMargin);
 
     std::array<LabelSlider*, numLeftColumns> topLeftRowComponents = {
         &inputSlider,
@@ -125,21 +125,21 @@ void CenterPanel::resized()
 
     for (int i = 0; i < numLeftColumns; ++i)
     {
-        topLeftRowComponents[i]->setBounds(areaFunc(topLeftRowBounds, numLeftColumns, i));
+        topLeftRowComponents[i]->setBounds (areaFunc (topLeftRowBounds, numLeftColumns, i));
     }
 
     // Margin
-    leftSideBounds.removeFromTop(betweenRowMargin);
+    leftSideBounds.removeFromTop (betweenRowMargin);
 
     // Bottom
-    auto bottomRowParamHeight = juce::roundToInt(paramWidth * .65f);
+    auto bottomRowParamHeight = juce::roundToInt (paramWidth * .65f);
     const auto smallborderMargin = bottomRowParamHeight * .05f;
-    bottomLeftRowBorderBounds = leftSideBounds.removeFromTop(bottomRowParamHeight);
+    bottomLeftRowBorderBounds = leftSideBounds.removeFromTop (bottomRowParamHeight);
 
-    auto bottomLeftRowBounds = bottomLeftRowBorderBounds.reduced(smallborderMargin);
+    auto bottomLeftRowBounds = bottomLeftRowBorderBounds.reduced (smallborderMargin);
 
-    auto ratioBounds = bottomLeftRowBounds.removeFromLeft(bottomLeftRowBounds.getWidth() / 3.0f);
-    mRatioBox->setBounds(ratioBounds);
+    auto ratioBounds = bottomLeftRowBounds.removeFromLeft (bottomLeftRowBounds.getWidth() / 3.0f);
+    mRatioBox->setBounds (ratioBounds);
 
     const auto numBottomLeftColumns = numLeftColumns - 1;
 
@@ -150,19 +150,19 @@ void CenterPanel::resized()
 
     for (int i = 0; i < numBottomLeftColumns; ++i)
     {
-        bottomLeftRowComponents[i]->setBounds(areaFunc(bottomLeftRowBounds, numBottomLeftColumns, i));
+        bottomLeftRowComponents[i]->setBounds (areaFunc (bottomLeftRowBounds, numBottomLeftColumns, i));
     }
 
     // Vertical margin
-    workingArea.removeFromLeft(betweenRowMargin);
+    workingArea.removeFromLeft (betweenRowMargin);
 
     const auto numRightColumns = 2;
-    auto rightSideBounds = workingArea.removeFromLeft(paramWidth * numRightColumns);
+    auto rightSideBounds = workingArea.removeFromLeft (paramWidth * numRightColumns);
 
     // Top right
-    topRightRowBorderBounds = rightSideBounds.removeFromTop(paramWidth);
+    topRightRowBorderBounds = rightSideBounds.removeFromTop (paramWidth);
 
-    auto topRightRowBounds = topRightRowBorderBounds.reduced(borderMargin);
+    auto topRightRowBounds = topRightRowBorderBounds.reduced (borderMargin);
 
     std::array<LabelSlider*, numRightColumns> topRightRowComponents = {
         &outputSlider,
@@ -171,20 +171,19 @@ void CenterPanel::resized()
 
     for (int i = 0; i < numRightColumns; ++i)
     {
-        topRightRowComponents[i]->setBounds(areaFunc(topRightRowBounds, numRightColumns, i));
+        topRightRowComponents[i]->setBounds (areaFunc (topRightRowBounds, numRightColumns, i));
     }
 
     // Margin
-    rightSideBounds.removeFromTop(betweenRowMargin);
+    rightSideBounds.removeFromTop (betweenRowMargin);
 
     // Bottom right
-    auto logoHeight = juce::roundToInt(paramWidth * .5f);
-    auto versionHeight = juce::roundToInt(logoHeight * .25);
+    auto logoHeight = juce::roundToInt (paramWidth * .5f);
+    auto versionHeight = juce::roundToInt (logoHeight * .25);
 
-    auto logoBounds = rightSideBounds.removeFromTop(logoHeight).removeFromLeft(paramWidth * numRightColumns).reduced(borderMargin);
-    auto versionBounds = logoBounds.removeFromBottom(versionHeight);
+    auto logoBounds = rightSideBounds.removeFromTop (logoHeight).removeFromLeft (paramWidth * numRightColumns).reduced (borderMargin);
+    auto versionBounds = logoBounds.removeFromBottom (versionHeight);
 
-    vLogo->setTransformToFit(logoBounds.toFloat(), juce::RectanglePlacement(juce::RectanglePlacement::xMid |
-                                                                            juce::RectanglePlacement::yTop));
-    versionLabel.setBounds(versionBounds);
+    vLogo->setTransformToFit (logoBounds.toFloat(), juce::RectanglePlacement (juce::RectanglePlacement::xMid | juce::RectanglePlacement::yTop));
+    versionLabel.setBounds (versionBounds);
 }
