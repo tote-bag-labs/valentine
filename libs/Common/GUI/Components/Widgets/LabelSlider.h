@@ -10,13 +10,18 @@
 
 #pragma once
 
-#include <JuceHeader.h>
-
 #include "Common/GUI/Components/Widgets/ParameterSlider.h"
+
+#include <juce_gui_basics/juce_gui_basics.h>
 
 //==============================================================================
 /*
 */
+namespace juce
+{
+class AudioProcessorValueTreeState;
+}// namespace juce
+
 class LabelSlider  : public juce::Component
 {
 public:

@@ -8,13 +8,15 @@
   ==============================================================================
 */
 
-#include <JuceHeader.h>
-
 #include "ValentineCenterPanel.h"
 #include "PluginProcessor.h"
 #include "ValentineParameters.h"
+#include "BinaryData.h"
 
 #include "Common/GUI/Utilities/GraphicsUtilities.h"
+#include "Common/GUI/LookAndFeel/LookAndFeel.h"
+
+#include <juce_gui_basics/juce_gui_basics.h>
 
 //==============================================================================
 
@@ -43,19 +45,19 @@ CenterPanel::CenterPanel(ValentineAudioProcessor& processor) :
     addAndMakeVisible(outputSlider);
 
     // Logo
-    vLogo = Drawable::createFromImageData(BinaryData::logo_218x40_svg,
+    vLogo = juce::Drawable::createFromImageData(BinaryData::logo_218x40_svg,
                                           BinaryData::logo_218x40_svgSize); 
     addAndMakeVisible(vLogo.get());
 
     // Version label
-    versionLabel.setText(JucePlugin_VersionString, dontSendNotification);
+    versionLabel.setText(JucePlugin_VersionString, juce::dontSendNotification);
     versionLabel.setColour(juce::Label::ColourIds::textColourId,
                            tote_bag::laf_constants::vPinkDark);
-    versionLabel.setJustificationType(Justification::centredTop);
+    versionLabel.setJustificationType(juce::Justification::centredTop);
     addAndMakeVisible(versionLabel);
 
     // Ratio box
-    if (auto ratioParam = dynamic_cast<AudioParameterChoice*>(processor.treeState.getParameter(FFCompParameterID()[getParameterIndex(VParameter::ratio)])))
+    if (auto ratioParam = dynamic_cast<juce::AudioParameterChoice*>(processor.treeState.getParameter(FFCompParameterID()[getParameterIndex(VParameter::ratio)])))
     {
         mRatioBox = std::make_unique<tote_bag::FlatTextChooser>(FFCompParameterLabel()[getParameterIndex(VParameter::ratio)],
                                                                 std::vector<std::string>{
@@ -182,7 +184,7 @@ void CenterPanel::resized()
     auto logoBounds = rightSideBounds.removeFromTop(logoHeight).removeFromLeft(paramWidth * numRightColumns).reduced(borderMargin);
     auto versionBounds = logoBounds.removeFromBottom(versionHeight);
 
-    vLogo->setTransformToFit(logoBounds.toFloat(), RectanglePlacement(RectanglePlacement::xMid |
-                                                                    RectanglePlacement::yTop));
+    vLogo->setTransformToFit(logoBounds.toFloat(), juce::RectanglePlacement(juce::RectanglePlacement::xMid |
+                                                                            juce::RectanglePlacement::yTop));
     versionLabel.setBounds(versionBounds);
 }

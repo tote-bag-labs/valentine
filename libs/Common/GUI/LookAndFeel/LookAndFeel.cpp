@@ -10,16 +10,18 @@
 
 #include "LookAndFeel.h"
 #include "LookAndFeelConstants.h"
+
 #include "Common/GUI/Components/Widgets/FlatTextButton.h"
 
+#include "BinaryData.h"
 
 namespace
 {
-const Font getCustomFont()
+const juce::Font getCustomFont()
 {
-    static auto typeface = Typeface::createSystemTypefaceFor (BinaryData::MontserratMedium_ttf,
-                                                              BinaryData::MontserratMedium_ttfSize);
-    return Font (typeface);
+    static auto typeface = juce::Typeface::createSystemTypefaceFor (BinaryData::MontserratMedium_ttf,
+                                                                    BinaryData::MontserratMedium_ttfSize);
+    return juce::Font (typeface);
 }
 }
 
@@ -38,24 +40,24 @@ LookAndFeel::LookAndFeel()
     setColour(ColourIds::pointerColourId, juce::Colours::black);
 
     // slider text box colours
-    setColour(juce::Slider::textBoxTextColourId, Colours::black);
+    setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
     setColour(juce::Slider::textBoxOutlineColourId, vPinkDark);
     setColour(juce::Slider::rotarySliderOutlineColourId, vPinkDark);
-    setColour(juce::Slider::rotarySliderFillColourId, Colours::floralwhite);
+    setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::floralwhite);
 }
 
-void LookAndFeel::drawSliderMeter(Graphics& g,
-                                   const Rectangle<float> bounds,
+void LookAndFeel::drawSliderMeter(juce::Graphics& g,
+                                   const juce::Rectangle<float> bounds,
                                    const float lineWidth,
                                    const float radius,
                                    const float startAngle, float endAngle,
                                    const float toAngle,
-                                   Slider& slider)
+                                  juce::Slider& slider)
 {
-    auto outline = slider.findColour (Slider::rotarySliderOutlineColourId);
-    auto fill    = slider.findColour (Slider::rotarySliderFillColourId);
+    auto outline = slider.findColour (juce::Slider::rotarySliderOutlineColourId);
+    auto fill    = slider.findColour (juce::Slider::rotarySliderFillColourId);
 
-    Path backgroundArc;
+    juce::Path backgroundArc;
     backgroundArc.addCentredArc (bounds.getCentreX(),
                                  bounds.getCentreY(),
                                  radius,
@@ -66,11 +68,14 @@ void LookAndFeel::drawSliderMeter(Graphics& g,
                                  true);
 
     g.setColour (outline);
-    g.strokePath (backgroundArc, PathStrokeType (lineWidth, PathStrokeType::curved, PathStrokeType::butt));
+    g.strokePath (backgroundArc,
+                  juce::PathStrokeType (lineWidth,
+                                        juce::PathStrokeType::curved,
+                                        juce::PathStrokeType::butt));
 
     if (slider.isEnabled())
     {
-        Path valueArc;
+        juce::Path valueArc;
         valueArc.addCentredArc (bounds.getCentreX(),
                                 bounds.getCentreY(),
                                 radius,
@@ -81,39 +86,42 @@ void LookAndFeel::drawSliderMeter(Graphics& g,
                                 true);
 
         g.setColour (fill);
-        g.strokePath (valueArc, PathStrokeType (lineWidth, PathStrokeType::curved, PathStrokeType::butt));
+        g.strokePath (valueArc,
+                      juce::PathStrokeType (lineWidth,
+                                            juce::PathStrokeType::curved,
+                                            juce::PathStrokeType::butt));
     }
 }
 
-void LookAndFeel::drawDrawableKnob(Graphics& g,
+void LookAndFeel::drawDrawableKnob(juce::Graphics& g,
                                    const float radius,
                                    const float drawableWidth,
-                                   Drawable& sliderImage,
+                                   juce::Drawable& sliderImage,
                                    const float toAngle,
-                                   const Rectangle<float> bounds)
+                                   const juce::Rectangle<float> bounds)
 {
     const auto rw = radius * 2.0f;
     const auto realW = rw / drawableWidth;
 
     const auto halfDrawableWidth = drawableWidth / 2.0f;
 
-    sliderImage.setTransform(AffineTransform::rotation(toAngle,
-                                                  halfDrawableWidth,
-                                                  halfDrawableWidth).scaled(realW,
-                                                                            realW,
-                                                                            halfDrawableWidth,
-                                                                            halfDrawableWidth));
+    sliderImage.setTransform(juce::AffineTransform::rotation(toAngle,
+                                                             halfDrawableWidth,
+                                                             halfDrawableWidth).scaled(realW,
+                                                                                       realW,
+                                                                                       halfDrawableWidth,
+                                                                                       halfDrawableWidth));
 
     const auto cX = bounds.getCentreX() - halfDrawableWidth;
     const auto cY = bounds.getCentreY() - halfDrawableWidth;
     sliderImage.drawAt(g, cX, cY, 1.0f);
 }
 
-void LookAndFeel::drawKnob(Graphics& g,
+void LookAndFeel::drawKnob(juce::Graphics& g,
                             const float radius,
                             const float toAngle,
-                            const Rectangle<float> bounds,
-                            Slider& slider,
+                            const juce::Rectangle<float> bounds,
+                            juce::Slider& slider,
                             const bool withDropShadow)
 {
     const auto centreX = bounds.getCentreX();
@@ -129,7 +137,7 @@ void LookAndFeel::drawKnob(Graphics& g,
     g.fillEllipse (rx, ry, rw, rw);
 
     // Get thicknesses for outline rings...
-    const auto innerOutlineThickness = jmax((rw * .05f), 1.0f);
+    const auto innerOutlineThickness = juce::jmax((rw * .05f), 1.0f);
     const auto outerOutlineThickness = innerOutlineThickness * .15f;
 
     // Offset inner outline by its thickness
@@ -152,13 +160,13 @@ void LookAndFeel::drawKnob(Graphics& g,
     if (withDropShadow)
     {
 
-        auto xOffset = jmin(roundToInt(innerOutlineThickness * .25), 1);
-        auto yOffset = jmin(roundToInt(innerOutlineThickness * .5), 1);
+        auto xOffset = juce::jmin(juce::roundToInt(innerOutlineThickness * .25), 1);
+        auto yOffset = juce::jmin(juce::roundToInt(innerOutlineThickness * .5), 1);
 
-        auto shadow = DropShadow(fillColour.darker(),
-                                 innerOutlineThickness,
-                                 {xOffset, yOffset});
-        Path shadowPath;
+        auto shadow = juce::DropShadow(fillColour.darker(),
+                                       innerOutlineThickness,
+                                       {xOffset, yOffset});
+        juce::Path shadowPath;
         shadowPath.addEllipse(outerOutlineRx, outerOutlineRy, outerOutlineRw, outerOutlineRw);
         shadow.drawForPath(g, shadowPath);
     }
@@ -185,16 +193,16 @@ void LookAndFeel::drawKnob(Graphics& g,
     g.fillPath (p);
 }
 
-void LookAndFeel::drawRotarySlider (Graphics& g,
-                                     int x, int y,
-                                     int width, int height,
-                                     float sliderPos,
-                                     const float rotaryStartAngle, const float rotaryEndAngle,
-                                     Slider& slider)
+void LookAndFeel::drawRotarySlider (juce::Graphics& g,
+                                    int x, int y,
+                                    int width, int height,
+                                    float sliderPos,
+                                    const float rotaryStartAngle, const float rotaryEndAngle,
+                                    juce::Slider& slider)
 {
 
-    auto bounds = Rectangle<int> (x, y, width, height).toFloat().reduced (10);
-    auto radius = jmin (bounds.getWidth(), bounds.getHeight()) / 2.0f;
+    auto bounds = juce::Rectangle<int> (x, y, width, height).toFloat().reduced (10);
+    auto radius = juce::jmin (bounds.getWidth(), bounds.getHeight()) / 2.0f;
     auto lineW = radius * 0.125f;
     auto arcRadius = radius - lineW * 0.5f;
     const auto toAngle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
@@ -208,26 +216,26 @@ void LookAndFeel::drawRotarySlider (Graphics& g,
         
 //=============================================================================
 
-Typeface::Ptr LookAndFeel::getTypefaceForFont (const Font& f)
+juce::Typeface::Ptr LookAndFeel::getTypefaceForFont (const juce::Font& f)
 {
     return getCustomFont().getTypefacePtr();
 }
 
-Font LookAndFeel::getTextButtonFont (TextButton& b, int buttonHeight)
+juce::Font LookAndFeel::getTextButtonFont (juce::TextButton& b, int buttonHeight)
 {
-    return  {jmax (7.0f, buttonHeight * 0.8f)};
+    return  {juce::jmax (7.0f, buttonHeight * 0.8f)};
 }
     
-Font LookAndFeel::getLabelFont (Label& l)
+juce::Font LookAndFeel::getLabelFont (juce::Label& l)
 {
     return { static_cast<float>(l.getHeight()) };
 }
     
-    void LookAndFeel::drawButtonBackground (Graphics& g,
-                                             Button& button,
-                                             const Colour& backgroundColour,
-                                             bool,
-                                             bool isButtonDown)
+    void LookAndFeel::drawButtonBackground (juce::Graphics& g,
+                                            juce::Button& button,
+                                            const juce::Colour& backgroundColour,
+                                            bool,
+                                            bool isButtonDown)
     {
         auto buttonArea = button.getLocalBounds();
         const auto h = buttonArea.getHeight();
@@ -239,15 +247,15 @@ Font LookAndFeel::getLabelFont (Label& l)
         g.fillRoundedRectangle(buttonArea.toFloat(), cornerSize);
     }
 
-void LookAndFeel::drawFlatButtonBackground (Graphics& g,
-                                             tote_bag::FlatTextButton& button,
-                                             const Colour& backgroundColour,
-                                             bool shouldDrawButtonAsHighlighted,
-                                             bool shouldDrawButtonAsDown)
+void LookAndFeel::drawFlatButtonBackground (juce::Graphics& g,
+                                            tote_bag::FlatTextButton& button,
+                                            const juce::Colour& backgroundColour,
+                                            bool shouldDrawButtonAsHighlighted,
+                                            bool shouldDrawButtonAsDown)
 {
     auto bounds = button.getLocalBounds().toFloat();
 
-    auto r = jmin(bounds.getWidth(), bounds.getHeight());
+    auto r = juce::jmin(bounds.getWidth(), bounds.getHeight());
     auto cornerSize = r * .5f;
 
     auto baseColour = backgroundColour.withMultipliedSaturation (button.hasKeyboardFocus (true) ? 1.3f : 0.9f)
@@ -265,7 +273,7 @@ void LookAndFeel::drawFlatButtonBackground (Graphics& g,
 
     if (flatOnLeft || flatOnRight || flatOnTop || flatOnBottom)
     {
-        Path path;
+        juce::Path path;
         path.addRoundedRectangle (bounds.getX(), bounds.getY(),
                                   bounds.getWidth(), bounds.getHeight(),
                                   cornerSize, cornerSize,
@@ -282,20 +290,23 @@ void LookAndFeel::drawFlatButtonBackground (Graphics& g,
     }
 }
 
-    void LookAndFeel::drawButtonText (Graphics& g, TextButton& button, bool, bool isButtonDown)
+    void LookAndFeel::drawButtonText (juce::Graphics& g,
+                                      juce::TextButton& button,
+                                      bool,
+                                      bool isButtonDown)
     {
         auto font = getTextButtonFont (button, button.getHeight());
         g.setFont (font);
-        g.setColour (button.findColour (isButtonDown ? TextButton::textColourOnId
-                                                                : TextButton::textColourOffId)
+        g.setColour (button.findColour (isButtonDown ? juce::TextButton::textColourOnId
+                                                     : juce::TextButton::textColourOffId)
                            .withMultipliedAlpha (button.isEnabled() ? 1.0f : 0.5f));
 
-        auto yIndent = jmin (4, button.proportionOfHeight (0.5f));
-        auto cornerSize = jmin (button.getHeight(), button.getWidth()) / 2;
+        auto yIndent = juce::jmin (4, button.proportionOfHeight (0.5f));
+        auto cornerSize = juce::jmin (button.getHeight(), button.getWidth()) / 2;
 
-        auto fontHeight = roundToInt (font.getHeight() * 0.6f);
-        auto leftIndent  = jmin (fontHeight, 2 + cornerSize / (button.isConnectedOnLeft()  ? 4 : 2));
-        auto rightIndent = jmin (fontHeight, 2 + cornerSize / (button.isConnectedOnRight() ? 4 : 2));
+        auto fontHeight = juce::roundToInt (font.getHeight() * 0.6f);
+        auto leftIndent  = juce::jmin (fontHeight, 2 + cornerSize / (button.isConnectedOnLeft()  ? 4 : 2));
+        auto rightIndent = juce::jmin (fontHeight, 2 + cornerSize / (button.isConnectedOnRight() ? 4 : 2));
         auto textWidth = button.getWidth() - leftIndent - rightIndent;
 
         //auto edge = 4;
@@ -303,53 +314,64 @@ void LookAndFeel::drawFlatButtonBackground (Graphics& g,
 
         if (textWidth > 0)
             g.drawFittedText (button.getButtonText(),
-                              leftIndent, yIndent, textWidth, button.getHeight() - yIndent * 2,
-                              Justification::centred, 2);
+                              leftIndent, yIndent,
+                              textWidth, button.getHeight() - yIndent * 2,
+                              juce::Justification::centred, 2);
     }
 
-    void LookAndFeel::drawComboBox (Graphics& g, int width, int height, bool,
-                                       int, int, int, int, ComboBox& box)
+    void LookAndFeel::drawComboBox (juce::Graphics& g,
+                                    int width, int height,
+                                    bool,
+                                    int, int, int, int,
+                                    juce::ComboBox& box)
     {
         const auto boxBounds = box.getLocalBounds();
 
-        const auto fontHeight = jmax (7.0f, height * 0.6f);
-        g.setFont(Font(fontHeight));
+        const auto fontHeight = juce::jmax (7.0f, height * 0.6f);
+        g.setFont(juce::Font(fontHeight));
 
-        g.setColour (box.findColour (ComboBox::backgroundColourId));
+        g.setColour (box.findColour (juce::ComboBox::backgroundColourId));
 
         const auto h = boxBounds.getHeight();
         const auto cornerSize = h * .15f;
         g.fillRoundedRectangle(boxBounds.toFloat(), cornerSize);
     }
 
-    void LookAndFeel::drawPopupMenuItem (Graphics& g, const Rectangle<int>& area,
-                              bool isSeparator, bool isActive, bool isHighlighted, bool isTicked, bool hasSubMenu,
-                              const String& text, const String& shortcutKeyText,
-                              const Drawable* icon, const Colour* textColour)
+    void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
+                                         const juce::Rectangle<int>& area,
+                                         bool isSeparator,
+                                         bool isActive,
+                                         bool isHighlighted,
+                                         bool isTicked,
+                                         bool hasSubMenu,
+                                         const juce::String& text,
+                                         const juce::String& shortcutKeyText,
+                                         const juce::Drawable* icon,
+                                         const juce::Colour* textColour)
       {
           using namespace laf_constants;
 
           juce::Rectangle<int> r (area);
 
-          Colour fillColour = isHighlighted ? vColour_5 : vColour_4;
+          juce::Colour fillColour = isHighlighted ? vColour_5 : vColour_4;
           g.setColour(fillColour);
           g.fillRect(r.getX(), r.getY(), r.getWidth(), r.getHeight() - 1 );
 
-          Colour myTextColour = isTicked ? vColour_7 : vColour_1;
+          juce::Colour myTextColour = isTicked ? vColour_7 : vColour_1;
           g.setColour(myTextColour);
 
-          auto fHeight = jmax (7.0f, r.getHeight() * 0.6f);
-          g.setFont(Font(fHeight));
+          auto fHeight = juce::jmax (7.0f, r.getHeight() * 0.6f);
+          g.setFont(juce::Font(fHeight));
 
           r.setLeft(10);
           r.setY(1);
-          g.drawFittedText(text, r, Justification::left, 1);
+          g.drawFittedText(text, r, juce::Justification::left, 1);
 
       }
     
     
     
-    Slider::SliderLayout LookAndFeel::getSliderLayout (Slider& slider)
+    juce::Slider::SliderLayout LookAndFeel::getSliderLayout (juce::Slider& slider)
     {
         // 1. compute the actually visible textBox size from the slider textBox size and some additional constraints
 
@@ -358,7 +380,7 @@ void LookAndFeel::drawFlatButtonBackground (Graphics& g,
 
         auto textBoxPos = slider.getTextBoxPosition();
 
-        if (textBoxPos == Slider::TextBoxLeft || textBoxPos == Slider::TextBoxRight)
+        if (textBoxPos == juce::Slider::TextBoxLeft || textBoxPos == juce::Slider::TextBoxRight)
             minXSpace = 30;
         else
             minYSpace = 15;
@@ -366,15 +388,15 @@ void LookAndFeel::drawFlatButtonBackground (Graphics& g,
         auto localBounds = slider.getLocalBounds();
 
         
-        auto sDiameter = jmin(localBounds.getWidth(), localBounds.getHeight()) - 4.0f;
+        auto sDiameter = juce::jmin(localBounds.getWidth(), localBounds.getHeight()) - 4.0f;
         auto textBoxWidth  = sDiameter * .66f;
         auto textBoxHeight = sDiameter * .17f;
       
-        Slider::SliderLayout layout;
+        juce::Slider::SliderLayout layout;
 
         // 2. set the textBox bounds
 
-        if (textBoxPos != Slider::NoTextBox)
+        if (textBoxPos != juce::Slider::NoTextBox)
         {
             if (slider.isBar())
             {
@@ -385,12 +407,12 @@ void LookAndFeel::drawFlatButtonBackground (Graphics& g,
                 layout.textBoxBounds.setWidth (textBoxWidth);
                 layout.textBoxBounds.setHeight (textBoxHeight);
 
-                if (textBoxPos == Slider::TextBoxLeft)           layout.textBoxBounds.setX (0);
-                else if (textBoxPos == Slider::TextBoxRight)     layout.textBoxBounds.setX (localBounds.getWidth() - textBoxWidth);
+                if (textBoxPos == juce::Slider::TextBoxLeft)           layout.textBoxBounds.setX (0);
+                else if (textBoxPos == juce::Slider::TextBoxRight)     layout.textBoxBounds.setX (localBounds.getWidth() - textBoxWidth);
                 else /* above or below -> centre horizontally */ layout.textBoxBounds.setX ((localBounds.getWidth() - textBoxWidth) / 2);
 
-                if (textBoxPos == Slider::TextBoxAbove)          layout.textBoxBounds.setY (0);
-                else if (textBoxPos == Slider::TextBoxBelow)     layout.textBoxBounds.setY (localBounds.getHeight() - textBoxHeight);
+                if (textBoxPos == juce::Slider::TextBoxAbove)          layout.textBoxBounds.setY (0);
+                else if (textBoxPos == juce::Slider::TextBoxBelow)     layout.textBoxBounds.setY (localBounds.getHeight() - textBoxHeight);
                 else /* left or right -> centre vertically */    layout.textBoxBounds.setY ((localBounds.getHeight() - textBoxHeight) / 2);
             }
         }
@@ -405,10 +427,10 @@ void LookAndFeel::drawFlatButtonBackground (Graphics& g,
         }
         else
         {
-            if (textBoxPos == Slider::TextBoxLeft)       layout.sliderBounds.removeFromLeft (textBoxWidth);
-            else if (textBoxPos == Slider::TextBoxRight) layout.sliderBounds.removeFromRight (textBoxWidth);
-            else if (textBoxPos == Slider::TextBoxAbove) layout.sliderBounds.removeFromTop (textBoxHeight);
-            else if (textBoxPos == Slider::TextBoxBelow) layout.sliderBounds.removeFromBottom (textBoxHeight);
+            if (textBoxPos == juce::Slider::TextBoxLeft)       layout.sliderBounds.removeFromLeft (textBoxWidth);
+            else if (textBoxPos == juce::Slider::TextBoxRight) layout.sliderBounds.removeFromRight (textBoxWidth);
+            else if (textBoxPos == juce::Slider::TextBoxAbove) layout.sliderBounds.removeFromTop (textBoxHeight);
+            else if (textBoxPos == juce::Slider::TextBoxBelow) layout.sliderBounds.removeFromBottom (textBoxHeight);
 
             const int thumbIndent = getSliderThumbRadius (slider);
 

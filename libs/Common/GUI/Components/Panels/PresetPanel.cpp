@@ -36,16 +36,16 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
     addAndMakeVisible (mBypassButton);
 
     // set up preset combo box
-    mPresetDisplay.setColour (ComboBox::ColourIds::backgroundColourId, Colours::black);
-    mPresetDisplay.setColour (ComboBox::ColourIds::textColourId, Colours::darkgrey);
-    mPresetDisplay.setColour (ComboBox::ColourIds::outlineColourId, Colours::grey);
+    mPresetDisplay.setColour (juce::ComboBox::ColourIds::backgroundColourId, juce::Colours::black);
+    mPresetDisplay.setColour (juce::ComboBox::ColourIds::textColourId, juce::Colours::darkgrey);
+    mPresetDisplay.setColour (juce::ComboBox::ColourIds::outlineColourId, juce::Colours::grey);
 
     addAndMakeVisible (mPresetDisplay);
     mPresetDisplay.onChange = [this]() {
         handlePresetDisplaySelection();
     };
-    mPresetDisplay.setText (currentPresetName, dontSendNotification);
-    mPresetDisplay.setSelectedItemIndex(presetManager.getCurrentPresetIndex(), dontSendNotification);
+    mPresetDisplay.setText (currentPresetName, juce::dontSendNotification);
+    mPresetDisplay.setSelectedItemIndex(presetManager.getCurrentPresetIndex(), juce::dontSendNotification);
 
     updatePresetComboBox();
 
@@ -66,9 +66,9 @@ PresetPanel::~PresetPanel()
     stopTimer();
 }
 
-void PresetPanel::paint(Graphics& g)
+void PresetPanel::paint(juce::Graphics& g)
 {
-    g.setColour(Colours::darkgrey);
+    g.setColour(juce::Colours::darkgrey);
     g.fillAll();
 }
 
@@ -96,16 +96,16 @@ void PresetPanel::savePreset()
 {
     auto currentPresetName = presetManager.getCurrentPresetName();
 
-    String currentPresetPath = presetManager.getCurrentPresetDirectory()
+    juce::String currentPresetPath = presetManager.getCurrentPresetDirectory()
                                + static_cast<std::string>(directorySeparator) + currentPresetName;
 
-    FileChooser chooser ("Save a file: ",
-                         File (currentPresetPath),
-                         static_cast<std::string>(presetFileExtensionWildcard));
+    juce::FileChooser chooser ("Save a file: ",
+                               juce::File (currentPresetPath),
+                               static_cast<std::string>(presetFileExtensionWildcard));
 
     if (chooser.browseForFileToSave (true))
     {
-        File presetToSave (chooser.getResult());
+        juce::File presetToSave (chooser.getResult());
 
         presetManager.savePreset (presetToSave);
 
@@ -115,19 +115,19 @@ void PresetPanel::savePreset()
 
 void PresetPanel::loadPreset()
 {
-    String currentPresetDirectory = presetManager.getCurrentPresetDirectory();
+    juce::String currentPresetDirectory = presetManager.getCurrentPresetDirectory();
 
     if (currentPresetDirectory.isNotEmpty())
     {
 
-        FileChooser chooser ("Load a file: ",
-                            File (currentPresetDirectory),
-                            static_cast<std::string>(presetFileExtensionWildcard));
+        juce::FileChooser chooser ("Load a file: ",
+                                   juce::File (currentPresetDirectory),
+                                   static_cast<std::string>(presetFileExtensionWildcard));
 
         if (chooser.browseForFileToOpen())
         {
-            File presetToLoad (chooser.getResult());
-            
+            juce::File presetToLoad (chooser.getResult());
+
             presetManager.loadPreset (presetToLoad);
 
         }
@@ -145,21 +145,17 @@ void PresetPanel::handlePresetDisplaySelection()
 
 void PresetPanel::timerCallback()
 {
-
     auto presetNameInManager = presetManager.getCurrentPresetName();
     if (currentPresetName != presetNameInManager)
     {
-        mPresetDisplay.setText (presetNameInManager, dontSendNotification);
+        mPresetDisplay.setText (presetNameInManager, juce::dontSendNotification);
         currentPresetName = presetNameInManager;
-        
     }
-    
 }
 
 void PresetPanel::updatePresetComboBox()
 {
-    
-    mPresetDisplay.clear (dontSendNotification);
+    mPresetDisplay.clear (juce::dontSendNotification);
 
     const int numPresets = presetManager.getNumberOfPresets();
 
@@ -167,9 +163,8 @@ void PresetPanel::updatePresetComboBox()
     {
         mPresetDisplay.addItem (presetManager.getPresetName (i), (i+1));
     }
-        
-    mPresetDisplay.setText (presetManager.getCurrentPresetName(), dontSendNotification);
-    
+
+    mPresetDisplay.setText (presetManager.getCurrentPresetName(), juce::dontSendNotification);
 }
 
 void PresetPanel::resized()

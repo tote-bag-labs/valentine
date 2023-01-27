@@ -10,9 +10,11 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
-class ParameterSlider : public Slider
+#include <juce_audio_processors/juce_audio_processors.h>
+
+class ParameterSlider : public juce::Slider
 {
 public:
 
@@ -23,6 +25,6 @@ private:
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sliderValue;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParameterSlider);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParameterSlider)
 };
 

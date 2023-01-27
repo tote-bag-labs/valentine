@@ -9,17 +9,19 @@
 */
 
 #pragma once
-#include "JuceHeader.h"
 
-class ParameterTextButton : public TextButton
+#include <juce_gui_basics/juce_gui_basics.h>
+#include <juce_audio_processors/juce_audio_processors.h>
+
+class ParameterTextButton : public juce::TextButton
 {
 public:
     ParameterTextButton (const juce::String& buttonText,
                          const juce::String& parameterId,
-                         AudioProcessorValueTreeState& stateToControl);
+                         juce::AudioProcessorValueTreeState& stateToControl);
 
 private:
-    AudioProcessorValueTreeState::ButtonAttachment buttonValue;
+    juce::AudioProcessorValueTreeState::ButtonAttachment buttonValue;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParameterTextButton)
 };

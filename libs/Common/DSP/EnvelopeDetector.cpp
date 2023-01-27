@@ -8,11 +8,11 @@
   ==============================================================================
 */
 
-
-
 #include "EnvelopeDetector.h"
-#include "JuceHeader.h"
 #include "AudioHelpers.h"
+
+#include <juce_dsp/juce_dsp.h>
+
 #include <math.h>
 
 EnvelopeDetector::EnvelopeDetector (bool autoReleaseFlag) :
@@ -80,7 +80,7 @@ inline double EnvelopeDetector::getReleaseCoefficient()
 
 double EnvelopeDetector::processSampleDecoupledBranched (double inputSample)
 {
-    ScopedNoDenormals noDenormals;
+    juce::ScopedNoDenormals noDenormals;
     
     auto prevOutput = prevEnv.get();
     auto coeff  = inputSample > prevOutput ? tauAttack.get() : tauRelease.get();

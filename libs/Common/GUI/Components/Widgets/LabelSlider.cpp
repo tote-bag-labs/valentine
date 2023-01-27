@@ -8,8 +8,9 @@
   ==============================================================================
 */
 
-#include <JuceHeader.h>
 #include "LabelSlider.h"
+
+#include <juce_audio_processors/juce_audio_processors.h>
 
 //==============================================================================
 
@@ -17,9 +18,9 @@ LabelSlider::LabelSlider(const juce::String& parameterId,
                          juce::AudioProcessorValueTreeState& stateToControl) :
 slider(parameterId, stateToControl)
 {
-    label.setText(stateToControl.getParameter(parameterId)->name, dontSendNotification);
-    label.setColour(Label::textColourId, Colours::black);
-    label.setJustificationType(Justification::centredTop);
+    label.setText(stateToControl.getParameter(parameterId)->name, juce::dontSendNotification);
+    label.setColour(juce::Label::textColourId, juce::Colours::black);
+    label.setJustificationType(juce::Justification::centredTop);
 
     addAndMakeVisible(label);
     addAndMakeVisible(slider);
