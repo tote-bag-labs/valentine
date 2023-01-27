@@ -13,9 +13,14 @@
 #include "Common/GUI/Managers/RadioButtonGroupManager.h"
 #include "Common/GUI/Components/Widgets/FlatTextButton.h"
 
-#include <JuceHeader.h>
+#include <juce_gui_basics/juce_gui_basics.h>
 
 //==============================================================================
+
+namespace juce
+{
+class AudioParameterChoice;
+} // namespace juce
 
 namespace tote_bag
 {

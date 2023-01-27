@@ -17,9 +17,9 @@ ValentineAudioProcessor::ValentineAudioProcessor()
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
                       #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
+                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
                       #endif
-                       .withOutput ("Output", AudioChannelSet::stereo(), true)
+                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
                       treeState (*this, nullptr, "PARAMETER", createParameterLayout()),
@@ -57,11 +57,11 @@ ValentineAudioProcessor::~ValentineAudioProcessor()
 
 //==============================================================================
 
-AudioProcessorValueTreeState::ParameterLayout
+juce::AudioProcessorValueTreeState::ParameterLayout
 ValentineAudioProcessor::createParameterLayout()
 {
     testManager = juce::MessageManager::getInstance();
-    std::vector<std::unique_ptr<RangedAudioParameter>> params;
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
     for (int i = 0; i < numParams; ++i)
     {
@@ -75,7 +75,8 @@ ValentineAudioProcessor::createParameterLayout()
             }
 
             const auto ratioParameterIndex = getParameterIndex(VParameter::ratio);
-            params.push_back(std::make_unique<AudioParameterChoice>(ParameterID{FFCompParameterID()[ratioParameterIndex], ValentineParameterVersion},
+            params.push_back(std::make_unique<juce::AudioParameterChoice>(
+                                                                    juce::ParameterID{FFCompParameterID()[ratioParameterIndex], ValentineParameterVersion},
                                                                     FFCompParameterLabel()[ratioParameterIndex],
                                                                     ratioChoices,
                                                                     FFCompParameterDefaults[ratioParameterIndex]));
@@ -83,19 +84,19 @@ ValentineAudioProcessor::createParameterLayout()
         else if (paramType == VParameter::nice ||
                  paramType == VParameter::bypass)
         {
-            params.push_back(std::make_unique<AudioParameterBool>(ParameterID{FFCompParameterID()[i], ValentineParameterVersion},
-                                                                  FFCompParameterLabel()[i],
-                                                                  false));
+            params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{FFCompParameterID()[i], ValentineParameterVersion},
+                                                                        FFCompParameterLabel()[i],
+                                                                        false));
 
         }
 
         else
         {
-            auto rangeToUse = NormalisableRange<float>(FFCompParameterMin[i],
-                                                       FFCompParameterMax[i],
-                                                       FFCompParameterIncrement[i]);
+            auto rangeToUse = juce::NormalisableRange<float>(FFCompParameterMin[i],
+                                                             FFCompParameterMax[i],
+                                                             FFCompParameterIncrement[i]);
             rangeToUse.setSkewForCentre(FFCompParamCenter[i]);
-            std::function<String(float value, int maximumStringLength)> stringFromValue = nullptr;
+            std::function<juce::String(float value, int maximumStringLength)> stringFromValue = nullptr;
 
             if ((paramType == VParameter::attack)    ||
                 (paramType == VParameter::release)   ||
@@ -123,17 +124,17 @@ ValentineAudioProcessor::createParameterLayout()
                 stringFromValue =
                 [](int value, int)
                 {
-                    return String(value);
+                    return juce::String(value);
                 };
 
             }
-                params.push_back( std::make_unique<AudioParameterFloat>
+                params.push_back( std::make_unique<juce::AudioParameterFloat>
                                  (juce::ParameterID{FFCompParameterID()[i], ValentineParameterVersion},
                                   FFCompParameterLabel()[i],
                                   rangeToUse,
                                   FFCompParameterDefaults[i],
                                   VParameterUnit()[i],
-                                  AudioProcessorParameter::genericParameter,
+                                  juce::AudioProcessorParameter::genericParameter,
                                   stringFromValue,
                                   nullptr));
             }
@@ -145,7 +146,7 @@ ValentineAudioProcessor::createParameterLayout()
 
 //==============================================================================
 
-const String ValentineAudioProcessor::getName() const
+const juce::String ValentineAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
@@ -197,12 +198,12 @@ void ValentineAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const String ValentineAudioProcessor::getProgramName (int index)
+const juce::String ValentineAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void ValentineAudioProcessor::changeProgramName (int index, const String& newName)
+void ValentineAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
@@ -276,8 +277,8 @@ bool ValentineAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
   #else
     // This is the place where you check if the layout is supported.
     // In this template code we only support mono or stereo.
-    if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
+    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
+     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
     // This checks if the input layout matches the output layout
@@ -291,9 +292,9 @@ bool ValentineAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 }
 #endif
 
-void ValentineAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    ScopedNoDenormals noDenormals;
+    juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     auto currentSamplesPerBlock = getBlockSize();
@@ -334,8 +335,8 @@ void ValentineAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     currentGain = g;
 
     // Upsample then do non-linear processing
-    dsp::AudioBlock<float> processBlock (processBuffer);
-    dsp::AudioBlock<float> highSampleRateBlock = oversampler->processSamplesUp (processBlock);
+    juce::dsp::AudioBlock<float> processBlock (processBuffer);
+    juce::dsp::AudioBlock<float> highSampleRateBlock = oversampler->processSamplesUp (processBlock);
 
     ffCompressor->process(highSampleRateBlock);
     saturator->processBlock(highSampleRateBlock);
@@ -345,7 +346,7 @@ void ValentineAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     // Delay processed signal to produce a integral delay amount
     for (int channel = 0; channel < totalNumOutputChannels; ++channel)
     {
-        dsp::AudioBlock<float> channelBlock = processBlock.getSingleChannelBlock(channel);
+        juce::dsp::AudioBlock<float> channelBlock = processBlock.getSingleChannelBlock(channel);
         fracDelayFilters[channel]->process(channelBlock);
     }
 
@@ -376,9 +377,9 @@ void ValentineAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     outputMeterSource.measureBlock (buffer);
 }
 
-void ValentineAudioProcessor::processBlockBypassed (AudioBuffer<float>& buffer, MidiBuffer&)
+void ValentineAudioProcessor::processBlockBypassed (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
-    ScopedNoDenormals noDenormals;
+    juce::ScopedNoDenormals noDenormals;
 
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
@@ -390,7 +391,7 @@ void ValentineAudioProcessor::processBlockBypassed (AudioBuffer<float>& buffer, 
                        currentSamplesPerBlock);
 }
 
-void ValentineAudioProcessor::prepareInputBuffer (AudioBuffer<float>& buffer,
+void ValentineAudioProcessor::prepareInputBuffer (juce::AudioBuffer<float>& buffer,
                                                   const int numInputChannels,
                                                   const int numOutputChannels,
                                                   const int samplesPerBlock)
@@ -417,24 +418,24 @@ bool ValentineAudioProcessor::hasEditor() const
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-AudioProcessorEditor* ValentineAudioProcessor::createEditor()
+juce::AudioProcessorEditor* ValentineAudioProcessor::createEditor()
 {
     return new ValentineAudioProcessorEditor (*this);
 }
 
 //==============================================================================
 
-void ValentineAudioProcessor::parameterChanged (const String& parameter, float newValue)
+void ValentineAudioProcessor::parameterChanged (const juce::String& parameter, float newValue)
 {
 
     if (parameter == "Crush")
     {
         const auto bitCrushIndex = static_cast<int>(VParameter::bitCrush);
-        bitCrush->setParams(jmap(newValue,
-                                 FFCompParameterMin[bitCrushIndex],
-                                 FFCompParameterMax[bitCrushIndex],
-                                 17.0f,
-                                 3.0f)
+        bitCrush->setParams(juce::jmap(newValue,
+                                  FFCompParameterMin[bitCrushIndex],
+                                  FFCompParameterMax[bitCrushIndex],
+                                  17.0f,
+                                  3.0f)
                             );
         if (newValue >= 1.0001f)
             crushOn.set(true);
@@ -444,11 +445,11 @@ void ValentineAudioProcessor::parameterChanged (const String& parameter, float n
     else if (parameter == "Saturation")
     {
         const auto saturateIndex = static_cast<int>(VParameter::saturation);
-        saturator->setParams(jmap(newValue,
-                                  FFCompParameterMin[saturateIndex],
-                                  FFCompParameterMax[saturateIndex],
-                                  kMinSaturationGain,
-                                  kMaxSaturationGain));
+        saturator->setParams(juce::jmap(newValue,
+                                        FFCompParameterMin[saturateIndex],
+                                        FFCompParameterMax[saturateIndex],
+                                        kMinSaturationGain,
+                                        kMaxSaturationGain));
     }
     else if (parameter == "AttackTime")
     {
@@ -467,7 +468,7 @@ void ValentineAudioProcessor::parameterChanged (const String& parameter, float n
     }
     else if (parameter == "Compress")
     {
-        compressValue.set(Decibels::decibelsToGain(newValue));
+        compressValue.set(juce::Decibels::decibelsToGain(newValue));
     }
     else if (parameter == "Mix")
     {
@@ -475,7 +476,7 @@ void ValentineAudioProcessor::parameterChanged (const String& parameter, float n
     }
     else if (parameter == "Makeup")
     {
-        makeupValue.set(Decibels::decibelsToGain(newValue));
+        makeupValue.set(juce::Decibels::decibelsToGain(newValue));
     }
     else if (parameter == "Nice")
     {
@@ -491,7 +492,7 @@ void ValentineAudioProcessor::parameterChanged (const String& parameter, float n
 }
 
 //==============================================================================
-void ValentineAudioProcessor::getStateInformation (MemoryBlock& destData)
+void ValentineAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
@@ -502,9 +503,9 @@ void ValentineAudioProcessor::getStateInformation (MemoryBlock& destData)
     auto currentPresetName = presetManager.getCurrentPresetName();
 
     if (currentPresetName.isNotEmpty())
-        state.setProperty(Identifier ("PresetName"), currentPresetName, nullptr);
+        state.setProperty(juce::Identifier ("PresetName"), currentPresetName, nullptr);
 
-    std::unique_ptr<XmlElement> xml (state.createXml());
+    std::unique_ptr<juce::XmlElement> xml (state.createXml());
 
     copyXmlToBinary (*xml, destData);
 
@@ -514,15 +515,15 @@ void ValentineAudioProcessor::setStateInformation (const void* data, int sizeInB
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
-    std::unique_ptr<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
 
     if (xmlState.get() != nullptr)
     {
         if (xmlState->hasTagName (treeState.state.getType()))
         {
-            auto newTree = ValueTree::fromXml (*xmlState);
+            auto newTree = juce::ValueTree::fromXml (*xmlState);
 
-            auto presetID = Identifier("PresetName");
+            auto presetID = juce::Identifier("PresetName");
             if (newTree.hasProperty (presetID))
             {
                 presetManager.setLastChosenPresetName (newTree.getPropertyAsValue ("PresetName", nullptr).toString());
@@ -566,7 +567,7 @@ void ValentineAudioProcessor::initializeDSP()
 //==============================================================================
 
 // This creates new instances of the plugin..
-AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new ValentineAudioProcessor();
 }

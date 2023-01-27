@@ -10,21 +10,24 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+
 #include "GUI/Panels/ValentineMainPanel.h"
+
+#include <juce_audio_processors/juce_audio_processors.h>
+#include <juce_gui_basics/juce_gui_basics.h>
 
 
 //==============================================================================
 
-class ValentineAudioProcessorEditor  : public AudioProcessorEditor
+class ValentineAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
     ValentineAudioProcessorEditor (ValentineAudioProcessor&);
     ~ValentineAudioProcessorEditor();
 
     //==============================================================================
-    void paint (Graphics&) override;
+    void paint (juce::Graphics&) override;
     void resized() override;
 
 private:

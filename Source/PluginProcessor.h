@@ -10,8 +10,6 @@
 
 #pragma once
 
-#include <juce_audio_processors/juce_audio_processors.h>
-
 #include "ValentineParameters.h"
 
 #include "Common/DSP/Compressor.h"
@@ -21,6 +19,7 @@
 #include "Common/DSP/CircularBuffer.h"
 #include "Common/GUI/Managers/ToteBagPresetManager.h"
 
+#include <juce_audio_processors/juce_audio_processors.h>
 
 //==============================================================================
 /**

@@ -10,23 +10,23 @@
 
 #pragma once
 
-#include "JuceHeader.h"
-
 #include "ValentineCenterPanel.h"
 
 #include "Common/GUI/LookAndFeel/LookAndFeel.h"
 #include "Common/GUI/Components/Panels/PresetPanel.h"
 #include "Common/GUI/Components/Panels/VerticalMeterPanel.h"
 
+#include <juce_gui_basics/juce_gui_basics.h>
+
 class ValentineAudioProcessor;
 
-class VMainPanel : public Component
+class VMainPanel : public juce::Component
 {
 public:
     VMainPanel(ValentineAudioProcessor& inProcessor);
     ~VMainPanel();
 
-    void paint (Graphics& g) override;
+    void paint (juce::Graphics& g) override;
 
     void resized() override;
 private:

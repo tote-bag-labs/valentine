@@ -42,7 +42,7 @@ ValentineAudioProcessorEditor::~ValentineAudioProcessorEditor()
 }
 
 //==============================================================================
-void ValentineAudioProcessorEditor::paint (Graphics& g)
+void ValentineAudioProcessorEditor::paint (juce::Graphics& g)
 {
 }
 

@@ -8,8 +8,9 @@
   ==============================================================================
 */
 
-#include <JuceHeader.h>
 #include "FlatTextChooser.h"
+
+#include <juce_audio_processors/juce_audio_processors.h>
 
 //==============================================================================
 
@@ -25,8 +26,8 @@ FlatTextChooser::FlatTextChooser(const juce::String& labelText,
 ,mParameter(param)
 ,mAlignWithParameterSliders(alignWithParameterSliders)
 {
-    mLabel.setColour(Label::textColourId, Colours::black);
-    mLabel.setJustificationType(Justification::centredTop);
+    mLabel.setColour(juce::Label::textColourId, juce::Colours::black);
+    mLabel.setJustificationType(juce::Justification::centredTop);
 
     addAndMakeVisible(mLabel);
     

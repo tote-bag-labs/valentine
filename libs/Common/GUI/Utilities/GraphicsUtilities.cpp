@@ -30,7 +30,7 @@ void drawRoundedRect(juce::Graphics& g,
 
     g.setColour(colour);
 
-    Path p;
+    juce::Path p;
     p.addRoundedRectangle(croppedBounds, cornerSize);
     g.fillPath(p);
 }

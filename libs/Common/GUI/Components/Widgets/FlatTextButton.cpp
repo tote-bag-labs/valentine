@@ -18,7 +18,7 @@ FlatTextButton::FlatTextButton(juce::String name) : TextButton(name)
 {    
 }
 
-void FlatTextButton::paintButton (Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+void FlatTextButton::paintButton (juce::Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 {
 
     if (auto* lnf = dynamic_cast<LookAndFeel*> (&getLookAndFeel()))

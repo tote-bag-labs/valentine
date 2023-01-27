@@ -10,12 +10,11 @@
 
 #pragma once
 
-#include <JuceHeader.h>
-
 #include "Common/GUI/Components/Widgets/LabelSlider.h"
 #include "Common/GUI/LookAndFeel/LookAndFeelConstants.h"
 #include "Common/GUI/Components/Widgets/FlatTextChooser.h"
 
+#include <juce_gui_basics/juce_gui_basics.h>
 
 //==============================================================================
 /*
@@ -33,17 +32,17 @@ public:
     void resized() override;
 
 private:
-    Rectangle<int> topLeftRowBorderBounds;
+    juce::Rectangle<int> topLeftRowBorderBounds;
     LabelSlider inputSlider;
     LabelSlider crushSlider;
     LabelSlider saturateSlider;
 
-    Rectangle<int> bottomLeftRowBorderBounds;
+    juce::Rectangle<int> bottomLeftRowBorderBounds;
     LabelSlider ratioSlider;
     LabelSlider attackSlider;
     LabelSlider releaseSlider;
 
-    Rectangle<int> topRightRowBorderBounds;
+    juce::Rectangle<int> topRightRowBorderBounds;
     LabelSlider mixSlider;
     LabelSlider outputSlider;
 

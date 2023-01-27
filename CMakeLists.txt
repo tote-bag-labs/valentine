@@ -195,7 +195,6 @@ target_link_libraries("${PROJECT_NAME}"
     juce::juce_recommended_lto_flags
     juce::juce_recommended_warning_flags)
 
-juce_generate_juce_header("${PROJECT_NAME}")
 
 # Required for ctest (which is just easier for cross-platform CI)
 # include(CTest) does this too, but adds tons of targets we don't want

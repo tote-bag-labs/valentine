@@ -12,7 +12,7 @@
 
 ParameterTextButton::ParameterTextButton (const juce::String& buttonText,
                                           const juce::String& parameterId,
-                                          AudioProcessorValueTreeState& stateToControl) :
+                                          juce::AudioProcessorValueTreeState& stateToControl) :
 buttonValue(stateToControl, parameterId, *this)
 {
     setButtonText(buttonText);

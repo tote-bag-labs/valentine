@@ -8,9 +8,11 @@
   ==============================================================================
 */
 
-#include <JuceHeader.h>
 #include "VerticalMeterPanel.h"
+
 #include "Common/GUI/LookAndFeel/LookAndFeelConstants.h"
+
+#include <juce_gui_basics/juce_gui_basics.h>
 
 //==============================================================================
 VerticalMeterPanel::VerticalMeterPanel(const juce::String& label,

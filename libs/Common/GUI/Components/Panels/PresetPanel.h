@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include "JuceHeader.h"
-
 #include "Common/GUI/Components/Widgets/ParameterTextButton.h"
+
+#include <juce_gui_basics/juce_gui_basics.h>
 
 class ToteBagPresetManager;
 class PresetPanel  : public juce::Component,
@@ -26,7 +26,7 @@ public:
                  juce::AudioProcessorValueTreeState& treeState);
     ~PresetPanel();
     
-    void paint (Graphics& g) override;
+    void paint (juce::Graphics& g) override;
     
     void incrementPreset();
 
@@ -52,7 +52,7 @@ private:
     juce::TextButton mNextPreset;
     ParameterTextButton mBypassButton;
 
-    ComboBox mPresetDisplay;
+    juce::ComboBox mPresetDisplay;
 
     juce::String currentPresetName {"Untitled"};
     

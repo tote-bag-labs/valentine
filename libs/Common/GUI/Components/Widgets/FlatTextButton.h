@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <JuceHeader.h>
+#include <juce_gui_basics/juce_gui_basics.h>
 
 namespace tote_bag
 {
@@ -23,7 +23,9 @@ public:
     
 protected:
 
-    void paintButton (Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
+    void paintButton (juce::Graphics& g,
+                      bool shouldDrawButtonAsHighlighted,
+                      bool shouldDrawButtonAsDown) override;
 
 };
 }// namespace totebag
