@@ -10,9 +10,9 @@
 
 #pragma once
 
+#include "Common/GUI/Components/Widgets/FlatTextChooser.h"
 #include "Common/GUI/Components/Widgets/LabelSlider.h"
 #include "Common/GUI/LookAndFeel/LookAndFeelConstants.h"
-#include "Common/GUI/Components/Widgets/FlatTextChooser.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -22,10 +22,10 @@
 
 class ValentineAudioProcessor;
 
-class CenterPanel  : public juce::Component
+class CenterPanel : public juce::Component
 {
 public:
-    CenterPanel(ValentineAudioProcessor& processor);
+    CenterPanel (ValentineAudioProcessor& processor);
     ~CenterPanel() override;
 
     void paint (juce::Graphics&) override;

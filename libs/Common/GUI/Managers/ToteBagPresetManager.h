@@ -12,7 +12,6 @@
 
 #include <juce_core/juce_core.h>
 
-
 namespace
 {
 constexpr std::string_view presetFileExtension = ".tbp";
@@ -32,7 +31,6 @@ class AudioProcessor;
 class ToteBagPresetManager
 {
 public:
-    
     ToteBagPresetManager (juce::AudioProcessor* inProcessor);
 
     /** Returns the number of presets loaded to the local presets array */
@@ -40,9 +38,9 @@ public:
 
     /** Sets all parameters to default and sets preset name to "Untitled"*/
     void createNewPreset();
-    
-    void savePreset(juce::File presetToSave);
-    
+
+    void savePreset (juce::File presetToSave);
+
     void loadPreset (juce::File presetToLoad);
 
     void loadPreset (int presetIndex);
@@ -58,23 +56,21 @@ public:
     const juce::String getCurrentPresetDirectory();
     /** Allows caller to set the name of the currently loaded preset. used to facilitate state restore */
     void setLastChosenPresetName (juce::String newPresetName);
-            
+
 private:
-    
     /** Iterates over the preset directory and adds the files to localPresets  */
     void updatePresetList();
 
-    int findPresetIndex(const juce::String& presetName);
-        
+    int findPresetIndex (const juce::String& presetName);
+
     juce::File presetDirectory;
-    juce::String currentPresetName {"Untitled"};
-    int mCurrentPresetIndex{0};
+    juce::String currentPresetName { "Untitled" };
+    int mCurrentPresetIndex { 0 };
     juce::Array<juce::String> presetList;
-    
+
     juce::AudioProcessor* processor;
-    
+
     bool presetIsDirty = false;
-    
-    
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ToteBagPresetManager)
 };

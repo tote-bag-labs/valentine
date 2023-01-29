@@ -15,13 +15,13 @@
 namespace tote_bag
 {
 
-RadioButtonGroupManager::RadioButtonGroupManager(juce::AudioParameterChoice& parameter, int groupId) :
-    mParameter(parameter)
-    ,mGroupId(groupId)
+RadioButtonGroupManager::RadioButtonGroupManager (juce::AudioParameterChoice& parameter, int groupId)
+    : mParameter (parameter)
+    , mGroupId (groupId)
 {
     mCurrentParameterIndex = mParameter.getIndex();
-    
-    startTimerHz(20);
+
+    startTimerHz (20);
 }
 
 RadioButtonGroupManager::~RadioButtonGroupManager()
@@ -33,31 +33,31 @@ RadioButtonGroupManager::~RadioButtonGroupManager()
     {
         button->onClick = nullptr;
     }
-    
+
     stopTimer();
 }
 
-void RadioButtonGroupManager::attach(juce::Button* button)
+void RadioButtonGroupManager::attach (juce::Button* button)
 {
     const auto index = mNextButtonIndex;
 
     button->onClick = [this, button, index] {
-        buttonOnClickCallback(button, index);
+        buttonOnClickCallback (button, index);
     };
 
     if (index == mCurrentParameterIndex)
     {
-        button->setToggleState(true, juce::dontSendNotification);
+        button->setToggleState (true, juce::dontSendNotification);
     }
 
-    button->setClickingTogglesState(true);
-    button->setRadioGroupId(mGroupId);
+    button->setClickingTogglesState (true);
+    button->setRadioGroupId (mGroupId);
 
-    mManagedButtons.emplace_back(button);
+    mManagedButtons.emplace_back (button);
     ++mNextButtonIndex;
 }
 
-void RadioButtonGroupManager::buttonOnClickCallback(juce::Button* button, int index)
+void RadioButtonGroupManager::buttonOnClickCallback (juce::Button* button, int index)
 {
     auto buttonOn = button->getToggleState();
 
@@ -65,10 +65,10 @@ void RadioButtonGroupManager::buttonOnClickCallback(juce::Button* button, int in
     {
         mCurrentParameterIndex = index;
 
-        const auto buttonVal = mParameter.convertTo0to1(index);
+        const auto buttonVal = mParameter.convertTo0to1 (index);
 
         mParameter.beginChangeGesture();
-        mParameter.setValueNotifyingHost(buttonVal);
+        mParameter.setValueNotifyingHost (buttonVal);
         mParameter.endChangeGesture();
     }
 }
@@ -76,10 +76,10 @@ void RadioButtonGroupManager::buttonOnClickCallback(juce::Button* button, int in
 void RadioButtonGroupManager::updateGroupState()
 {
     const auto parameterIndex = mParameter.getIndex();
-    if(mCurrentParameterIndex != parameterIndex)
+    if (mCurrentParameterIndex != parameterIndex)
     {
-        mManagedButtons[parameterIndex]->setToggleState(true,
-                                                   juce::dontSendNotification);
+        mManagedButtons[parameterIndex]->setToggleState (true,
+                                                         juce::dontSendNotification);
         mCurrentParameterIndex = parameterIndex;
     }
 }

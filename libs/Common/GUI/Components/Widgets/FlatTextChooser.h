@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "Common/GUI/Managers/RadioButtonGroupManager.h"
 #include "Common/GUI/Components/Widgets/FlatTextButton.h"
+#include "Common/GUI/Managers/RadioButtonGroupManager.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -26,21 +26,20 @@ namespace tote_bag
 {
 /*
 */
-class FlatTextChooser  : public juce::Component
+class FlatTextChooser : public juce::Component
 {
 public:
-    FlatTextChooser(const juce::String&,
-                    const std::vector<std::string>&,
-                    int,
-                    juce::AudioParameterChoice*,
-                    bool);
+    FlatTextChooser (const juce::String&,
+                     const std::vector<std::string>&,
+                     int,
+                     juce::AudioParameterChoice*,
+                     bool);
     ~FlatTextChooser() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
 
 private:
-    
     juce::Label mLabel;
 
     juce::OwnedArray<FlatTextButton> mButtons;

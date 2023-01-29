@@ -12,10 +12,10 @@
 
 ParameterTextButton::ParameterTextButton (const juce::String& buttonText,
                                           const juce::String& parameterId,
-                                          juce::AudioProcessorValueTreeState& stateToControl) :
-buttonValue(stateToControl, parameterId, *this)
+                                          juce::AudioProcessorValueTreeState& stateToControl)
+    : buttonValue (stateToControl, parameterId, *this)
 {
-    setButtonText(buttonText);
+    setButtonText (buttonText);
     changeWidthToFitText();
     setClickingTogglesState (true);
 }

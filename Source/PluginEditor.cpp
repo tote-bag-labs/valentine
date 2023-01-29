@@ -8,15 +8,15 @@
   ==============================================================================
 */
 
-#include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "../Source/ValentineParameters.h"
+#include "PluginProcessor.h"
 //==============================================================================
 ValentineAudioProcessorEditor::ValentineAudioProcessorEditor (ValentineAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+    : AudioProcessorEditor (&p)
+    , processor (p)
 {
-
-    addAndMakeVisible(mainPanel);
+    addAndMakeVisible (mainPanel);
 
     auto w = 0.0f;
 
@@ -25,15 +25,14 @@ ValentineAudioProcessorEditor::ValentineAudioProcessorEditor (ValentineAudioProc
     else
         w = startingWidth;
 
-    setResizable(true, true);
+    setResizable (true, true);
     setResizeLimits (minimumWidth,
                      minimumWidth / ratio,
                      maximumWidth,
                      maximumWidth / ratio);
-    getConstrainer()->setFixedAspectRatio(ratio);
+    getConstrainer()->setFixedAspectRatio (ratio);
 
-    setSize(w, w / ratio);
-
+    setSize (w, w / ratio);
 }
 
 ValentineAudioProcessorEditor::~ValentineAudioProcessorEditor()
@@ -48,7 +47,5 @@ void ValentineAudioProcessorEditor::paint (juce::Graphics& g)
 
 void ValentineAudioProcessorEditor::resized()
 {
-    mainPanel.setBounds(getLocalBounds());
+    mainPanel.setBounds (getLocalBounds());
 }
-
-
