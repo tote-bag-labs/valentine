@@ -38,7 +38,7 @@ option(JUCE_ENABLE_MODULE_SOURCE_GROUPS "Show all module sources in IDE projects
 # Locally, you'll need to run `git submodule update --init --recursive` once
 # and `git submodule update --remote --merge` to keep it up to date
 # On Github Actions, it's managed by actions/checkout
-add_subdirectory(JUCE)
+add_subdirectory(libs/JUCE)
 
 # Also using Foley's Finest meters
 juce_add_module(libs/ff_meters)

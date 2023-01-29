@@ -1,5 +1,5 @@
 [submodule "JUCE"]
-	path = JUCE
+	path = libs/JUCE
 	url = https://github.com/juce-framework/JUCE/
 	branch = develop
 [submodule "ff_meters"]
