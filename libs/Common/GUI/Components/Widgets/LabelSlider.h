@@ -20,14 +20,13 @@
 namespace juce
 {
 class AudioProcessorValueTreeState;
-}// namespace juce
+} // namespace juce
 
-class LabelSlider  : public juce::Component
+class LabelSlider : public juce::Component
 {
 public:
-
-    LabelSlider(const juce::String& parameterId,
-                juce::AudioProcessorValueTreeState& stateToControl);
+    LabelSlider (const juce::String& parameterId,
+                 juce::AudioProcessorValueTreeState& stateToControl);
 
     ~LabelSlider() override;
 

@@ -10,13 +10,13 @@
 
 #include "ParameterSlider.h"
 
-ParameterSlider::ParameterSlider(const juce::String& parameterId,
-                                   juce::AudioProcessorValueTreeState& stateToControl) :
-sliderValue(std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(stateToControl,
-                                                                                   parameterId,
-                                                                                   *this))
+ParameterSlider::ParameterSlider (const juce::String& parameterId,
+                                  juce::AudioProcessorValueTreeState& stateToControl)
+    : sliderValue (std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment> (stateToControl,
+                                                                                           parameterId,
+                                                                                           *this))
 {
-    setSliderStyle(SliderStyle::RotaryHorizontalVerticalDrag);
-    setTextValueSuffix(stateToControl.getParameter(parameterId)->label);
-    setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxBelow, false, 0, 0);
+    setSliderStyle (SliderStyle::RotaryHorizontalVerticalDrag);
+    setTextValueSuffix (stateToControl.getParameter (parameterId)->label);
+    setTextBoxStyle (Slider::TextEntryBoxPosition::TextBoxBelow, false, 0, 0);
 }

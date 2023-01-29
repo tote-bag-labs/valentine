@@ -18,14 +18,11 @@ namespace tote_bag
 class FlatTextButton : public juce::TextButton
 {
 public:
+    FlatTextButton (juce::String name);
 
-    FlatTextButton(juce::String name);
-    
 protected:
-
     void paintButton (juce::Graphics& g,
                       bool shouldDrawButtonAsHighlighted,
                       bool shouldDrawButtonAsDown) override;
-
 };
-}// namespace totebag
+} // namespace totebag

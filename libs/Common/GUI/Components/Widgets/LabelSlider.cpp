@@ -14,16 +14,16 @@
 
 //==============================================================================
 
-LabelSlider::LabelSlider(const juce::String& parameterId,
-                         juce::AudioProcessorValueTreeState& stateToControl) :
-slider(parameterId, stateToControl)
+LabelSlider::LabelSlider (const juce::String& parameterId,
+                          juce::AudioProcessorValueTreeState& stateToControl)
+    : slider (parameterId, stateToControl)
 {
-    label.setText(stateToControl.getParameter(parameterId)->name, juce::dontSendNotification);
-    label.setColour(juce::Label::textColourId, juce::Colours::black);
-    label.setJustificationType(juce::Justification::centredTop);
+    label.setText (stateToControl.getParameter (parameterId)->name, juce::dontSendNotification);
+    label.setColour (juce::Label::textColourId, juce::Colours::black);
+    label.setJustificationType (juce::Justification::centredTop);
 
-    addAndMakeVisible(label);
-    addAndMakeVisible(slider);
+    addAndMakeVisible (label);
+    addAndMakeVisible (slider);
 }
 
 LabelSlider::~LabelSlider()
@@ -37,12 +37,12 @@ void LabelSlider::paint (juce::Graphics& g)
 void LabelSlider::resized()
 {
     const auto mainArea = getLocalBounds();
-    const auto margin = juce::roundToInt(mainArea.getHeight() * .01f);
-    auto sliderArea = mainArea.reduced(margin);
+    const auto margin = juce::roundToInt (mainArea.getHeight() * .01f);
+    auto sliderArea = mainArea.reduced (margin);
 
-    const auto labelHeight = juce::roundToInt(sliderArea.getHeight() * .140);
-    const auto labelArea = sliderArea.removeFromTop(labelHeight);
+    const auto labelHeight = juce::roundToInt (sliderArea.getHeight() * .140);
+    const auto labelArea = sliderArea.removeFromTop (labelHeight);
 
-    slider.setBounds(sliderArea);
-    label.setBounds(labelArea);
+    slider.setBounds (sliderArea);
+    label.setBounds (labelArea);
 }

@@ -17,26 +17,26 @@
 namespace tote_bag
 {
 
-FlatTextChooser::FlatTextChooser(const juce::String& labelText,
-                                 const std::vector<std::string>& choices,
-                                 int paramGroupId,
-                                 juce::AudioParameterChoice* param = nullptr,
-                                 bool alignWithParameterSliders = false) :
- mLabel(labelText + " Chooser", labelText)
-,mParameter(param)
-,mAlignWithParameterSliders(alignWithParameterSliders)
+FlatTextChooser::FlatTextChooser (const juce::String& labelText,
+                                  const std::vector<std::string>& choices,
+                                  int paramGroupId,
+                                  juce::AudioParameterChoice* param = nullptr,
+                                  bool alignWithParameterSliders = false)
+    : mLabel (labelText + " Chooser", labelText)
+    , mParameter (param)
+    , mAlignWithParameterSliders (alignWithParameterSliders)
 {
-    mLabel.setColour(juce::Label::textColourId, juce::Colours::black);
-    mLabel.setJustificationType(juce::Justification::centredTop);
+    mLabel.setColour (juce::Label::textColourId, juce::Colours::black);
+    mLabel.setJustificationType (juce::Justification::centredTop);
 
-    addAndMakeVisible(mLabel);
-    
+    addAndMakeVisible (mLabel);
+
     for (const auto& choiceLabelText : choices)
     {
-        auto button = mButtons.add(std::make_unique<FlatTextButton>(choiceLabelText));
+        auto button = mButtons.add (std::make_unique<FlatTextButton> (choiceLabelText));
 
         int edgesFlag = 0;
-        if(choiceLabelText == choices.front())
+        if (choiceLabelText == choices.front())
         {
             edgesFlag = juce::Button::ConnectedEdgeFlags::ConnectedOnBottom;
         }
@@ -46,21 +46,21 @@ FlatTextChooser::FlatTextChooser(const juce::String& labelText,
         }
         else
         {
-           edgesFlag = juce::Button::ConnectedEdgeFlags::ConnectedOnTop
-                     | juce::Button::ConnectedEdgeFlags::ConnectedOnBottom;
+            edgesFlag = juce::Button::ConnectedEdgeFlags::ConnectedOnTop
+                        | juce::Button::ConnectedEdgeFlags::ConnectedOnBottom;
         }
 
-        button->setConnectedEdges(edgesFlag);
-        addAndMakeVisible(button);
+        button->setConnectedEdges (edgesFlag);
+        addAndMakeVisible (button);
     }
 
     if (param)
     {
-        mButtonState = std::make_unique<RadioButtonGroupManager>(*param, paramGroupId);
-        
+        mButtonState = std::make_unique<RadioButtonGroupManager> (*param, paramGroupId);
+
         for (const auto button : mButtons)
         {
-            mButtonState->attach(button);
+            mButtonState->attach (button);
         }
     }
 }
@@ -76,40 +76,39 @@ void FlatTextChooser::paint (juce::Graphics& g)
 void FlatTextChooser::resized()
 {
     const auto mainArea = getLocalBounds();
-    const auto margin = juce::roundToInt(mainArea.getHeight() * .01f);
-    auto buttonArea = getLocalBounds().reduced(margin);
+    const auto margin = juce::roundToInt (mainArea.getHeight() * .01f);
+    auto buttonArea = getLocalBounds().reduced (margin);
 
-    const auto labelHeight = juce::roundToInt(buttonArea.getHeight() * .140);
-    const auto labelArea = buttonArea.removeFromTop(labelHeight);
+    const auto labelHeight = juce::roundToInt (buttonArea.getHeight() * .140);
+    const auto labelArea = buttonArea.removeFromTop (labelHeight);
 
-    mLabel.setBounds(labelArea);
+    mLabel.setBounds (labelArea);
 
     // Make some more space between label and buttons
-    buttonArea.removeFromTop(labelHeight);
+    buttonArea.removeFromTop (labelHeight);
 
     if (mAlignWithParameterSliders)
     {
-        buttonArea.removeFromBottom(buttonArea.getHeight() * .15f);
+        buttonArea.removeFromBottom (buttonArea.getHeight() * .15f);
     }
 
     // The buttons themselves shouldn't take up all of the horizontal space
     // given to this component
-    const auto sideMargin = juce::roundToInt(buttonArea.getHeight() * .6f);
-    buttonArea.reduce(sideMargin, 0);
+    const auto sideMargin = juce::roundToInt (buttonArea.getHeight() * .6f);
+    buttonArea.reduce (sideMargin, 0);
 
     const auto numButtons = mButtons.size();
     const auto buttonWidth = buttonArea.getWidth();
-    const auto buttonHeight = juce::roundToInt(buttonArea.getHeight() / static_cast<float>(numButtons));
+    const auto buttonHeight = juce::roundToInt (buttonArea.getHeight() / static_cast<float> (numButtons));
     const auto x = buttonArea.getX();
     auto y = buttonArea.getY();
 
     for (auto* button : mButtons)
     {
-        button->setBounds(x, y, buttonWidth, buttonHeight);
+        button->setBounds (x, y, buttonWidth, buttonHeight);
 
         y += buttonHeight;
     }
-
 }
 
 } // namespace tote_bag
