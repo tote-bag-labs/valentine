@@ -15,8 +15,8 @@
 namespace gui_utils
 {
 
-void drawRoundedRect(juce::Graphics& g,
-                     juce::Rectangle<float> bounds,
-                     juce::Colour colour);
+void drawRoundedRect (juce::Graphics& g,
+                      juce::Rectangle<float> bounds,
+                      juce::Colour colour);
 
 } // namespace gui_utils
