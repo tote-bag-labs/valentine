@@ -16,8 +16,7 @@
 
 //==============================================================================
 
-enum ReductionMeterPlacement
-{
+enum ReductionMeterPlacement {
     Left = 1,
     Right = 1 << 1,
     None = 1 << 2
@@ -25,23 +24,22 @@ enum ReductionMeterPlacement
 
 class ValentineAudioProcessor;
 
-class VerticalMeterPanel  : public juce::Component
+class VerticalMeterPanel : public juce::Component
 {
 public:
-    VerticalMeterPanel(const juce::String& label,
-                       ReductionMeterPlacement grMeterPlacement,
-                       foleys::LevelMeterSource* levelMeterSource,
-                       foleys::LevelMeterSource* grMeterSource = nullptr);
+    VerticalMeterPanel (const juce::String& label,
+                        ReductionMeterPlacement grMeterPlacement,
+                        foleys::LevelMeterSource* levelMeterSource,
+                        foleys::LevelMeterSource* grMeterSource = nullptr);
 
     ~VerticalMeterPanel() override;
 
     void resized() override;
 
 private:
-
     tote_bag::LookAndFeel metersLookAndFeel;
 
-    FFAU::LevelMeter levelMeter {FFAU::LevelMeter::MeterFlags::Minimal};
+    FFAU::LevelMeter levelMeter { FFAU::LevelMeter::MeterFlags::Minimal };
 
     std::unique_ptr<FFAU::LevelMeter> gainReductionMeter;
 

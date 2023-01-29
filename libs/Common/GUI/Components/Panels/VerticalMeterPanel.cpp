@@ -15,29 +15,29 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 
 //==============================================================================
-VerticalMeterPanel::VerticalMeterPanel(const juce::String& label,
-                                       ReductionMeterPlacement grMeterPlacement,
-                                       foleys::LevelMeterSource* levelMeterSource,
-                                       foleys::LevelMeterSource* grMeterSource) :
-grMeterPlacement(grMeterPlacement)
+VerticalMeterPanel::VerticalMeterPanel (const juce::String& label,
+                                        ReductionMeterPlacement grMeterPlacement,
+                                        foleys::LevelMeterSource* levelMeterSource,
+                                        foleys::LevelMeterSource* grMeterSource)
+    : grMeterPlacement (grMeterPlacement)
 {
     using namespace tote_bag::laf_constants;
 
-    metersLookAndFeel.setColour(FFAU::LevelMeter::lmBackgroundColour, vPink);
-    metersLookAndFeel.setColour(FFAU::LevelMeter::lmMeterGradientLowColour, (vGreen1));
-    metersLookAndFeel.setColour(FFAU::LevelMeter::lmMeterGradientMidColour, vGreen2);
-    metersLookAndFeel.setColour(FFAU::LevelMeter::lmMeterMaxOverColour, vRed);
-    
-    levelMeter.setLookAndFeel(&metersLookAndFeel);
-    levelMeter.setMeterSource(levelMeterSource);
-    addAndMakeVisible(levelMeter);
+    metersLookAndFeel.setColour (FFAU::LevelMeter::lmBackgroundColour, vPink);
+    metersLookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientLowColour, (vGreen1));
+    metersLookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientMidColour, vGreen2);
+    metersLookAndFeel.setColour (FFAU::LevelMeter::lmMeterMaxOverColour, vRed);
 
-    if(grMeterSource)
+    levelMeter.setLookAndFeel (&metersLookAndFeel);
+    levelMeter.setMeterSource (levelMeterSource);
+    addAndMakeVisible (levelMeter);
+
+    if (grMeterSource)
     {
-        gainReductionMeter = std::make_unique<FFAU::LevelMeter>(FFAU::LevelMeter::MeterFlags::Reduction);
-        gainReductionMeter->setMeterSource(grMeterSource);
-        gainReductionMeter->setLookAndFeel(&metersLookAndFeel);
-        addAndMakeVisible(gainReductionMeter.get());
+        gainReductionMeter = std::make_unique<FFAU::LevelMeter> (FFAU::LevelMeter::MeterFlags::Reduction);
+        gainReductionMeter->setMeterSource (grMeterSource);
+        gainReductionMeter->setLookAndFeel (&metersLookAndFeel);
+        addAndMakeVisible (gainReductionMeter.get());
     }
 }
 
@@ -54,16 +54,13 @@ void VerticalMeterPanel::resized()
     const auto areaWidth = area.getWidth();
 
     // get gr and meters width
-    const auto grMeterWidth = juce::roundToInt(areaWidth * .25f);
+    const auto grMeterWidth = juce::roundToInt (areaWidth * .25f);
 
+    const auto grMeterBounds = (grMeterPlacement & ReductionMeterPlacement::Left) ? area.removeFromLeft (grMeterWidth) : area.removeFromRight (grMeterWidth);
 
-    const auto grMeterBounds = (grMeterPlacement & ReductionMeterPlacement::Left) ?
-                               area.removeFromLeft(grMeterWidth) : area.removeFromRight(grMeterWidth);
-
-    if(gainReductionMeter.get())
+    if (gainReductionMeter.get())
     {
-        gainReductionMeter->setBounds(grMeterBounds);
+        gainReductionMeter->setBounds (grMeterBounds);
     }
-    levelMeter.setBounds(area);
-
+    levelMeter.setBounds (area);
 }
