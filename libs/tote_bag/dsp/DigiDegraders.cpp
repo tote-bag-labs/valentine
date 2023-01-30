@@ -9,7 +9,7 @@
 */
 
 #include "DigiDegraders.h"
-#include "Common/DSP/AudioHelpers.h"
+#include "tote_bag/dsp/AudioHelpers.h"
 
 void SimpleZOH::setResampleOffset (double inHostSr)
 {

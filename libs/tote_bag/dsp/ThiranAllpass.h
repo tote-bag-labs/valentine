@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "Common/DSP/AudioHelpers.h"
-#include "Common/DSP/CircularBuffer.h"
+#include "tote_bag/dsp/AudioHelpers.h"
+#include "tote_bag/dsp/CircularBuffer.h"
 
 #include <juce_dsp/juce_dsp.h>
 

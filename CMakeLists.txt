@@ -77,46 +77,46 @@ set(SourceFiles
     Source/GUI/Panels/ValentineCenterPanel.cpp
     Source/GUI/Panels/ValentineMainPanel.cpp
 
-    libs/Common/DSP/AudioHelpers.h
-    libs/Common/DSP/CircularBuffer.h
-    libs/Common/DSP/Compressor.h
-    libs/Common/DSP/DigiDegraders.h
-    libs/Common/DSP/EnvelopeDetector.h
-    libs/Common/DSP/Saturation.h
-    libs/Common/DSP/ThiranAllpass.h
-    libs/Common/DSP/Compressor.cpp
-    libs/Common/DSP/DigiDegraders.cpp
-    libs/Common/DSP/EnvelopeDetector.cpp
-    libs/Common/DSP/Saturation.cpp
+    libs/tote_bag/dsp/AudioHelpers.h
+    libs/tote_bag/dsp/CircularBuffer.h
+    libs/tote_bag/dsp/Compressor.h
+    libs/tote_bag/dsp/DigiDegraders.h
+    libs/tote_bag/dsp/EnvelopeDetector.h
+    libs/tote_bag/dsp/Saturation.h
+    libs/tote_bag/dsp/ThiranAllpass.h
+    libs/tote_bag/dsp/Compressor.cpp
+    libs/tote_bag/dsp/DigiDegraders.cpp
+    libs/tote_bag/dsp/EnvelopeDetector.cpp
+    libs/tote_bag/dsp/Saturation.cpp
     
-    libs/Common/GUI/Components/Panels/PresetPanel.h
-    libs/Common/GUI/Components/Panels/VerticalMeterPanel.h
-    libs/Common/GUI/Components/Panels/PresetPanel.cpp
-    libs/Common/GUI/Components/Panels/VerticalMeterPanel.cpp
+    libs/tote_bag/gui/components/panels/PresetPanel.h
+    libs/tote_bag/gui/components/panels/VerticalMeterPanel.h
+    libs/tote_bag/gui/components/panels/PresetPanel.cpp
+    libs/tote_bag/gui/components/panels/VerticalMeterPanel.cpp
 
-    libs/Common/GUI/Components/Widgets/FlatTextButton.h
-    libs/Common/GUI/Components/Widgets/FlatTextChooser.h
-    libs/Common/GUI/Components/Widgets/LabelSlider.h
-    libs/Common/GUI/Components/Widgets/ParameterSlider.h
-    libs/Common/GUI/Components/Widgets/ParameterTextButton.h
-    libs/Common/GUI/Components/Widgets/FlatTextButton.cpp
-    libs/Common/GUI/Components/Widgets/FlatTextChooser.cpp
-    libs/Common/GUI/Components/Widgets/LabelSlider.cpp
-    libs/Common/GUI/Components/Widgets/ParameterSlider.cpp
-    libs/Common/GUI/Components/Widgets/ParameterTextButton.cpp
+    libs/tote_bag/gui/components/widgets/FlatTextButton.h
+    libs/tote_bag/gui/components/widgets/FlatTextChooser.h
+    libs/tote_bag/gui/components/widgets/LabelSlider.h
+    libs/tote_bag/gui/components/widgets/ParameterSlider.h
+    libs/tote_bag/gui/components/widgets/ParameterTextButton.h
+    libs/tote_bag/gui/components/widgets/FlatTextButton.cpp
+    libs/tote_bag/gui/components/widgets/FlatTextChooser.cpp
+    libs/tote_bag/gui/components/widgets/LabelSlider.cpp
+    libs/tote_bag/gui/components/widgets/ParameterSlider.cpp
+    libs/tote_bag/gui/components/widgets/ParameterTextButton.cpp
 
-    libs/Common/GUI/LookAndFeel/LookAndFeel.h
-    libs/Common/GUI/LookAndFeel/LookAndFeelConstants.h
-    libs/Common/GUI/LookAndFeel/MeterLookAndFeelMethods.h
-    libs/Common/GUI/LookAndFeel/LookAndFeel.cpp
+    libs/tote_bag/gui/LookAndFeel/LookAndFeel.h
+    libs/tote_bag/gui/LookAndFeel/LookAndFeelConstants.h
+    libs/tote_bag/gui/LookAndFeel/MeterLookAndFeelMethods.h
+    libs/tote_bag/gui/LookAndFeel/LookAndFeel.cpp
 
-    libs/Common/GUI/Managers/ToteBagPresetManager.h
-    libs/Common/GUI/Managers/RadioButtonGroupManager.h
-    libs/Common/GUI/Managers/ToteBagPresetManager.cpp
-    libs/Common/GUI/Managers/RadioButtonGroupManager.cpp
+    libs/tote_bag/gui/Managers/ToteBagPresetManager.h
+    libs/tote_bag/gui/Managers/RadioButtonGroupManager.h
+    libs/tote_bag/gui/Managers/ToteBagPresetManager.cpp
+    libs/tote_bag/gui/Managers/RadioButtonGroupManager.cpp
 
-    libs/Common/GUI/Utilities/GraphicsUtilities.h
-    libs/Common/GUI/Utilities/GraphicsUtilities.cpp
+    libs/tote_bag/gui/Utilities/GraphicsUtilities.h
+    libs/tote_bag/gui/Utilities/GraphicsUtilities.cpp
     )
 
 target_sources("${PROJECT_NAME}" PRIVATE ${SourceFiles})

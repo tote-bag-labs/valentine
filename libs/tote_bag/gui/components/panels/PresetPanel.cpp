@@ -9,7 +9,7 @@
 */
 
 #include "PresetPanel.h"
-#include "Common/GUI/Managers/ToteBagPresetManager.h"
+#include "tote_bag/gui/managers/ToteBagPresetManager.h"
 
 PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
                           const juce::String& bypassButtonText,

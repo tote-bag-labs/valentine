@@ -10,7 +10,7 @@
 
 #include "VerticalMeterPanel.h"
 
-#include "Common/GUI/LookAndFeel/LookAndFeelConstants.h"
+#include "tote_bag/gui/lookandfeel/LookAndFeelConstants.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 

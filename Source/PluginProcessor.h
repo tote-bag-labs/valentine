@@ -12,12 +12,12 @@
 
 #include "ValentineParameters.h"
 
-#include "Common/DSP/CircularBuffer.h"
-#include "Common/DSP/Compressor.h"
-#include "Common/DSP/DigiDegraders.h"
-#include "Common/DSP/Saturation.h"
-#include "Common/DSP/ThiranAllpass.h"
-#include "Common/GUI/Managers/ToteBagPresetManager.h"
+#include "tote_bag/dsp/CircularBuffer.h"
+#include "tote_bag/dsp/Compressor.h"
+#include "tote_bag/dsp/DigiDegraders.h"
+#include "tote_bag/dsp/Saturation.h"
+#include "tote_bag/dsp/ThiranAllpass.h"
+#include "tote_bag/gui/managers/ToteBagPresetManager.h"
 
 #include <juce_audio_processors/juce_audio_processors.h>
 
