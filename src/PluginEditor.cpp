@@ -9,8 +9,8 @@
 */
 
 #include "PluginEditor.h"
-#include "../Source/ValentineParameters.h"
 #include "PluginProcessor.h"
+#include "ValentineParameters.h"
 //==============================================================================
 ValentineAudioProcessorEditor::ValentineAudioProcessorEditor (ValentineAudioProcessor& p)
     : AudioProcessorEditor (&p)

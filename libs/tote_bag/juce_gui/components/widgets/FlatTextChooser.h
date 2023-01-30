@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "Common/GUI/Components/Widgets/FlatTextButton.h"
-#include "Common/GUI/Managers/RadioButtonGroupManager.h"
+#include "tote_bag/juce_gui/components/widgets/FlatTextButton.h"
+#include "tote_bag/juce_gui/managers/RadioButtonGroupManager.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 

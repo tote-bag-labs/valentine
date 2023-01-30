@@ -12,7 +12,7 @@
 #include "PluginProcessor.h"
 #include "ValentineParameters.h"
 
-#include "Common/GUI/LookAndFeel/LookAndFeelConstants.h"
+#include "tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h"
 
 VMainPanel::VMainPanel (ValentineAudioProcessor& processor)
     : presetPanel (processor.getPresetManager(),

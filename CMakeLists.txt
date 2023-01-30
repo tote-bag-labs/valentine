@@ -38,7 +38,7 @@ option(JUCE_ENABLE_MODULE_SOURCE_GROUPS "Show all module sources in IDE projects
 # Locally, you'll need to run `git submodule update --init --recursive` once
 # and `git submodule update --remote --merge` to keep it up to date
 # On Github Actions, it's managed by actions/checkout
-add_subdirectory(JUCE)
+add_subdirectory(libs/JUCE)
 
 # Also using Foley's Finest meters
 juce_add_module(libs/ff_meters)
@@ -66,57 +66,57 @@ target_compile_features("${PROJECT_NAME}" PRIVATE cxx_std_20)
 
 # Manually list all .h and .cpp files for the plugin
 set(SourceFiles
-    Source/PluginEditor.h
-    Source/PluginProcessor.h
-    Source/ValentineParameters.h
-    Source/PluginEditor.cpp
-    Source/PluginProcessor.cpp
+    src/PluginEditor.h
+    src/PluginProcessor.h
+    src/ValentineParameters.h
+    src/PluginEditor.cpp
+    src/PluginProcessor.cpp
     
-    Source/GUI/Panels/ValentineCenterPanel.h
-    Source/GUI/Panels/ValentineMainPanel.h
-    Source/GUI/Panels/ValentineCenterPanel.cpp
-    Source/GUI/Panels/ValentineMainPanel.cpp
+    src/gui/panels/ValentineCenterPanel.h
+    src/gui/panels/ValentineMainPanel.h
+    src/gui/panels/ValentineCenterPanel.cpp
+    src/gui/panels/ValentineMainPanel.cpp
 
-    libs/Common/DSP/AudioHelpers.h
-    libs/Common/DSP/CircularBuffer.h
-    libs/Common/DSP/Compressor.h
-    libs/Common/DSP/DigiDegraders.h
-    libs/Common/DSP/EnvelopeDetector.h
-    libs/Common/DSP/Saturation.h
-    libs/Common/DSP/ThiranAllpass.h
-    libs/Common/DSP/Compressor.cpp
-    libs/Common/DSP/DigiDegraders.cpp
-    libs/Common/DSP/EnvelopeDetector.cpp
-    libs/Common/DSP/Saturation.cpp
+    libs/tote_bag/dsp/AudioHelpers.h
+    libs/tote_bag/dsp/CircularBuffer.h
+    libs/tote_bag/dsp/Compressor.h
+    libs/tote_bag/dsp/DigiDegraders.h
+    libs/tote_bag/dsp/EnvelopeDetector.h
+    libs/tote_bag/dsp/Saturation.h
+    libs/tote_bag/dsp/ThiranAllpass.h
+    libs/tote_bag/dsp/Compressor.cpp
+    libs/tote_bag/dsp/DigiDegraders.cpp
+    libs/tote_bag/dsp/EnvelopeDetector.cpp
+    libs/tote_bag/dsp/Saturation.cpp
     
-    libs/Common/GUI/Components/Panels/PresetPanel.h
-    libs/Common/GUI/Components/Panels/VerticalMeterPanel.h
-    libs/Common/GUI/Components/Panels/PresetPanel.cpp
-    libs/Common/GUI/Components/Panels/VerticalMeterPanel.cpp
+    libs/tote_bag/juce_gui/components/panels/PresetPanel.h
+    libs/tote_bag/juce_gui/components/panels/VerticalMeterPanel.h
+    libs/tote_bag/juce_gui/components/panels/PresetPanel.cpp
+    libs/tote_bag/juce_gui/components/panels/VerticalMeterPanel.cpp
 
-    libs/Common/GUI/Components/Widgets/FlatTextButton.h
-    libs/Common/GUI/Components/Widgets/FlatTextChooser.h
-    libs/Common/GUI/Components/Widgets/LabelSlider.h
-    libs/Common/GUI/Components/Widgets/ParameterSlider.h
-    libs/Common/GUI/Components/Widgets/ParameterTextButton.h
-    libs/Common/GUI/Components/Widgets/FlatTextButton.cpp
-    libs/Common/GUI/Components/Widgets/FlatTextChooser.cpp
-    libs/Common/GUI/Components/Widgets/LabelSlider.cpp
-    libs/Common/GUI/Components/Widgets/ParameterSlider.cpp
-    libs/Common/GUI/Components/Widgets/ParameterTextButton.cpp
+    libs/tote_bag/juce_gui/components/widgets/FlatTextButton.h
+    libs/tote_bag/juce_gui/components/widgets/FlatTextChooser.h
+    libs/tote_bag/juce_gui/components/widgets/LabelSlider.h
+    libs/tote_bag/juce_gui/components/widgets/ParameterSlider.h
+    libs/tote_bag/juce_gui/components/widgets/ParameterTextButton.h
+    libs/tote_bag/juce_gui/components/widgets/FlatTextButton.cpp
+    libs/tote_bag/juce_gui/components/widgets/FlatTextChooser.cpp
+    libs/tote_bag/juce_gui/components/widgets/LabelSlider.cpp
+    libs/tote_bag/juce_gui/components/widgets/ParameterSlider.cpp
+    libs/tote_bag/juce_gui/components/widgets/ParameterTextButton.cpp
 
-    libs/Common/GUI/LookAndFeel/LookAndFeel.h
-    libs/Common/GUI/LookAndFeel/LookAndFeelConstants.h
-    libs/Common/GUI/LookAndFeel/MeterLookAndFeelMethods.h
-    libs/Common/GUI/LookAndFeel/LookAndFeel.cpp
+    libs/tote_bag/juce_gui/LookAndFeel/LookAndFeel.h
+    libs/tote_bag/juce_gui/LookAndFeel/LookAndFeelConstants.h
+    libs/tote_bag/juce_gui/LookAndFeel/MeterLookAndFeelMethods.h
+    libs/tote_bag/juce_gui/LookAndFeel/LookAndFeel.cpp
 
-    libs/Common/GUI/Managers/ToteBagPresetManager.h
-    libs/Common/GUI/Managers/RadioButtonGroupManager.h
-    libs/Common/GUI/Managers/ToteBagPresetManager.cpp
-    libs/Common/GUI/Managers/RadioButtonGroupManager.cpp
+    libs/tote_bag/juce_gui/Managers/ToteBagPresetManager.h
+    libs/tote_bag/juce_gui/Managers/RadioButtonGroupManager.h
+    libs/tote_bag/juce_gui/Managers/ToteBagPresetManager.cpp
+    libs/tote_bag/juce_gui/Managers/RadioButtonGroupManager.cpp
 
-    libs/Common/GUI/Utilities/GraphicsUtilities.h
-    libs/Common/GUI/Utilities/GraphicsUtilities.cpp
+    libs/tote_bag/juce_gui/Utilities/GraphicsUtilities.h
+    libs/tote_bag/juce_gui/Utilities/GraphicsUtilities.cpp
     )
 
 target_sources("${PROJECT_NAME}" PRIVATE ${SourceFiles})
@@ -128,8 +128,8 @@ set_target_properties("${PROJECT_NAME}" PROPERTIES FOLDER "")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${SourceFiles})
 
 set(AssetFiles
-    Source/GUI/Assets/Fonts/Montserrat-Medium.ttf
-    Source/GUI/Assets/Images/logo_218x40.svg
+    src/gui/assets/fonts/Montserrat-Medium.ttf
+    src/gui/assets/images/logo_218x40.svg
    )
 
 # Setup our binary data as a target
@@ -182,7 +182,7 @@ target_compile_definitions("${PROJECT_NAME}"
 
 target_include_directories("${PROJECT_NAME}"
                             PRIVATE
-                           "${CMAKE_CURRENT_SOURCE_DIR}/Source"
+                           "${CMAKE_CURRENT_SOURCE_DIR}/src"
                            "${CMAKE_CURRENT_SOURCE_DIR}/libs")
 
 target_link_libraries("${PROJECT_NAME}"
@@ -199,13 +199,13 @@ target_link_libraries("${PROJECT_NAME}"
 # Required for ctest (which is just easier for cross-platform CI)
 # include(CTest) does this too, but adds tons of targets we don't want
 # See: https://github.com/catchorg/Catch2/issues/2026
-# You could forgo ctest and call ./Tests directly from the build dir
+# You could forgo ctest and call ./tests directly from the build dir
 enable_testing()
 
 # "GLOBS ARE BAD" is brittle and silly UX, sorry CMake!
 # CONFIGURE_DEPENDS / Clion's CMake integration makes globbing absolutely fine
-file(GLOB_RECURSE TestFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Tests/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Tests/*.h")
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/Tests PREFIX "" FILES ${TestFiles})
+file(GLOB_RECURSE TestFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h")
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/tests PREFIX "" FILES ${TestFiles})
 
 # Use Catch2 v3 on the devel branch
 Include(FetchContent)
@@ -224,7 +224,7 @@ target_compile_features(Tests PRIVATE cxx_std_20)
 # Our test executable also wants to know about our plugin code...
 target_include_directories(Tests
                            PRIVATE
-                          "${CMAKE_CURRENT_SOURCE_DIR}/Source"
+                          "${CMAKE_CURRENT_SOURCE_DIR}/src"
                           "${CMAKE_CURRENT_SOURCE_DIR}/libs")
 
 target_link_libraries(Tests PRIVATE Catch2::Catch2WithMain "${PROJECT_NAME}" ${JUCE_DEPENDENCIES})
@@ -232,8 +232,8 @@ target_link_libraries(Tests PRIVATE Catch2::Catch2WithMain "${PROJECT_NAME}" ${J
 # Make an Xcode Scheme for the test executable so we can run tests in the IDE
 set_target_properties(Tests PROPERTIES XCODE_GENERATE_SCHEME ON)
 
-# Organize the test source in the Tests/ folder in the IDE
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/Tests PREFIX "" FILES ${TestFiles})
+# Organize the test source in the tests/ folder in the IDE
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/tests PREFIX "" FILES ${TestFiles})
 
 # Load and use the .cmake file provided by Catch2
 # https://github.com/catchorg/Catch2/blob/devel/docs/cmake-integration.md
