@@ -14,3 +14,25 @@ If you're here, it's probably because the downloads are hosted here.
 It's definitely in a state good enought to start sharing. However,
 the code itself is often an example of what not to do. So I'll ask
 you to avert your eyes for now.  
+
+Building Valentine
+==================
+
+Xcode
+-----
+
+Currently, `Xcode 14.2` is explicitly supported for building Valentine.
+Here are the steps needed to create an Xcode project for building the plugin.
+
+```
+git clone https://github.com/Tote-Bag-Labs/valentine.git
+cd valentine
+git submodule update --init --recursive
+cmake -B builds -G Xcode
+```
+
+Other (for now)
+---------------
+
+If you'd rather just build it from the command line, run
+`cmake --build Builds --config Release`
