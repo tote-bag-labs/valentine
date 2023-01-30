@@ -1,7 +1,5 @@
 {
   "title": "Valentine",
-  "icon": "pamplejuce.icns",
-  "background": "background.jpg",
   "window": {
     "position": {
       "x": 100,
