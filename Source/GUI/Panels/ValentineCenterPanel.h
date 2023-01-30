@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include "tote_bag/gui/components/widgets/FlatTextChooser.h"
-#include "tote_bag/gui/components/widgets/LabelSlider.h"
-#include "tote_bag/gui/lookandfeel/LookAndFeelConstants.h"
+#include "tote_bag/juce_gui/components/widgets/FlatTextChooser.h"
+#include "tote_bag/juce_gui/components/widgets/LabelSlider.h"
+#include "tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 

@@ -13,8 +13,8 @@
 #include "PluginProcessor.h"
 #include "ValentineParameters.h"
 
-#include "tote_bag/gui/lookandfeel/LookAndFeel.h"
-#include "tote_bag/gui/utilities/GraphicsUtilities.h"
+#include "tote_bag/juce_gui/lookandfeel/LookAndFeel.h"
+#include "tote_bag/juce_gui/utilities/GraphicsUtilities.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 

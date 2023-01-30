@@ -17,7 +17,7 @@
 #include "tote_bag/dsp/DigiDegraders.h"
 #include "tote_bag/dsp/Saturation.h"
 #include "tote_bag/dsp/ThiranAllpass.h"
-#include "tote_bag/gui/managers/ToteBagPresetManager.h"
+#include "tote_bag/juce_gui/managers/ToteBagPresetManager.h"
 
 #include <juce_audio_processors/juce_audio_processors.h>
 

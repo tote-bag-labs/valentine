@@ -12,9 +12,9 @@
 
 #include "ValentineCenterPanel.h"
 
-#include "tote_bag/gui/components/panels/PresetPanel.h"
-#include "tote_bag/gui/components/panels/VerticalMeterPanel.h"
-#include "tote_bag/gui/lookandfeel/LookAndFeel.h"
+#include "tote_bag/juce_gui/components/panels/PresetPanel.h"
+#include "tote_bag/juce_gui/components/panels/VerticalMeterPanel.h"
+#include "tote_bag/juce_gui/lookandfeel/LookAndFeel.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 

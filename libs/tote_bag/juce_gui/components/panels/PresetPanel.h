@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "tote_bag/gui/components/widgets/ParameterTextButton.h"
+#include "tote_bag/juce_gui/components/widgets/ParameterTextButton.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 

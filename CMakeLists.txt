@@ -89,34 +89,34 @@ set(SourceFiles
     libs/tote_bag/dsp/EnvelopeDetector.cpp
     libs/tote_bag/dsp/Saturation.cpp
     
-    libs/tote_bag/gui/components/panels/PresetPanel.h
-    libs/tote_bag/gui/components/panels/VerticalMeterPanel.h
-    libs/tote_bag/gui/components/panels/PresetPanel.cpp
-    libs/tote_bag/gui/components/panels/VerticalMeterPanel.cpp
+    libs/tote_bag/juce_gui/components/panels/PresetPanel.h
+    libs/tote_bag/juce_gui/components/panels/VerticalMeterPanel.h
+    libs/tote_bag/juce_gui/components/panels/PresetPanel.cpp
+    libs/tote_bag/juce_gui/components/panels/VerticalMeterPanel.cpp
 
-    libs/tote_bag/gui/components/widgets/FlatTextButton.h
-    libs/tote_bag/gui/components/widgets/FlatTextChooser.h
-    libs/tote_bag/gui/components/widgets/LabelSlider.h
-    libs/tote_bag/gui/components/widgets/ParameterSlider.h
-    libs/tote_bag/gui/components/widgets/ParameterTextButton.h
-    libs/tote_bag/gui/components/widgets/FlatTextButton.cpp
-    libs/tote_bag/gui/components/widgets/FlatTextChooser.cpp
-    libs/tote_bag/gui/components/widgets/LabelSlider.cpp
-    libs/tote_bag/gui/components/widgets/ParameterSlider.cpp
-    libs/tote_bag/gui/components/widgets/ParameterTextButton.cpp
+    libs/tote_bag/juce_gui/components/widgets/FlatTextButton.h
+    libs/tote_bag/juce_gui/components/widgets/FlatTextChooser.h
+    libs/tote_bag/juce_gui/components/widgets/LabelSlider.h
+    libs/tote_bag/juce_gui/components/widgets/ParameterSlider.h
+    libs/tote_bag/juce_gui/components/widgets/ParameterTextButton.h
+    libs/tote_bag/juce_gui/components/widgets/FlatTextButton.cpp
+    libs/tote_bag/juce_gui/components/widgets/FlatTextChooser.cpp
+    libs/tote_bag/juce_gui/components/widgets/LabelSlider.cpp
+    libs/tote_bag/juce_gui/components/widgets/ParameterSlider.cpp
+    libs/tote_bag/juce_gui/components/widgets/ParameterTextButton.cpp
 
-    libs/tote_bag/gui/LookAndFeel/LookAndFeel.h
-    libs/tote_bag/gui/LookAndFeel/LookAndFeelConstants.h
-    libs/tote_bag/gui/LookAndFeel/MeterLookAndFeelMethods.h
-    libs/tote_bag/gui/LookAndFeel/LookAndFeel.cpp
+    libs/tote_bag/juce_gui/LookAndFeel/LookAndFeel.h
+    libs/tote_bag/juce_gui/LookAndFeel/LookAndFeelConstants.h
+    libs/tote_bag/juce_gui/LookAndFeel/MeterLookAndFeelMethods.h
+    libs/tote_bag/juce_gui/LookAndFeel/LookAndFeel.cpp
 
-    libs/tote_bag/gui/Managers/ToteBagPresetManager.h
-    libs/tote_bag/gui/Managers/RadioButtonGroupManager.h
-    libs/tote_bag/gui/Managers/ToteBagPresetManager.cpp
-    libs/tote_bag/gui/Managers/RadioButtonGroupManager.cpp
+    libs/tote_bag/juce_gui/Managers/ToteBagPresetManager.h
+    libs/tote_bag/juce_gui/Managers/RadioButtonGroupManager.h
+    libs/tote_bag/juce_gui/Managers/ToteBagPresetManager.cpp
+    libs/tote_bag/juce_gui/Managers/RadioButtonGroupManager.cpp
 
-    libs/tote_bag/gui/Utilities/GraphicsUtilities.h
-    libs/tote_bag/gui/Utilities/GraphicsUtilities.cpp
+    libs/tote_bag/juce_gui/Utilities/GraphicsUtilities.h
+    libs/tote_bag/juce_gui/Utilities/GraphicsUtilities.cpp
     )
 
 target_sources("${PROJECT_NAME}" PRIVATE ${SourceFiles})

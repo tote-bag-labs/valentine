@@ -9,7 +9,7 @@
 */
 
 #include "FlatTextButton.h"
-#include "tote_bag/gui/lookandfeel/LookAndFeel.h"
+#include "tote_bag/juce_gui/lookandfeel/LookAndFeel.h"
 
 namespace tote_bag
 {

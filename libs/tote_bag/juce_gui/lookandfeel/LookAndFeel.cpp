@@ -11,7 +11,7 @@
 #include "LookAndFeel.h"
 #include "LookAndFeelConstants.h"
 
-#include "tote_bag/gui/components/widgets/FlatTextButton.h"
+#include "tote_bag/juce_gui/components/widgets/FlatTextButton.h"
 
 #include "BinaryData.h"
 
