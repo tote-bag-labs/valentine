@@ -66,16 +66,16 @@ target_compile_features("${PROJECT_NAME}" PRIVATE cxx_std_20)
 
 # Manually list all .h and .cpp files for the plugin
 set(SourceFiles
-    Source/PluginEditor.h
-    Source/PluginProcessor.h
-    Source/ValentineParameters.h
-    Source/PluginEditor.cpp
-    Source/PluginProcessor.cpp
+    src/PluginEditor.h
+    src/PluginProcessor.h
+    src/ValentineParameters.h
+    src/PluginEditor.cpp
+    src/PluginProcessor.cpp
     
-    Source/gui/panels/ValentineCenterPanel.h
-    Source/gui/panels/ValentineMainPanel.h
-    Source/gui/panels/ValentineCenterPanel.cpp
-    Source/gui/panels/ValentineMainPanel.cpp
+    src/gui/panels/ValentineCenterPanel.h
+    src/gui/panels/ValentineMainPanel.h
+    src/gui/panels/ValentineCenterPanel.cpp
+    src/gui/panels/ValentineMainPanel.cpp
 
     libs/tote_bag/dsp/AudioHelpers.h
     libs/tote_bag/dsp/CircularBuffer.h
@@ -128,8 +128,8 @@ set_target_properties("${PROJECT_NAME}" PROPERTIES FOLDER "")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${SourceFiles})
 
 set(AssetFiles
-    Source/gui/assets/fonts/Montserrat-Medium.ttf
-    Source/gui/assets/images/logo_218x40.svg
+    src/gui/assets/fonts/Montserrat-Medium.ttf
+    src/gui/assets/images/logo_218x40.svg
    )
 
 # Setup our binary data as a target
@@ -182,7 +182,7 @@ target_compile_definitions("${PROJECT_NAME}"
 
 target_include_directories("${PROJECT_NAME}"
                             PRIVATE
-                           "${CMAKE_CURRENT_SOURCE_DIR}/Source"
+                           "${CMAKE_CURRENT_SOURCE_DIR}/src"
                            "${CMAKE_CURRENT_SOURCE_DIR}/libs")
 
 target_link_libraries("${PROJECT_NAME}"
@@ -224,7 +224,7 @@ target_compile_features(Tests PRIVATE cxx_std_20)
 # Our test executable also wants to know about our plugin code...
 target_include_directories(Tests
                            PRIVATE
-                          "${CMAKE_CURRENT_SOURCE_DIR}/Source"
+                          "${CMAKE_CURRENT_SOURCE_DIR}/src"
                           "${CMAKE_CURRENT_SOURCE_DIR}/libs")
 
 target_link_libraries(Tests PRIVATE Catch2::Catch2WithMain "${PROJECT_NAME}" ${JUCE_DEPENDENCIES})
