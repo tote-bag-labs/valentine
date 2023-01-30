@@ -72,10 +72,10 @@ set(SourceFiles
     Source/PluginEditor.cpp
     Source/PluginProcessor.cpp
     
-    Source/GUI/Panels/ValentineCenterPanel.h
-    Source/GUI/Panels/ValentineMainPanel.h
-    Source/GUI/Panels/ValentineCenterPanel.cpp
-    Source/GUI/Panels/ValentineMainPanel.cpp
+    Source/gui/panels/ValentineCenterPanel.h
+    Source/gui/panels/ValentineMainPanel.h
+    Source/gui/panels/ValentineCenterPanel.cpp
+    Source/gui/panels/ValentineMainPanel.cpp
 
     libs/tote_bag/dsp/AudioHelpers.h
     libs/tote_bag/dsp/CircularBuffer.h
@@ -128,8 +128,8 @@ set_target_properties("${PROJECT_NAME}" PROPERTIES FOLDER "")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${SourceFiles})
 
 set(AssetFiles
-    Source/GUI/Assets/Fonts/Montserrat-Medium.ttf
-    Source/GUI/Assets/Images/logo_218x40.svg
+    Source/gui/assets/fonts/Montserrat-Medium.ttf
+    Source/gui/assets/images/logo_218x40.svg
    )
 
 # Setup our binary data as a target
