@@ -4,7 +4,7 @@ V A L E N T I N E
 A compressor that's meant to make tracks pump and
 breathe.
 
-This is an incredibly in progress repository. 
+This is an incredibly in progress repository.
 
 The intention is for it to be open source—and not just that,
 but a resource for people who want to get into audio software
@@ -36,3 +36,6 @@ Other (for now)
 
 If you'd rather just build it from the command line, run
 `cmake --build Builds --config Release`
+
+
+just a silly way of testing the runners
