@@ -41,7 +41,7 @@ jobs:
     steps:
     - name: Set up Clang
       if: ${{ matrix.name != 'macOS' }}
-      uses: egor-tensin/setup-clang@v1
+      uses: egor-tensin/setup-clang@v1.4
 
     #- name: Install JUCE's Linux Deps
     #if: runner.os == 'Linux'
@@ -54,8 +54,8 @@ jobs:
       if: ${{ matrix.name == 'macOS' }}
       run: brew install ninja osxutils
 
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3.3.0
       with:
         submodules: true # Gotta get JUCE populated
 
@@ -69,8 +69,8 @@ jobs:
         echo "AUV3_PATH=${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/AUv3/${{ env.PROJECT_NAME }}.appex" >> $GITHUB_ENV
         echo "PRODUCT_NAME=${{ env.PROJECT_NAME }}-$VERSION-${{ matrix.name }}" >> $GITHUB_ENV
 
-    - name: ccache
-      uses: hendrikmuhs/ccache-action@v1.2
+    - name: Ccache for gh actions
+      uses: hendrikmuhs/ccache-action@v1.2.8
       with:
         key: v2-${{ matrix.os }}-${{ matrix.type }}
 
@@ -162,7 +162,7 @@ jobs:
 
     - name: Upload Exe (Windows)
       if: ${{ matrix.name == 'Windows' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3.1.2
       with:
         name: ${{ env.PRODUCT_NAME }}.exe
         path: '${{ env.ARTIFACTS_PATH }}/${{ env.PRODUCT_NAME }}.exe'
@@ -176,7 +176,7 @@ jobs:
 
     - name: Upload DMG (MacOS)
       if: ${{ matrix.name == 'macOS' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3.1.2
       with:
         name: ${{ env.PRODUCT_NAME }}.dmg
         path: packaging/${{ env.PRODUCT_NAME }}.dmg
@@ -189,10 +189,10 @@ jobs:
 
     steps:
     - name: Get Artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v3.1.2
 
     - name: Create Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v0.1.15
       with:
         prerelease: true
         # download-artifact puts these files in their own dirs...
