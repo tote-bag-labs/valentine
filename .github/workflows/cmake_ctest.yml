@@ -171,6 +171,17 @@ jobs:
         xcrun notarytool submit ${{ env.PRODUCT_NAME }}.dmg --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --password ${{ secrets.NOTARIZATION_PASSWORD }} --team-id ${{ secrets.TEAM_ID }} --wait
         xcrun stapler staple ${{ env.PRODUCT_NAME }}.dmg
 
+    - name: Cleanup Keychain
+      if: ${{ matrix.name == 'macOS' }}
+      shell: bash
+      env:
+        KEYCHAINPATH: ${{ runner.temp }}/app-signing.keychain-db
+      run: |
+        security delete-keychain "$KEYCHAINPATH"
+
+        # default to user login keychain
+        security list-keychains -d user -s login.keychain
+
     #- name: Zip
     #  if: ${{ matrix.name == 'Linux' }}
     #  working-directory: ${{ env.ARTIFACTS_PATH }}
