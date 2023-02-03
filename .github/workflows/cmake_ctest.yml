@@ -74,12 +74,37 @@ jobs:
       with:
         key: v2-${{ matrix.os }}-${{ matrix.type }}
 
-    - name: Import Certificates (macOS)
-      uses: tote-bag-labs/import-codesign-certs@253ddeeac23f2bdad1646faac5c8c2832e800071
+    - name: Setup Keychain and Import Signing Certificate
       if: ${{ matrix.name == 'macOS' }}
-      with:
-        p12-file-base64: ${{ secrets.DEV_ID_APP_CERT }}
-        p12-password: ${{ secrets.DEV_ID_APP_PASSWORD }}
+      shell: bash
+      env:
+        TEAM_ID: ${{ secrets.TEAM_ID }}
+        APP_SPECIFIC_PWD: ${{ secrets.NOTARIZATION_PASSWORD }}
+        CERT_PWD: ${{ secrets.DEV_ID_APP_PASSWORD }}
+        CERT_BASE64: ${{ secrets.DEV_ID_APP_CERT}}
+        CERTPATH: ${{ runner.temp }}/certificate.p12
+        KEYCHAINPWD: ${{ secrets.MACOS_CI_KEYCHAIN_PWD }}
+        KEYCHAINPATH: ${{ runner.temp }}/app-signing.keychain-db
+       # create and setup a temporary keychain, then decode the certificate and setup creditials for codesigning and notarization
+      run: |
+        security create-keychain -p "$KEYCHAINPWD" "$KEYCHAINPATH"
+
+        # Update the keychain list with our newly created temp keychain
+        security list-keychain -d user -s "$KEYCHAINPATH"
+
+        # lock the keychain after a 6 hour timeout
+        security set-keychain-settings -lut 21600 "$KEYCHAINPATH"
+
+        # prevent keychain access from prompting for password when importing our certificate
+        security unlock-keychain -p "$KEYCHAINPWD" "$KEYCHAINPATH"
+
+        echo -n "$CERT_BASE64" | base64 --decode --output $CERTPATH
+
+        # import our certificate into the temp keychain
+        security import "$CERTPATH" -P "$CERT_PWD" -t cert -f pkcs12 -k "$KEYCHAINPATH" -T /usr/bin/codesign
+
+        # allow codesign to access keychain without password prompt
+        security set-key-partition-list -S apple-tool:,apple:, -s -k "$KEYCHAINPATH" -D "$CERT_BASE64" -t private "$KEYCHAINPATH"
 
     - name: Configure
       shell: bash
