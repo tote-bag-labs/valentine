@@ -48,7 +48,7 @@ juce_add_plugin("${PROJECT_NAME}"
     # VERSION ...                               # Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
-    COMPANY_NAME ToteBagLabs
+    COMPANY_NAME "Tote Bag Labs"
     BUNDLE_ID com.ToteBagLabs.Valentine
     # IS_SYNTH FALSE                       # Is this a synth or an effect?
     # NEEDS_MIDI_INPUT FALSE               # Does the plugin need midi input?
