@@ -68,29 +68,30 @@ jobs:
         echo "AU_PATH=${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/AU/${{ env.PROJECT_NAME }}.component" >> $GITHUB_ENV
         echo "AUV3_PATH=${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/AUv3/${{ env.PROJECT_NAME }}.appex" >> $GITHUB_ENV
         echo "PRODUCT_NAME=${{ env.PROJECT_NAME }}-$VERSION-${{ matrix.name }}" >> $GITHUB_ENV
+        echo "VERSION_NUMBER=$VERSION" >> $GITHUB_ENV
 
     - name: Ccache for gh actions
       uses: hendrikmuhs/ccache-action@v1.2.8
       with:
         key: v2-${{ matrix.os }}-${{ matrix.type }}
 
-    - name: Setup Keychain and Import Signing Certificate
+    - name: Setup Keychain and Import Signing Certificates
       if: ${{ matrix.name == 'macOS' }}
       shell: bash
       env:
         TEAM_ID: ${{ secrets.TEAM_ID }}
         APP_SPECIFIC_PWD: ${{ secrets.NOTARIZATION_PASSWORD }}
-        CERT_PWD: ${{ secrets.DEV_ID_APP_PASSWORD }}
-        CERT_BASE64: ${{ secrets.DEV_ID_APP_CERT}}
-        CERTPATH: ${{ runner.temp }}/certificate.p12
+        APP_CERT_PWD: ${{ secrets.DEV_ID_APP_PASSWORD }}
+        APP_CERT_BASE64: ${{ secrets.DEV_ID_APP_CERT}}
+        APP_CERT_PATH: ${{ runner.temp }}/app_certificate.p12
+        INSTALL_CERT_PWD: ${{ secrets. DEV_ID_INSTALL_PASSWORD }}
+        INSTALL_CERT_BASE64: ${{ secrets.DEV_ID_INSTALL_CERT }}
+        INSTALL_CERT_PATH: ${{ runner.temp }}/install_certificate.p12
         KEYCHAINPWD: ${{ secrets.MACOS_CI_KEYCHAIN_PWD }}
         KEYCHAINPATH: ${{ runner.temp }}/app-signing.keychain-db
        # create and setup a temporary keychain, then decode the certificate and setup creditials for codesigning and notarization
       run: |
         security create-keychain -p "$KEYCHAINPWD" "$KEYCHAINPATH"
-
-        # Update the keychain list with our newly created temp keychain
-        security list-keychain -d user -s "$KEYCHAINPATH"
 
         # lock the keychain after a 6 hour timeout
         security set-keychain-settings -lut 21600 "$KEYCHAINPATH"
@@ -98,13 +99,19 @@ jobs:
         # prevent keychain access from prompting for password when importing our certificate
         security unlock-keychain -p "$KEYCHAINPWD" "$KEYCHAINPATH"
 
-        echo -n "$CERT_BASE64" | base64 --decode --output $CERTPATH
+        # certificates need to be decoded before use
+        echo -n "$APP_CERT_BASE64" | base64 --decode --output $APP_CERT_PATH
+        echo -n "$INSTALL_CERT_BASE64" | base64 --decode --output $INSTALL_CERT_PATH
 
-        # import our certificate into the temp keychain
-        security import "$CERTPATH" -P "$CERT_PWD" -t cert -f pkcs12 -k "$KEYCHAINPATH" -T /usr/bin/codesign
+        # import certificates into the temp keychain
+        security import "$APP_CERT_PATH" -P "$APP_CERT_PWD" -t cert -f pkcs12 -k "$KEYCHAINPATH" -A -T /usr/bin/codesign -T /usr/bin/security
+        security import "$INSTALL_CERT_PATH" -P "$INSTALL_CERT_PWD" -t cert -f pkcs12 -k "$KEYCHAINPATH" -A -T /usr/bin/codesign -T /usr/bin/security
 
         # allow codesign to access keychain without password prompt
-        security set-key-partition-list -S apple-tool:,apple:, -s -k "$KEYCHAINPATH" -D "$CERT_BASE64" -t private "$KEYCHAINPATH"
+        security set-key-partition-list -S apple-tool:,apple:, -k "$KEYCHAINPWD" "$KEYCHAINPATH"
+
+        # Update the keychain list with our newly created temp keychain
+        security list-keychains -d user -s "$KEYCHAINPATH" login.keychain
 
     - name: Configure
       shell: bash
