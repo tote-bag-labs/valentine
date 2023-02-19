@@ -61,11 +61,11 @@ build_flavor()
 
 
 if [[ -d $INDIR/"VST3"/$VST3 ]]; then
-    build_flavor "VST3" "$VST3" "com.ToteBagLabs.${PRODUCTFILE}.vst3.pkg" "/Library/Audio/Plug-Ins/VST3"
+    build_flavor "VST3" "$VST3" "com.tote-bag-labs.${PRODUCTFILE}.vst3.pkg" "/Library/Audio/Plug-Ins/VST3"
 fi
 
 if [[ -d $INDIR/"AU"/$AU ]]; then
-    build_flavor "AU" "$AU" "com.ToteBagLabs.${PRODUCTFILE}.component.pkg" "/Library/Audio/Plug-Ins/Components"
+    build_flavor "AU" "$AU" "com.tote-bag-labs.${PRODUCTFILE}.component.pkg" "/Library/Audio/Plug-Ins/Components"
 fi
 
 
@@ -75,14 +75,14 @@ ls "${TMPDIR}"
 # create distribution.xml
 
 if [[ -d $INDIR/"VST3"/$VST3 ]]; then
-	VST3_PKG_REF="<pkg-ref id=\"com.ToteBagLabs.${PRODUCTFILE}.vst3.pkg\"/>"
-	VST3_CHOICE="<line choice=\"com.ToteBagLabs.${PRODUCTFILE}.vst3.pkg\"/>"
-	VST3_CHOICE_DEF="<choice id=\"com.ToteBagLabs.${PRODUCTFILE}.vst3.pkg\" visible=\"true\" start_selected=\"true\" title=\"${PRODUCT} VST3\"><pkg-ref id=\"com.ToteBagLabs.${PRODUCTFILE}.vst3.pkg\"/></choice><pkg-ref id=\"com.ToteBagLabs.${PRODUCTFILE}.vst3.pkg\" version=\"${VERSION}\" onConclusion=\"none\">${PRODUCTFILE}_VST3.pkg</pkg-ref>"
+	VST3_PKG_REF="<pkg-ref id=\"com.tote-bag-labs.${PRODUCTFILE}.vst3.pkg\"/>"
+	VST3_CHOICE="<line choice=\"com.tote-bag-labs.${PRODUCTFILE}.vst3.pkg\"/>"
+	VST3_CHOICE_DEF="<choice id=\"com.tote-bag-labs.${PRODUCTFILE}.vst3.pkg\" visible=\"true\" start_selected=\"true\" title=\"${PRODUCT} VST3\"><pkg-ref id=\"com.tote-bag-labs.${PRODUCTFILE}.vst3.pkg\"/></choice><pkg-ref id=\"com.tote-bag-labs.${PRODUCTFILE}.vst3.pkg\" version=\"${VERSION}\" onConclusion=\"none\">${PRODUCTFILE}_VST3.pkg</pkg-ref>"
 fi
 if [[ -d $INDIR/"AU"/$AU ]]; then
-	AU_PKG_REF="<pkg-ref id=\"com.ToteBagLabs.${PRODUCTFILE}.component.pkg\"/>"
-	AU_CHOICE="<line choice=\"com.ToteBagLabs.${PRODUCTFILE}.component.pkg\"/>"
-	AU_CHOICE_DEF="<choice id=\"com.ToteBagLabs.${PRODUCTFILE}.component.pkg\" visible=\"true\" start_selected=\"true\" title=\"${PRODUCT} Audio Unit\"><pkg-ref id=\"com.ToteBagLabs.${PRODUCTFILE}.component.pkg\"/></choice><pkg-ref id=\"com.ToteBagLabs.${PRODUCTFILE}.component.pkg\" version=\"${VERSION}\" onConclusion=\"none\">${PRODUCTFILE}_AU.pkg</pkg-ref>"
+	AU_PKG_REF="<pkg-ref id=\"com.tote-bag-labs.${PRODUCTFILE}.component.pkg\"/>"
+	AU_CHOICE="<line choice=\"com.tote-bag-labs.${PRODUCTFILE}.component.pkg\"/>"
+	AU_CHOICE_DEF="<choice id=\"com.tote-bag-labs.${PRODUCTFILE}.component.pkg\" visible=\"true\" start_selected=\"true\" title=\"${PRODUCT} Audio Unit\"><pkg-ref id=\"com.tote-bag-labs.${PRODUCTFILE}.component.pkg\"/></choice><pkg-ref id=\"com.tote-bag-labs.${PRODUCTFILE}.component.pkg\" version=\"${VERSION}\" onConclusion=\"none\">${PRODUCTFILE}_AU.pkg</pkg-ref>"
 fi
 
 cat > $TMPDIR/distribution.xml << XMLEND
