@@ -120,12 +120,6 @@ echo --- Main Package Created ---
 
 popd
 
+# move completed package to output directory
 mkdir -p "${TMPDIR}/${PRODUCTFILE}"
-mv "${TMPDIR}/${OUTPUT_BASE_FILENAME}.pkg" "${TMPDIR}/${PRODUCTFILE}"
-
-# create the DMG
-if [[ -f "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg" ]]; then
-    rm "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg"
-fi
-hdiutil create /tmp/tmp.dmg -ov -volname "$OUTPUT_BASE_FILENAME" -fs HFS+ -srcfolder "${TMPDIR}/${PRODUCTFILE}/"
-hdiutil convert /tmp/tmp.dmg -format UDZO -o "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg"
+mv "${TMPDIR}/${OUTPUT_BASE_FILENAME}.pkg" "${TARGET_DIR}"

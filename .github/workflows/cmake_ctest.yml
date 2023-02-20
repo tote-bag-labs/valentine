@@ -164,6 +164,13 @@ jobs:
                                                    "$VERSION" \
                                                    "$SIGNING_ID"
 
+    - name: Create Installer dmg (macOS)
+      if: ${{ matrix.name == 'macOS' }}
+      run: |
+
+        hdiutil create /tmp/tmp.dmg -ov -volname "$OUTPUT_BASE_FILENAME" -fs HFS+ -srcfolder ${{ runner.temp }}
+        hdiutil convert /tmp/tmp.dmg -format UDZO -o "${{ runner.temp }}/${{ env.OUTPUT_FILENAME }}.dmg"
+
     - name: Notarize and Staple (macOS)
       if: ${{ matrix.name == 'macOS' }}
       run: |
