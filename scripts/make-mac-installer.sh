@@ -113,8 +113,13 @@ cp -r "${RESOURCES_DIR}/License.txt" "${TMPDIR}/${RESOURCES_DIR}"
 
 pushd ${TMPDIR}
 
-echo productbuild --sign "$SIGNING_ID" --distribution "distribution.xml" --package-path "." --resources "${RESOURCES_DIR}" "$OUTPUT_BASE_FILENAME.pkg"
-productbuild --sign "$SIGNING_ID" --distribution "distribution.xml" --package-path "." --resources ${RESOURCES_DIR} "$OUTPUT_BASE_FILENAME.pkg"
+if [[ ! -z "$SIGNING_ID" ]]; then
+    echo productbuild --sign "$SIGNING_ID" --distribution "distribution.xml" --package-path "." --resources "${RESOURCES_DIR}" "$OUTPUT_BASE_FILENAME.pkg"
+    productbuild --sign "$SIGNING_ID" --distribution "distribution.xml" --package-path "." --resources ${RESOURCES_DIR} "$OUTPUT_BASE_FILENAME.pkg"
+else
+    echo productbuild ---distribution "distribution.xml" --package-path "." --resources "${RESOURCES_DIR}" "$OUTPUT_BASE_FILENAME.pkg"
+    productbuild --distribution "distribution.xml" --package-path "." --resources "${RESOURCES_DIR}" "$OUTPUT_BASE_FILENAME.pkg"
+fi
 
 echo --- Main Package Created ---
 
