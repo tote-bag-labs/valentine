@@ -1,0 +1,155 @@
+Thank you for trying Valentine!
+
+This is a pre-release build. Please take the appropriate precautions when using.
+
+Changelog:
+
+- 0.0.2
+
+Roll back while I figure out open source lmao.
+
+1.0.0 r1
+
+- New UI
+
+- Subtly massaged parameter ranges
+
+- New algorithm (kind of)
+
+- Bypass in UI
+
+- Preset increment / decrement
+
+- Bugfixes
+
+1.0.0
+
+- Many. TODO: update this when time to do the thing
+
+0.9.8r
+
+- Updated ff_meters dependency. Shouldn't have a visible change...
+
+0.9.8
+
+- Improvements to preset management
+
+- Nice Mode changed to increase threshold instead of lowering then raising gain
+
+- Gain computer changed. Now correctly calculates knee
+
+- Saturation algorithm changed to reduce aliasing
+
+
+0.9.7
+
+- slight tweak to Crush parameter skew
+
+- more UI improvements
+
+0.9.6
+
+- UI Improvements
+
+
+0.9.5
+
+- General UI improvements and bug fixes
+
+- Issue with Logic software instruments solved
+
+- Gain computer revised to be more efficient
+
+- Makeup parameter range changed to +- 12dB
+
+- "Nice" button added. Lowers gain before processing for a light touch.
+
+- Latency compensation adjusted to more accurately report to host.
+
+- Stability improvements 
+
+
+0.9.0
+
+- Input/gain reduction and output meters added. Thanks to Foley's Finest / Daniel Walz: https://github.com/ffAudio/ff_meters
+
+- Preset management implemented. Will save presets in your 'Documents' folder
+
+- Resizable GUI
+
+- Slight changes to parameter ranges and skew. Biggest change: Compress has more attenuation and Makeup has more boost.
+
+- Slight changes to distortion algorithm
+
+
+0.7.2
+
+- New, if provisional, interface
+
+- New parameter change handling. (Under the hood)
+
+- No longer boosts level when mix is set to 0
+
+
+0.7.1 Rev A
+
+- Compress now controls input gain after Crush module
+
+- More / better saturation parameter scaling
+
+- Smooth parameters (finally!)
+
+- Will install as a separate plugin
+
+Issues
+
+- Using Crush in Logic causes long feedback-like decay after playback stops
+
+
+0.7.1
+
+- tweaks to Crush module
+
+
+0.7.0
+
+- added delay compensated Dry/Wet mix
+
+- changed how Crush parameter works
+
+- changed how threshold works
+
+- changed how automatic makeup gain works
+
+- removed 2:1 ratio
+
+- changed maximum attack time
+
+- turned off autorelease
+
+- parameters now have logarithmic tapers
+
+- processing path is now: in > downsample > bit crush > saturate > compress > makeup > mix
+
+- fixed an issue that would cause dropouts when input monitoring enabled in Logic
+
+
+Known Issues as of 11/22/19:
+
+- Adjusting Compress and Out can cause clicks in audio, especially in Logic
+
+
+0.6.0:
+
+- combined Bit Crush and Downsample parameters into one 'Crush Parameter'
+
+- added autorelease that doubles release time when device has been compressing at a certain amount for a certain amount of time
+
+- added 2:1 Ratio
+
+- longer max. Attack time
+
+- changed GUI colors and sizing
+
+
+
