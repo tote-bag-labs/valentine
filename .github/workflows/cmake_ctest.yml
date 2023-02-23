@@ -206,7 +206,7 @@ jobs:
 
     - name: Upload Exe (Windows)
       if: ${{ matrix.name == 'Windows' }}
-      uses: actions/upload-artifact@v3.1.2
+      uses: actions/upload-artifact@v3
       with:
         name: ${{ env.OUTPUT_FILENAME }}.exe
         path: '${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILENAME }}.exe'
@@ -220,7 +220,7 @@ jobs:
 
     - name: Upload DMG (MacOS)
       if: ${{ matrix.name == 'macOS' }}
-      uses: actions/upload-artifact@v3.1.2
+      uses: actions/upload-artifact@v3
       with:
         name: ${{ env.OUTPUT_FILENAME }}.dmg
         path: ${{ runner.temp }}/${{ env.OUTPUT_FILENAME }}.dmg
@@ -233,7 +233,7 @@ jobs:
 
     steps:
     - name: Get Artifacts
-      uses: actions/download-artifact@v3.1.2
+      uses: actions/download-artifact@v3
 
     - name: Create Release
       uses: softprops/action-gh-release@v0.1.15
