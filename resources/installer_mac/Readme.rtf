@@ -1,155 +1,31 @@
-Thank you for trying Valentine!
-
-This is a pre-release build. Please take the appropriate precautions when using.
-
-Changelog:
-
-- 0.0.2
-
-Roll back while I figure out open source lmao.
-
-1.0.0 r1
-
-- New UI
-
-- Subtly massaged parameter ranges
-
-- New algorithm (kind of)
-
-- Bypass in UI
-
-- Preset increment / decrement
-
-- Bugfixes
-
-1.0.0
-
-- Many. TODO: update this when time to do the thing
-
-0.9.8r
-
-- Updated ff_meters dependency. Shouldn't have a visible change...
-
-0.9.8
-
-- Improvements to preset management
-
-- Nice Mode changed to increase threshold instead of lowering then raising gain
-
-- Gain computer changed. Now correctly calculates knee
-
-- Saturation algorithm changed to reduce aliasing
-
-
-0.9.7
-
-- slight tweak to Crush parameter skew
-
-- more UI improvements
-
-0.9.6
-
-- UI Improvements
-
-
-0.9.5
-
-- General UI improvements and bug fixes
-
-- Issue with Logic software instruments solved
-
-- Gain computer revised to be more efficient
-
-- Makeup parameter range changed to +- 12dB
-
-- "Nice" button added. Lowers gain before processing for a light touch.
-
-- Latency compensation adjusted to more accurately report to host.
-
-- Stability improvements 
-
-
-0.9.0
-
-- Input/gain reduction and output meters added. Thanks to Foley's Finest / Daniel Walz: https://github.com/ffAudio/ff_meters
-
-- Preset management implemented. Will save presets in your 'Documents' folder
-
-- Resizable GUI
-
-- Slight changes to parameter ranges and skew. Biggest change: Compress has more attenuation and Makeup has more boost.
-
-- Slight changes to distortion algorithm
-
-
-0.7.2
-
-- New, if provisional, interface
-
-- New parameter change handling. (Under the hood)
-
-- No longer boosts level when mix is set to 0
-
-
-0.7.1 Rev A
-
-- Compress now controls input gain after Crush module
-
-- More / better saturation parameter scaling
-
-- Smooth parameters (finally!)
-
-- Will install as a separate plugin
-
-Issues
-
-- Using Crush in Logic causes long feedback-like decay after playback stops
-
-
-0.7.1
-
-- tweaks to Crush module
-
-
-0.7.0
-
-- added delay compensated Dry/Wet mix
-
-- changed how Crush parameter works
-
-- changed how threshold works
-
-- changed how automatic makeup gain works
-
-- removed 2:1 ratio
-
-- changed maximum attack time
-
-- turned off autorelease
-
-- parameters now have logarithmic tapers
-
-- processing path is now: in > downsample > bit crush > saturate > compress > makeup > mix
-
-- fixed an issue that would cause dropouts when input monitoring enabled in Logic
-
-
-Known Issues as of 11/22/19:
-
-- Adjusting Compress and Out can cause clicks in audio, especially in Logic
-
-
-0.6.0:
-
-- combined Bit Crush and Downsample parameters into one 'Crush Parameter'
-
-- added autorelease that doubles release time when device has been compressing at a certain amount for a certain amount of time
-
-- added 2:1 Ratio
-
-- longer max. Attack time
-
-- changed GUI colors and sizing
-
-
-
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww18500\viewh13560\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qc\partightenfactor0
+
+\f0\fs28 \cf0 V A L E N T I N E\
+\
+
+\fs24 An aggressive, open source compressor.\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 Hi. Thank you for trying Valentine. I think (I hope) you\'92re going to like it. Before you dive in, I figured I should warn: Valentine is still very much in development. Up until the release of Valentine 1.0.0, updates may dramatically change how the plugin behaves and possibly break mixes or presets.\
+\
+Why even \'93release\'94 this then? If you\'92re reading this, it\'92s very likely that you know me and have agreed to check Valentine out and give feedback. Thank you! It\'92s you who this release is for. I\'92m hoping that, in this trial, I can get a sense of whether Valentine works for people.\
+\
+Any and all feedback is greatly appreciated. That being said, you should know that the GUI definitely needs dialling in. I am also looking for specific feedback on the following topics:\
+\
+- Is \'93Crush\'94 working for you? How does \'93Saturate\'94 feel? \
+\
+- The hidden \'93Nice\'94 parameter. I forgot to totally remove a parameter called \'93Nice\'94 from the plugin. Nice changes Valentine\'92s threshold settings, decreasing the amount it compresses and changing how signal hits the saturator. You can find it by exposing the default plugin parameters in your DAW (or automation). Anyway, I\'92m kind of undecided on \'93Nice\'94. Is it \'93Nice\'94? Do you like it?\
+\
+- Does anything annoy you about using Valentine?\
+\
+- Were you able to make an exciting sound with Valentine?\
+\
+\
+Soon(?) I will set up a formal communication channel to take feedback and talk about Valentine. In the meanwhile, you can find me (Totie) on the Audio Programmer discord.\
+\
+Peace,}
