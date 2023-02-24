@@ -126,5 +126,4 @@ echo --- Main Package Created ---
 popd
 
 # move completed package to output directory
-mkdir -p "${TMPDIR}/${PRODUCTFILE}"
 mv "${TMPDIR}/${OUTPUT_BASE_FILENAME}.pkg" "${TARGET_DIR}"

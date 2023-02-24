@@ -151,10 +151,12 @@ jobs:
         PRODUCT: ${{ env.PROJECT_NAME }}
         INPUT_DIR: ${{ env.ARTIFACTS_PATH }}
         RESOURCES_DIR: ${{ env.RESOURCES_DIR }}
-        OUTPUT_DIR: ${{ runner.temp }}
+        OUTPUT_DIR: "${{ runner.temp }}/mac_installer_output"
         VERSION: ${{ env.VERSION_NUMBER }}
         SIGNING_ID: ${{ secrets.DEVELOPER_ID_INSTALLER}}
       run: |
+
+        mkdir -p "$OUTPUT_DIR"
 
         # creates a signed package and outputs it in a disk image, ready for notarization and staple.
         ${{env.SCRIPTS_DIR}}/make-mac-installer.sh "$PRODUCT" \
@@ -168,7 +170,7 @@ jobs:
       if: ${{ matrix.name == 'macOS' }}
       run: |
 
-        hdiutil create /tmp/tmp.dmg -ov -volname "$OUTPUT_BASE_FILENAME" -fs HFS+ -srcfolder ${{ runner.temp }}
+        hdiutil create /tmp/tmp.dmg -ov -volname "${{ env.OUTPUT_FILENAME }}" -fs HFS+ -srcfolder "${{ runner.temp }}/mac_installer_output/"
         hdiutil convert /tmp/tmp.dmg -format UDZO -o "${{ runner.temp }}/${{ env.OUTPUT_FILENAME }}.dmg"
 
     - name: Notarize and Staple (macOS)
