@@ -10,6 +10,7 @@ AppVersion={#Version}
 DefaultDirName="{commoncf64}\VST3\{#MyAppPublisher}\Valentine.vst3\"
 DisableStartupPrompt=yes
 OutputBaseFilename=valentine-{#Version}-windows
+LicenseFile="../LICENSE"
 UninstallDisplayIcon={uninstallexe}
 UninstallFilesDir={commonappdata}\{#MyAppName}\uninstall
 
