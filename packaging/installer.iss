@@ -1,7 +1,6 @@
 #define Version Trim(FileRead(FileOpen("..\VERSION")))
 #define MyAppName "Valentine"
 #define MyAppPublisher "Tote Bag Labs"
-#define Year GetDateTimeString("yyyy","","")
 
 [Setup]
 AppName={#MyAppName}
