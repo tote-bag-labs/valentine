@@ -8,6 +8,7 @@ AppName={#MyAppName}
 AppPublisher={#MyAppPublisher}
 AppVersion={#Version}
 DefaultDirName="{commoncf64}\VST3\{#MyAppPublisher}\Valentine.vst3\"
+DisableDirPage=yes
 OutputBaseFilename=valentine-{#Version}-windows
 LicenseFile="../LICENSE"
 UninstallDisplayIcon={uninstallexe}
