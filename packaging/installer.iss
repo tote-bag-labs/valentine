@@ -1,6 +1,7 @@
-#define Version Trim(FileRead(FileOpen("..\VERSION")))
+#define AppUrl "https://github.com/Tote-Bag-Labs/valentine"
 #define MyAppName "Valentine"
 #define MyAppPublisher "Tote Bag Labs"
+#define Version Trim(FileRead(FileOpen("..\VERSION")))
 
 [Setup]
 AppName={#MyAppName}
@@ -8,8 +9,8 @@ AppPublisher={#MyAppPublisher}
 AppVersion={#Version}
 DefaultDirName="{commoncf64}\VST3\{#MyAppPublisher}\Valentine.vst3\"
 DisableDirPage=yes
-OutputBaseFilename=valentine-{#Version}-windows
 LicenseFile="../LICENSE"
+OutputBaseFilename=valentine-{#Version}-windows
 UninstallDisplayIcon={uninstallexe}
 UninstallFilesDir={commonappdata}\{#MyAppName}\uninstall
 
