@@ -7,8 +7,9 @@ OutputBaseFilename=Valentine-{#Version}-Windows
 AppCopyright=Copyright (C) {#Year} Tote Bag Labs
 AppPublisher=Tote Bag Labs
 AppVersion={#Version}
-DefaultDirName="{commoncf64}\VST3"
+DefaultDirName="{commoncf64}\VST3\Valentine.vst3"
 DisableStartupPrompt=yes
 
+; MSVC adds a .ilk when building the plugin. Let's not include that.
 [Files]
-Source: "{src}..\Builds\Pamplejuce_artefacts\Release\VST3\Valentine.vst3\*.*"; DestDir: "{commoncf64}\VST3\Valentine.vst3\"; Check: Is64BitInstallMode; Flags: external overwritereadonly ignoreversion; Attribs: hidden system;
+Source: "..\Builds\Valentine_artefacts\Release\VST3\Valentine.vst3\*"; DestDir: "{commoncf64}\VST3\Valentine.vst3\"; Flags: ignoreversion recursesubdirs;
