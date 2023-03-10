@@ -76,8 +76,6 @@ TODO
 
 - Get it working on Linux
 
-- Sort out the Windows installer
-
 - Write tests
 
 - Code cleanup
