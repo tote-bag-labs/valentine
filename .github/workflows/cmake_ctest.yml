@@ -200,9 +200,11 @@ jobs:
     - name: Generate Installer (Windows) # and Sign with EV cert on Azure (Windows)
       if: ${{ matrix.name == 'Windows' }}
       shell: bash
+      env:
+        INSTALLER_DIR: "scripts/installer_win"
       run: |
-        iscc "packaging\installer.iss"
-        mv "packaging/Output/${{ env.OUTPUT_FILENAME }}.exe" "${{ env.ARTIFACTS_PATH }}/"
+        iscc "$INSTALLER_DIR/installer.iss"
+        mv "$INSTALLER_DIR/Output/${{ env.OUTPUT_FILENAME }}.exe" "${{ env.ARTIFACTS_PATH }}/"
       # dotnet tool install --global AzureSignTool
       # AzureSignTool sign -kvu "${{ secrets.AZURE_KEY_VAULT_URI }}" -kvi "${{ secrets.AZURE_CLIENT_ID }}" -kvt "${{ secrets.AZURE_TENANT_ID }}" -kvs "${{ secrets.AZURE_CLIENT_SECRET }}" -kvc ${{ secrets.AZURE_CERT_NAME }} -tr http://timestamp.digicert.com -v "${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILENA }}.exe"
 
