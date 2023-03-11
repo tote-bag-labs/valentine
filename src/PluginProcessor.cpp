@@ -285,7 +285,8 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-    auto currentSamplesPerBlock = getBlockSize();
+    auto bufferSize = buffer.getNumSamples();
+    auto currentSamplesPerBlock = bufferSize;
 
     // We need to prepare the process buffer first. The input buffer is delayed to account for
     // oversampling latency. Copying into the process buffer after this, then, would undo the
@@ -319,7 +320,7 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 
     auto g = compressValue.get();
     for (int i = 0; i < totalNumOutputChannels; ++i)
-        processBuffer.applyGainRamp (i, 0, getBlockSize(), currentGain, g);
+        processBuffer.applyGainRamp (i, 0, bufferSize, currentGain, g);
     currentGain = g;
 
     // Upsample then do non-linear processing
@@ -342,7 +343,7 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     auto m = makeupValue.get();
     for (int i = 0; i < totalNumOutputChannels; ++i)
     {
-        processBuffer.applyGainRamp (i, 0, getBlockSize(), currentMakeup, m);
+        processBuffer.applyGainRamp (i, 0, bufferSize, currentMakeup, m);
     }
     currentMakeup = m;
 
@@ -371,7 +372,7 @@ void ValentineAudioProcessor::processBlockBypassed (juce::AudioBuffer<float>& bu
 
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-    auto currentSamplesPerBlock = getBlockSize();
+    auto currentSamplesPerBlock = buffer.getNumSamples();
 
     prepareInputBuffer (buffer,
                         totalNumInputChannels,
