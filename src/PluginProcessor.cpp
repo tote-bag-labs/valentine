@@ -448,7 +448,7 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter, f
     }
     else if (parameter == "Ratio")
     {
-        ratioIndex = static_cast<int> (newValue);
+        ratioIndex = static_cast<size_t> (newValue);
         ffCompressor->setRatio (ratioValues[ratioIndex]);
         ffCompressor->setKnee (kneeValues[ratioIndex]);
 

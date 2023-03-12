@@ -124,9 +124,6 @@ private:
 
     const double dryWetRampLength { .10 }; // in seconds, used in .reset()
 
-    // used to index into ratio array
-    int ratioIndex = 0;
-
     // used to maintain state for ApplyGainRamp
     // compress and makeup are addressed in dB, interface-wise, but handled linearly here
     float smoothedGain { 1.0f },
@@ -134,6 +131,8 @@ private:
         currentMakeup { juce::Decibels::decibelsToGain (FFCompParameterDefaults[getParameterIndex (VParameter::makeupGain)]) },
         currentNiceGain { 1.0f };
 
+    // Used to index into ratio array
+    size_t ratioIndex = 0;
     // Raises compressor threshold setting when Nice mode is on
     static constexpr float kNiceOffset = 9.0f;
     // Determines whether offset is used when setting compressor threshold
