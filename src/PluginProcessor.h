@@ -134,6 +134,8 @@ private:
         currentMakeup { juce::Decibels::decibelsToGain (FFCompParameterDefaults[getParameterIndex (VParameter::makeupGain)]) },
         currentNiceGain { 1.0f };
 
+    static constexpr float kNiceOffset = 9.0f;
+
     // compress and makeup are addressed in dB, interface-wise, but handled linearly here
     juce::Atomic<float> compressValue { juce::Decibels::decibelsToGain (FFCompParameterDefaults[getParameterIndex (VParameter::inputGain)]) },
         mixValue { 1.0f },
