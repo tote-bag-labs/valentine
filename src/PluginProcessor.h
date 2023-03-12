@@ -134,7 +134,10 @@ private:
         currentMakeup { juce::Decibels::decibelsToGain (FFCompParameterDefaults[getParameterIndex (VParameter::makeupGain)]) },
         currentNiceGain { 1.0f };
 
+    // Raises compressor threshold setting when Nice mode is on
     static constexpr float kNiceOffset = 9.0f;
+    // Determines whether offset is used when setting compressor threshold
+    bool niceModeOn = false;
 
     // compress and makeup are addressed in dB, interface-wise, but handled linearly here
     juce::Atomic<float> compressValue { juce::Decibels::decibelsToGain (FFCompParameterDefaults[getParameterIndex (VParameter::inputGain)]) },
@@ -148,7 +151,6 @@ private:
     juce::Atomic<int> savedWidth { 0 };
 
     juce::Atomic<bool> crushOn { false };
-    juce::Atomic<bool> niceModeOn { false };
     juce::Atomic<bool> bypassOn { false };
 
     // This is used for, yes you guessed it, processing

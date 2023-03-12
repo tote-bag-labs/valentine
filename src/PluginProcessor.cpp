@@ -452,7 +452,7 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter, f
         ffCompressor->setRatio (ratioValues[ratioIndex]);
         ffCompressor->setKnee (kneeValues[ratioIndex]);
 
-        if (niceModeOn.get())
+        if (niceModeOn)
         {
             ffCompressor->setThreshold (thresholdValues[ratioIndex] + kNiceOffset);
         }
@@ -477,12 +477,12 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter, f
     {
         if (newValue > 0.5)
         {
-            niceModeOn.set (true);
+            niceModeOn = true;
             ffCompressor->setThreshold (thresholdValues[ratioIndex] + kNiceOffset);
         }
         else
         {
-            niceModeOn.set (false);
+            niceModeOn = false;
             ffCompressor->setThreshold (thresholdValues[ratioIndex]);
         }
     }
