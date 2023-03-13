@@ -7,11 +7,12 @@
 AppName={#MyAppName}
 AppPublisher={#MyAppPublisher}
 AppVersion={#Version}
+ArchitecturesInstallIn64BitMode=x64
+ArchitecturesAllowed=x64
 DefaultDirName="{commoncf64}\VST3\{#MyAppPublisher}\Valentine.vst3\"
 DisableDirPage=yes
 LicenseFile="..\..\LICENSE"
 OutputBaseFilename=valentine-{#Version}-windows
-UninstallDisplayIcon={uninstallexe}
 UninstallFilesDir={commonappdata}\{#MyAppName}\uninstall
 
 ; MSVC adds a .ilk when building the plugin. Let's not include that.
