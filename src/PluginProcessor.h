@@ -31,7 +31,7 @@ class ValentineAudioProcessor : public juce::AudioProcessor,
 public:
     //==============================================================================
     ValentineAudioProcessor();
-    ~ValentineAudioProcessor();
+    ~ValentineAudioProcessor() override;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
