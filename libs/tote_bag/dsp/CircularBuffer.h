@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include "tote_bag/dsp/AudioHelpers.h"
 #include <juce_audio_basics/juce_audio_basics.h>
 
 template <typename T>
@@ -24,14 +25,9 @@ public:
         buffer.clear();
     }
 
-    int findNextPow2 (int bufferLength)
-    {
-        return static_cast<int> ((std::pow (2, std::ceil (std::log (bufferLength) / std::log (2)))));
-    }
-
     void setSize (int inBufferLength)
     {
-        bufferLength = findNextPow2 (inBufferLength);
+        bufferLength = tote_bag::audio_helpers::nextPow2 (inBufferLength);
         wrapMask = bufferLength - 1;
         buffer.setSize (1, bufferLength, false, false, true);
         reset();
