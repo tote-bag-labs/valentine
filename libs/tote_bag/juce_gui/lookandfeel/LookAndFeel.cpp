@@ -139,7 +139,7 @@ void LookAndFeel::drawKnob (juce::Graphics& g,
     g.fillEllipse (rx, ry, rw, rw);
 
     // Get thicknesses for outline rings...
-    const auto innerOutlineThickness = juce::jmax ((rw * .05f), 1.0f);
+    const auto innerOutlineThickness = juce::roundToInt (juce::jmax ((rw * .05f), 1.0f));
     const auto outerOutlineThickness = innerOutlineThickness * .15f;
 
     // Offset inner outline by its thickness
@@ -239,7 +239,7 @@ void LookAndFeel::drawButtonBackground (juce::Graphics& g,
     auto buttonArea = button.getLocalBounds();
     const auto h = buttonArea.getHeight();
 
-    const auto cornerSize = h * .15;
+    const auto cornerSize = juce::roundToInt (h * .15);
 
     g.setColour (backgroundColour);
 
@@ -377,8 +377,8 @@ juce::Slider::SliderLayout LookAndFeel::getSliderLayout (juce::Slider& slider)
     auto localBounds = slider.getLocalBounds();
 
     auto sDiameter = juce::jmin (localBounds.getWidth(), localBounds.getHeight()) - 4.0f;
-    auto textBoxWidth = sDiameter * .66f;
-    auto textBoxHeight = sDiameter * .17f;
+    auto textBoxWidth = juce::roundToInt (sDiameter * .66f);
+    auto textBoxHeight = juce::roundToInt (sDiameter * .17f);
 
     juce::Slider::SliderLayout layout;
 
