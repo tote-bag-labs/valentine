@@ -123,7 +123,7 @@ void LookAndFeel::drawKnob (juce::Graphics& g,
                             const float radius,
                             const float toAngle,
                             const juce::Rectangle<float> bounds,
-                            juce::Slider& slider,
+                            juce::Slider&,
                             const bool withDropShadow)
 {
     const auto centreX = bounds.getCentreX();
@@ -215,12 +215,12 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
 
 //=============================================================================
 
-juce::Typeface::Ptr LookAndFeel::getTypefaceForFont (const juce::Font& f)
+juce::Typeface::Ptr LookAndFeel::getTypefaceForFont (const juce::Font&)
 {
     return getCustomFont().getTypefacePtr();
 }
 
-juce::Font LookAndFeel::getTextButtonFont (juce::TextButton& b, int buttonHeight)
+juce::Font LookAndFeel::getTextButtonFont (juce::TextButton&, int buttonHeight)
 {
     return { juce::jmax (7.0f, buttonHeight * 0.8f) };
 }
@@ -234,7 +234,7 @@ void LookAndFeel::drawButtonBackground (juce::Graphics& g,
                                         juce::Button& button,
                                         const juce::Colour& backgroundColour,
                                         bool,
-                                        bool isButtonDown)
+                                        bool)
 {
     auto buttonArea = button.getLocalBounds();
     const auto h = buttonArea.getHeight();
@@ -316,7 +316,7 @@ void LookAndFeel::drawButtonText (juce::Graphics& g,
 }
 
 void LookAndFeel::drawComboBox (juce::Graphics& g,
-                                int width,
+                                int,
                                 int height,
                                 bool,
                                 int,
@@ -339,15 +339,15 @@ void LookAndFeel::drawComboBox (juce::Graphics& g,
 
 void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
                                      const juce::Rectangle<int>& area,
-                                     bool isSeparator,
-                                     bool isActive,
+                                     bool,
+                                     bool,
                                      bool isHighlighted,
                                      bool isTicked,
-                                     bool hasSubMenu,
+                                     bool,
                                      const juce::String& text,
-                                     const juce::String& shortcutKeyText,
-                                     const juce::Drawable* icon,
-                                     const juce::Colour* textColour)
+                                     const juce::String&,
+                                     const juce::Drawable*,
+                                     const juce::Colour*)
 {
     using namespace laf_constants;
 
@@ -372,15 +372,7 @@ juce::Slider::SliderLayout LookAndFeel::getSliderLayout (juce::Slider& slider)
 {
     // 1. compute the actually visible textBox size from the slider textBox size and some additional constraints
 
-    int minXSpace = 0;
-    int minYSpace = 0;
-
     auto textBoxPos = slider.getTextBoxPosition();
-
-    if (textBoxPos == juce::Slider::TextBoxLeft || textBoxPos == juce::Slider::TextBoxRight)
-        minXSpace = 30;
-    else
-        minYSpace = 15;
 
     auto localBounds = slider.getLocalBounds();
 
