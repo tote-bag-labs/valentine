@@ -38,9 +38,6 @@ ValentineAudioProcessorEditor::~ValentineAudioProcessorEditor()
 }
 
 //==============================================================================
-void ValentineAudioProcessorEditor::paint (juce::Graphics& g)
-{
-}
 
 void ValentineAudioProcessorEditor::resized()
 {
