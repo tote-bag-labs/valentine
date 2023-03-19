@@ -23,7 +23,7 @@ class ValentineAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
     ValentineAudioProcessorEditor (ValentineAudioProcessor&);
-    ~ValentineAudioProcessorEditor();
+    ~ValentineAudioProcessorEditor() override;
 
     //==============================================================================
     void resized() override;
