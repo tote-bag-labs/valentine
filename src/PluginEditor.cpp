@@ -14,7 +14,8 @@
 //==============================================================================
 ValentineAudioProcessorEditor::ValentineAudioProcessorEditor (ValentineAudioProcessor& p)
     : AudioProcessorEditor (&p)
-    , processor (p)
+    , audioProcessor (p)
+    , mainPanel (audioProcessor)
 {
     addAndMakeVisible (mainPanel);
 
@@ -33,7 +34,7 @@ ValentineAudioProcessorEditor::ValentineAudioProcessorEditor (ValentineAudioProc
 
 ValentineAudioProcessorEditor::~ValentineAudioProcessorEditor()
 {
-    processor.saveGUIwidth (getWidth());
+    audioProcessor.saveGUIwidth (getWidth());
 }
 
 //==============================================================================
