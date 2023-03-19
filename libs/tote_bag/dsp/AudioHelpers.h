@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cmath>
 
 namespace tote_bag
@@ -99,6 +100,11 @@ inline FloatType ClampedCosh (FloatType x)
     static constexpr FloatType coshMax = 710.0;
 
     return std::cosh (std::clamp (x, coshMin, coshMax));
+}
+
+inline int nextPow2 (int x)
+{
+    return static_cast<int> ((std::pow (2, std::ceil (std::log (x) / std::log (2)))));
 }
 
 } // namespace audio_helpers
