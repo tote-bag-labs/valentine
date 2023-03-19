@@ -24,7 +24,7 @@ public:
     SimpleZOH() {};
 
     void setResampleOffset (double inHostSr);
-    void setParams (float inDownsampleCoeff, bool sampleRateChanged);
+    void setParams (float inDownsampleCoeff);
     void processBlock (juce::AudioBuffer<float>& inAudio, int samplesPerBlock, int numChannels);
     float getZOHSample (const float* channelData, int sampleIndex, int dsCoef);
 

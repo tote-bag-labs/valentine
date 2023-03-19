@@ -28,7 +28,7 @@ void SimpleZOH::setResampleOffset (double inHostSr)
     }
 }
 
-void SimpleZOH::setParams (float inDownsampleCoeff, bool sampleRateChanged)
+void SimpleZOH::setParams (float inDownsampleCoeff)
 {
     downsampleCoeff = inDownsampleCoeff;
 }

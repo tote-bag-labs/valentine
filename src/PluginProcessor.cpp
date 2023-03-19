@@ -215,7 +215,7 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
     saturator->reset (sampleRate);
     boundedSaturator->reset (sampleRate);
-    simpleZOH->setParams (sampleRate / downSampleRate, false);
+    simpleZOH->setParams (sampleRate / downSampleRate);
 
     // Calculate delay, round up. That's the delay reported to host. subtract
     // the original delay from that and you have the fractional delay
