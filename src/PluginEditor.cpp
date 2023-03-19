@@ -18,21 +18,17 @@ ValentineAudioProcessorEditor::ValentineAudioProcessorEditor (ValentineAudioProc
 {
     addAndMakeVisible (mainPanel);
 
-    auto w = 0.0f;
-
-    if (auto savedWidth = processor.getSavedGUIwidth())
-        w = savedWidth;
-    else
-        w = startingWidth;
+    const auto savedWidth = audioProcessor.getSavedGUIwidth();
+    const auto w = savedWidth != 0 ? savedWidth : startingWidth;
 
     setResizable (true, true);
     setResizeLimits (minimumWidth,
-                     minimumWidth / ratio,
+                     juce::roundToInt (minimumWidth / ratio),
                      maximumWidth,
-                     maximumWidth / ratio);
+                     juce::roundToInt (maximumWidth / ratio));
     getConstrainer()->setFixedAspectRatio (ratio);
 
-    setSize (w, w / ratio);
+    setSize (w, juce::roundToInt (w / ratio));
 }
 
 ValentineAudioProcessorEditor::~ValentineAudioProcessorEditor()
