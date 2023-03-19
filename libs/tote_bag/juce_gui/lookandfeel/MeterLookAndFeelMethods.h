@@ -95,7 +95,7 @@ juce::Rectangle<float> getMeterBarBounds (const juce::Rectangle<float> bounds,
         {
             const float margin = bounds.getHeight() * 0.001f;
             const float top = bounds.getY() + 2.0f * margin;
-            const float bottom = (meterType & FFAU::LevelMeter::MaxNumber) ? bounds.getBottom() - (3.0f * margin + ((bounds.getHeight() * .1) - margin * 2.0f))
+            const float bottom = (meterType & FFAU::LevelMeter::MaxNumber) ? bounds.getBottom() - (3.0f * margin + ((bounds.getHeight() * .1f) - margin * 2.0f))
                                                                            : bounds.getBottom() - margin;
             return juce::Rectangle<float> (bounds.getX() + margin, top, bounds.getWidth() - margin * 2.0f, bottom - top);
         }
