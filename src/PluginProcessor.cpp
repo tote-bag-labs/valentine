@@ -183,16 +183,16 @@ int ValentineAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void ValentineAudioProcessor::setCurrentProgram (int index)
+void ValentineAudioProcessor::setCurrentProgram (int)
 {
 }
 
-const juce::String ValentineAudioProcessor::getProgramName (int index)
+const juce::String ValentineAudioProcessor::getProgramName (int)
 {
     return {};
 }
 
-void ValentineAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void ValentineAudioProcessor::changeProgramName (int, const juce::String&)
 {
 }
 
@@ -280,7 +280,7 @@ bool ValentineAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 }
 #endif
 
-void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
