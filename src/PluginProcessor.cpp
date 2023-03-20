@@ -353,14 +353,14 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     dryWet.setTargetValue (mix);
     for (int j = 0; j < currentSamplesPerBlock; ++j)
     {
-        auto mix = dryWet.getNextValue();
+        const auto currentMix = dryWet.getNextValue();
 
         for (int i = 0; i < totalNumOutputChannels; ++i)
         {
             auto processed = processBuffer.getSample (i, j);
             auto unprocessed = buffer.getSample (i, j);
 
-            buffer.setSample (i, j, mix * processed + (1.0f - mix) * unprocessed);
+            buffer.setSample (i, j, mix * processed + (1.0f - currentMix) * unprocessed);
         }
     }
 
