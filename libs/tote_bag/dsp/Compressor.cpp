@@ -10,7 +10,7 @@
 #include "Compressor.h"
 
 Compressor::Compressor (bool autoRelease, float knee)
-    : autoReleaseFlag (autoRelease)
+    : levelDetector (autoRelease)
 {
 }
 

@@ -59,8 +59,7 @@ private:
         msRelease { -1.0f },
         threshold { -1.0 };
 
-    bool autoReleaseFlag { false };
-    EnvelopeDetector levelDetector { autoReleaseFlag };
+    EnvelopeDetector levelDetector;
     juce::AudioBuffer<float> analysisSignal;
 
     int overSampleMultiplier { 1 };
