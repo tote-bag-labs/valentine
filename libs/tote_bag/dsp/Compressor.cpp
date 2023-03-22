@@ -70,7 +70,7 @@ inline void Compressor::makeMonoSidechain (const juce::dsp::AudioBlock<float>& i
     auto numChannels = inAudio.getNumChannels();
     auto numSamples = static_cast<int> (inAudio.getNumSamples());
 
-    for (int channel = 0; channel < numChannels; ++channel)
+    for (size_t channel = 0; channel < numChannels; ++channel)
     {
         juce::FloatVectorOperations::addWithMultiply (scWritePointer,
                                                       inAudio.getChannelPointer (channel),
@@ -90,9 +90,9 @@ inline float Compressor::calculateGain (float inputSample)
     auto overshoot = inputSample - T;
     auto doubleOvershoot = 2.0f * overshoot;
     auto R = ratio.get();
-    auto cvOutput = 0.f;
+    auto cvOutput = 0.0f;
 
-    if (W > 0.0)
+    if (W > 0.0f)
     {
         if (doubleOvershoot < -W)
         {
@@ -101,7 +101,7 @@ inline float Compressor::calculateGain (float inputSample)
 
         else if (abs (doubleOvershoot) <= W)
         {
-            cvOutput = inputSample + ((1.0f / R - 1.0f) * pow (overshoot + W / 2.f, 2)) / (2.f * W);
+            cvOutput = inputSample + ((1.0f / R - 1.0f) * powf (overshoot + W / 2.0f, 2)) / (2.0f * W);
         }
         else
         {
@@ -127,20 +127,22 @@ void Compressor::process (juce::dsp::AudioBlock<float>& inAudio)
     auto numSamples = inAudio.getNumSamples();
     auto numChannels = inAudio.getNumChannels();
 
-    for (int sample = 0; sample < numSamples; sample++)
+    auto sidechain = analysisSignal.getWritePointer (0);
+    for (size_t sample = 0; sample < numSamples; sample++)
     {
-        auto controlVoltage = juce::Decibels::gainToDecibels (abs (analysisSignal.getSample (0, sample)));
-        controlVoltage = levelDetector.processSampleDecoupledBranched (controlVoltage);
+        auto controlVoltage = juce::Decibels::gainToDecibels (abs (sidechain[sample]));
+        // TODO: level detector methods should be float, or templated
+        controlVoltage = static_cast<float> (levelDetector.processSampleDecoupledBranched (controlVoltage));
 
         controlVoltage = calculateGain (controlVoltage);
         controlVoltage = juce::Decibels::decibelsToGain (controlVoltage);
 
         meterSource->setReductionLevel (controlVoltage);
 
-        analysisSignal.setSample (0, sample, controlVoltage);
+        sidechain[sample] = controlVoltage;
     }
 
-    for (int channel = 0; channel < numChannels; channel++)
+    for (size_t channel = 0; channel < numChannels; channel++)
     {
         juce::FloatVectorOperations::multiply (inAudio.getChannelPointer (channel),
                                                inAudio.getChannelPointer (channel),
