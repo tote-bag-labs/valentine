@@ -17,8 +17,6 @@
 class Compressor
 {
 public:
-    Compressor (bool autoRelease, float knee);
-
     Compressor (bool autoRelease);
 
     void reset (int numSamplesPerBlock);

@@ -544,7 +544,7 @@ void ValentineAudioProcessor::setStateInformation (const void* data, int sizeInB
 
 void ValentineAudioProcessor::initializeDSP()
 {
-    ffCompressor = std::make_unique<Compressor> (false, 3.84f);
+    ffCompressor = std::make_unique<Compressor> (false);
 
     saturator = std::make_unique<Saturation> (Saturation::Type::inverseHyperbolicSineInterp, .6f);
 
