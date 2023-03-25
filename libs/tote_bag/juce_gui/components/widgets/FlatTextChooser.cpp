@@ -69,10 +69,6 @@ FlatTextChooser::~FlatTextChooser()
 {
 }
 
-void FlatTextChooser::paint (juce::Graphics& g)
-{
-}
-
 void FlatTextChooser::resized()
 {
     const auto mainArea = getLocalBounds();
