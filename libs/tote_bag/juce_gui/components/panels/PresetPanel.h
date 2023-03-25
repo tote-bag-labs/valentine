@@ -23,7 +23,7 @@ public:
                  const juce::String& bypassButtonText,
                  const juce::String& bypassParameterId,
                  juce::AudioProcessorValueTreeState& treeState);
-    ~PresetPanel();
+    ~PresetPanel() override;
 
     void paint (juce::Graphics& g) override;
 
