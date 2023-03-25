@@ -51,13 +51,13 @@ public:
 
     inline double inverseHyperbolicSine (double x, double gain);
 
-    inline float inverseHyperbolicSineInterp (float x, float gain, int channel);
+    inline float inverseHyperbolicSineInterp (float x, int channel);
 
     inline float sineArcTangent (float x, float gain);
 
-    inline double hyperbolicTangent (double x, double gain, int channel);
+    inline double hyperbolicTangent (double x, double gain);
 
-    inline double interpolatedHyperbolicTangent (double x, double gain, int channel);
+    inline double interpolatedHyperbolicTangent (double x, int channel);
 
     inline double hyperTanFirstAntiDeriv (double x);
 

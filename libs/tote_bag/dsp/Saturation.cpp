@@ -49,7 +49,7 @@ inline double Saturation::inverseHyperbolicSine (double x, double gain)
     return log (xScaled + sqrt (xScaled * xScaled + 1.0)) / gain;
 }
 
-inline float Saturation::inverseHyperbolicSineInterp (float x, float gain, int channel)
+inline float Saturation::inverseHyperbolicSineInterp (float x, int channel)
 {
     auto stateSample = xState.getSample (channel, 0);
     auto diff = x - stateSample;
@@ -83,13 +83,13 @@ inline float Saturation::sineArcTangent (float x, float gain)
     return (xScaled / sqrt (1.f + xScaled * xScaled)) / gain;
 }
 
-inline double Saturation::hyperbolicTangent (double x, double gain, int channel)
+inline double Saturation::hyperbolicTangent (double x, double gain)
 {
     double xScaled = x * gain;
     return std::tanh (xScaled) / gain;
 }
 
-inline double Saturation::interpolatedHyperbolicTangent (double x, double gain, int channel)
+inline double Saturation::interpolatedHyperbolicTangent (double x, int channel)
 
 {
     auto stateSample = xState.getSample (channel, 0);
@@ -100,7 +100,7 @@ inline double Saturation::interpolatedHyperbolicTangent (double x, double gain, 
     if (abs (diff) < 0.001)
     {
         auto input = (x + stateSample) / 2.f;
-        output = hyperbolicTangent (input, 1.0f, channel);
+        output = hyperbolicTangent (input, 1.0f);
     }
     else
     {
@@ -138,13 +138,13 @@ inline double Saturation::processSample (double inputSample, int channel, double
             return sineArcTangent (inputSample, gain);
 
         case Type::hyperbolicTangent:
-            return hyperbolicTangent (inputSample, gain, channel);
+            return hyperbolicTangent (inputSample, gain);
 
         case Type::inverseHyperbolicSineInterp:
-            return inverseHyperbolicSineInterp (inputSample * gain, gain, channel) / gain;
+            return inverseHyperbolicSineInterp (inputSample * gain, channel) / gain;
 
         case Type::interpolatedHyperbolicTangent:
-            return interpolatedHyperbolicTangent (inputSample * gain, gain, channel) / gain;
+            return interpolatedHyperbolicTangent (inputSample * gain, channel) / gain;
 
         default:
             //somehow the distortion type was not set. It must be set!
