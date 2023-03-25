@@ -117,6 +117,8 @@ set(SourceFiles
 
     libs/tote_bag/juce_gui/Utilities/GraphicsUtilities.h
     libs/tote_bag/juce_gui/Utilities/GraphicsUtilities.cpp
+
+    libs/tote_bag/utils/macros.hpp
     )
 
 target_sources("${PROJECT_NAME}" PRIVATE ${SourceFiles})
