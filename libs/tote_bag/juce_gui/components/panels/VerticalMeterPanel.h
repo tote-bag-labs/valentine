@@ -27,8 +27,7 @@ class ValentineAudioProcessor;
 class VerticalMeterPanel : public juce::Component
 {
 public:
-    VerticalMeterPanel (const juce::String& label,
-                        ReductionMeterPlacement grMeterPlacement,
+    VerticalMeterPanel (ReductionMeterPlacement reductionMeterPlacement,
                         foleys::LevelMeterSource* levelMeterSource,
                         foleys::LevelMeterSource* grMeterSource = nullptr);
 
