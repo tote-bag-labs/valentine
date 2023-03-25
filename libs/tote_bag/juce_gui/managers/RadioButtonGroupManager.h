@@ -27,7 +27,7 @@ class RadioButtonGroupManager : public juce::Timer
 public:
     RadioButtonGroupManager (juce::AudioParameterChoice& parameter, int groupId);
 
-    ~RadioButtonGroupManager();
+    ~RadioButtonGroupManager() override;
 
     void timerCallback() override;
 
