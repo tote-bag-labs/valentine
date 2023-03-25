@@ -30,10 +30,6 @@ LabelSlider::~LabelSlider()
 {
 }
 
-void LabelSlider::paint (juce::Graphics& g)
-{
-}
-
 void LabelSlider::resized()
 {
     const auto mainArea = getLocalBounds();
