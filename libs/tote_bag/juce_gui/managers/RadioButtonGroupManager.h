@@ -41,7 +41,7 @@ private:
     /** Called by a managed button's onClick() method to change button and
         parameter state.
      */
-    void buttonOnClickCallback (juce::Button* button, int index);
+    void buttonOnClickCallback (juce::Button* button, size_t index);
 
     /** Called periodically to check if param value has changed in a way not driven
         by a click on the button itself. e.g. via automation.
@@ -51,8 +51,8 @@ private:
     juce::AudioParameterChoice& mParameter;
     std::vector<juce::Button*> mManagedButtons;
     int mGroupId { 0 };
-    int mCurrentParameterIndex { 0 };
-    int mNextButtonIndex { 0 };
+    size_t mCurrentParameterIndex { 0 };
+    size_t mNextButtonIndex { 0 };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RadioButtonGroupManager)
 };

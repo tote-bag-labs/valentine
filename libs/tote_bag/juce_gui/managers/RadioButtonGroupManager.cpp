@@ -19,7 +19,7 @@ RadioButtonGroupManager::RadioButtonGroupManager (juce::AudioParameterChoice& pa
     : mParameter (parameter)
     , mGroupId (groupId)
 {
-    mCurrentParameterIndex = mParameter.getIndex();
+    mCurrentParameterIndex = static_cast<size_t> (mParameter.getIndex());
 
     startTimerHz (20);
 }
@@ -57,7 +57,7 @@ void RadioButtonGroupManager::attach (juce::Button* button)
     ++mNextButtonIndex;
 }
 
-void RadioButtonGroupManager::buttonOnClickCallback (juce::Button* button, int index)
+void RadioButtonGroupManager::buttonOnClickCallback (juce::Button* button, size_t index)
 {
     auto buttonOn = button->getToggleState();
 
@@ -75,7 +75,7 @@ void RadioButtonGroupManager::buttonOnClickCallback (juce::Button* button, int i
 
 void RadioButtonGroupManager::updateGroupState()
 {
-    const auto parameterIndex = mParameter.getIndex();
+    const auto parameterIndex = static_cast<size_t> (mParameter.getIndex());
     if (mCurrentParameterIndex != parameterIndex)
     {
         mManagedButtons[parameterIndex]->setToggleState (true,
