@@ -29,9 +29,9 @@ jobs:
       fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
       matrix:
         include:
-         # - name: Linux
-         #   os: ubuntu-22.04
-         #   pluginval-binary: ./pluginval
+          - name: Linux
+            os: ubuntu-22.04
+            #pluginval-binary: ./pluginval
           - name: macOS
             os: macos-12
             pluginval-binary: pluginval.app/Contents/MacOS/pluginval
@@ -44,12 +44,12 @@ jobs:
       if: ${{ matrix.name != 'macOS' }}
       uses: egor-tensin/setup-clang@v1.4
 
-    #- name: Install JUCE's Linux Deps
-    #if: runner.os == 'Linux'
+    - name: Install JUCE's Linux Deps
+      if: runner.os == 'Linux'
       # Thanks to McMartin & co https://forum.juce.com/t/list-of-juce-dependencies-under-linux/15121/44
-    #  run: |
-    #    sudo apt-get update && sudo apt install libasound2-dev libx11-dev libxinerama-dev libxext-dev libfreetype6-dev libwebkit2gtk-4.0-dev libglu1-mesa-dev xvfb fluxbox ninja-build
-    #    sudo /usr/bin/Xvfb $DISPLAY &
+      run: |
+        sudo apt-get update && sudo apt install libasound2-dev libx11-dev libxinerama-dev libxext-dev libfreetype6-dev libwebkit2gtk-4.0-dev libglu1-mesa-dev xvfb fluxbox ninja-build
+        sudo /usr/bin/Xvfb $DISPLAY &
 
     - name: Install macOS Deps
       if: ${{ matrix.name == 'macOS' }}
@@ -129,6 +129,7 @@ jobs:
 
     - name: Pluginval
       working-directory: ${{ env.BUILD_DIR }}
+      if: ${{ matrix.name != 'Linux' }}
       shell: bash
       run: |
         curl -LO "https://github.com/Tracktion/pluginval/releases/download/v1.0.1/pluginval_${{ matrix.name }}.zip"
@@ -192,10 +193,10 @@ jobs:
         # default to user login keychain
         security list-keychains -d user -s login.keychain
 
-    #- name: Zip
-    #  if: ${{ matrix.name == 'Linux' }}
-    #  working-directory: ${{ env.ARTIFACTS_PATH }}
-    #  run: 7z a -tzip ${{ env.OUTPUT_FILEN }}.zip .
+    - name: Zip
+      if: ${{ matrix.name == 'Linux' }}
+      working-directory: ${{ env.ARTIFACTS_PATH }}
+      run: 7z a -tzip ${{ env.OUTPUT_FILEN }}.zip .
 
     - name: Generate Installer (Windows) # and Sign with EV cert on Azure (Windows)
       if: ${{ matrix.name == 'Windows' }}
@@ -215,12 +216,12 @@ jobs:
         name: ${{ env.OUTPUT_FILENAME }}.exe
         path: '${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILENAME }}.exe'
 
-    #- name: Upload Zip (Linux)
-    #  if: ${{ matrix.name == 'Linux' }}
-    #  uses: actions/upload-artifact@v3
-    #  with:
-    #    name: ${{ env.OUTPUT_FILEN }}.zip
-    #    path: '${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILEN }}.zip'
+    - name: Upload Zip (Linux)
+      if: ${{ matrix.name == 'Linux' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ env.OUTPUT_FILEN }}.zip
+        path: '${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILEN }}.zip'
 
     - name: Upload DMG (MacOS)
       if: ${{ matrix.name == 'macOS' }}
