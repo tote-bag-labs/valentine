@@ -131,7 +131,7 @@ void Compressor::process (juce::dsp::AudioBlock<float>& inAudio)
     for (size_t sample = 0; sample < numSamples; sample++)
     {
         auto controlVoltage = juce::Decibels::gainToDecibels (abs (sidechain[sample]));
-        // TODO: level detector methods should be float, or templated
+        // TODO: level detector methods should be float or templated
         controlVoltage = static_cast<float> (levelDetector.processSampleDecoupledBranched (controlVoltage));
 
         controlVoltage = calculateGain (controlVoltage);
