@@ -95,7 +95,7 @@ juce::Rectangle<float> getMeterBarBounds (const juce::Rectangle<float> bounds,
         {
             const float margin = bounds.getHeight() * 0.001f;
             const float top = bounds.getY() + 2.0f * margin;
-            const float bottom = (meterType & FFAU::LevelMeter::MaxNumber) ? bounds.getBottom() - (3.0f * margin + ((bounds.getHeight() * .1) - margin * 2.0f))
+            const float bottom = (meterType & FFAU::LevelMeter::MaxNumber) ? bounds.getBottom() - (3.0f * margin + ((bounds.getHeight() * .1f) - margin * 2.0f))
                                                                            : bounds.getBottom() - margin;
             return juce::Rectangle<float> (bounds.getX() + margin, top, bounds.getWidth() - margin * 2.0f, bottom - top);
         }
@@ -131,16 +131,16 @@ juce::Rectangle<float> getMeterBarBounds (const juce::Rectangle<float> bounds,
 
 /** Override this callback to define the placement of the tickmarks.
  To disable this feature return an empty rectangle. */
-juce::Rectangle<float> getMeterTickmarksBounds (const juce::Rectangle<float> bounds,
-                                                const FFAU::LevelMeter::MeterFlags meterType) const override
+juce::Rectangle<float> getMeterTickmarksBounds (const juce::Rectangle<float>,
+                                                const FFAU::LevelMeter::MeterFlags) const override
 {
     return juce::Rectangle<float>();
 }
 
 /** Override this callback to define the placement of the clip indicator light.
  To disable this feature return an empty rectangle. */
-juce::Rectangle<float> getMeterClipIndicatorBounds (const juce::Rectangle<float> bounds,
-                                                    const FFAU::LevelMeter::MeterFlags meterType) const override
+juce::Rectangle<float> getMeterClipIndicatorBounds (const juce::Rectangle<float>,
+                                                    const FFAU::LevelMeter::MeterFlags) const override
 {
     return juce::Rectangle<float>();
 }
@@ -207,8 +207,8 @@ void drawMeterBars (juce::Graphics& g,
                     const FFAU::LevelMeter::MeterFlags meterType,
                     const juce::Rectangle<float> bounds,
                     const FFAU::LevelMeterSource* source,
-                    const int fixedNumChannels = -1,
-                    const int selectedChannel = -1) override
+                    const int,
+                    const int) override
 {
     const juce::Rectangle<float> innerBounds = getMeterInnerBounds (bounds, meterType);
     if (source)
@@ -382,11 +382,11 @@ void drawMeterBarsBackground (juce::Graphics& g,
     }
 }
 
-void drawMeterChannel (juce::Graphics& g,
-                       const FFAU::LevelMeter::MeterFlags meterType,
-                       const juce::Rectangle<float> bounds,
-                       const FFAU::LevelMeterSource* source,
-                       const int selectedChannel) override
+void drawMeterChannel (juce::Graphics&,
+                       const FFAU::LevelMeter::MeterFlags,
+                       const juce::Rectangle<float>,
+                       const FFAU::LevelMeterSource*,
+                       const int) override
 {
 }
 
@@ -650,9 +650,9 @@ void drawMaxNumber (juce::Graphics& g,
                       1);
 }
 
-void drawMaxNumberBackground (juce::Graphics& g,
-                              [[maybe_unused]] const FFAU::LevelMeter::MeterFlags meterType,
-                              const juce::Rectangle<float> bounds) override
+void drawMaxNumberBackground (juce::Graphics&,
+                              const FFAU::LevelMeter::MeterFlags,
+                              const juce::Rectangle<float>) override
 {
 }
 

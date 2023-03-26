@@ -28,7 +28,7 @@ void SimpleZOH::setResampleOffset (double inHostSr)
     }
 }
 
-void SimpleZOH::setParams (float inDownsampleCoeff, bool sampleRateChanged)
+void SimpleZOH::setParams (float inDownsampleCoeff)
 {
     downsampleCoeff = inDownsampleCoeff;
 }
@@ -91,7 +91,7 @@ void Bitcrusher::processBlock (juce::AudioBuffer<float>& inAudio, int samplesPer
 
 inline float Bitcrusher::getBitcrushedSample (float inputSample, int bits)
 {
-    auto q = 1.0f / (pow (2.0f, bits) - 1);
+    const auto q = 1.0f / (std::powf (2.0f, bits) - 1);
 
-    return q * (floor (inputSample / q));
+    return q * (std::floorf (inputSample / q));
 }

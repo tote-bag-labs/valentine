@@ -23,18 +23,17 @@ class ValentineAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
     ValentineAudioProcessorEditor (ValentineAudioProcessor&);
-    ~ValentineAudioProcessorEditor();
+    ~ValentineAudioProcessorEditor() override;
 
     //==============================================================================
-    void paint (juce::Graphics&) override;
     void resized() override;
 
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
-    ValentineAudioProcessor& processor;
+    ValentineAudioProcessor& audioProcessor;
 
-    VMainPanel mainPanel { processor };
+    VMainPanel mainPanel;
 
     // in figma ~ 5053 x 1741. ratio = 2.9 ish width to height
     static constexpr float ratio = 2.5f;

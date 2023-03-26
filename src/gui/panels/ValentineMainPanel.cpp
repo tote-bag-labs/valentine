@@ -19,11 +19,9 @@ VMainPanel::VMainPanel (ValentineAudioProcessor& processor)
                    FFCompParameterLabel()[getParameterIndex (VParameter::bypass)],
                    FFCompParameterID()[getParameterIndex (VParameter::bypass)],
                    processor.treeState)
-    , inputMeterPanel ("In",
-                       ReductionMeterPlacement::Right,
+    , inputMeterPanel (ReductionMeterPlacement::Right,
                        &processor.getInputMeterSource())
-    , outputMeterPanel ("Out",
-                        ReductionMeterPlacement::Left,
+    , outputMeterPanel (ReductionMeterPlacement::Left,
                         &processor.getOutputMeterSource(),
                         &processor.getGrMeterSource())
     , centerPanel (processor)

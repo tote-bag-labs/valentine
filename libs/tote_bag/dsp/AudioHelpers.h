@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cmath>
 
 namespace tote_bag
@@ -99,6 +100,13 @@ inline FloatType ClampedCosh (FloatType x)
     static constexpr FloatType coshMax = 710.0;
 
     return std::cosh (std::clamp (x, coshMin, coshMax));
+}
+
+/** Returns the the next power of 2 greater than `x`. Returns `x` if it is a power of 2
+ */
+inline int nextPow2 (int x)
+{
+    return static_cast<int> ((std::pow (2, std::ceil (std::log (x) / std::log (2)))));
 }
 
 } // namespace audio_helpers

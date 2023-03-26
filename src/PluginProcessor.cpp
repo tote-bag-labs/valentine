@@ -35,10 +35,10 @@ ValentineAudioProcessor::ValentineAudioProcessor()
     }
 
     //initialize processor params
-    auto ratioIndex = static_cast<int> (FFCompParameterDefaults[getParameterIndex (VParameter::ratio)]);
-    ffCompressor->setRatio (ratioValues[ratioIndex]);
-    ffCompressor->setKnee (kneeValues[ratioIndex]);
-    ffCompressor->setThreshold (thresholdValues[ratioIndex]);
+    const auto defaultRatioIndex = static_cast<size_t> (FFCompParameterDefaults[getParameterIndex (VParameter::ratio)]);
+    ffCompressor->setRatio (ratioValues[defaultRatioIndex]);
+    ffCompressor->setKnee (kneeValues[defaultRatioIndex]);
+    ffCompressor->setThreshold (thresholdValues[defaultRatioIndex]);
     bitCrush->setParams (17.0);
     saturator->setParams (.001);
     boundedSaturator->setParams (boundedSatGain);
@@ -62,7 +62,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     testManager = juce::MessageManager::getInstance();
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
-    for (int i = 0; i < numParams; ++i)
+    for (size_t i = 0; i < numParams; ++i)
     {
         const auto paramType = static_cast<VParameter> (i);
         if (paramType == VParameter::ratio)
@@ -183,23 +183,23 @@ int ValentineAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void ValentineAudioProcessor::setCurrentProgram (int index)
+void ValentineAudioProcessor::setCurrentProgram (int)
 {
 }
 
-const juce::String ValentineAudioProcessor::getProgramName (int index)
+const juce::String ValentineAudioProcessor::getProgramName (int)
 {
     return {};
 }
 
-void ValentineAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void ValentineAudioProcessor::changeProgramName (int, const juce::String&)
 {
 }
 
 //==============================================================================
 void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    auto oversampleMultiplier = pow (2, oversampleFactor);
+    const auto oversampleMultiplier = static_cast<int> (pow (2, oversampleFactor));
 
     processBuffer.setSize (2, samplesPerBlock);
     processBuffer.clear();
@@ -211,18 +211,18 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     ffCompressor->setOversampleMultiplier (oversampleMultiplier);
 
     oversampler->reset();
-    oversampler->initProcessing (samplesPerBlock);
+    oversampler->initProcessing (static_cast<size_t> (samplesPerBlock));
 
     saturator->reset (sampleRate);
     boundedSaturator->reset (sampleRate);
-    simpleZOH->setParams (sampleRate / downSampleRate, false);
+    simpleZOH->setParams (static_cast<float> (sampleRate / downSampleRate));
 
     // Calculate delay, round up. That's the delay reported to host. subtract
     // the original delay from that and you have the fractional delay
     // for processed data. .5 for the the interpolated tanh() latency,
     // .5 for the interp inverse sine latency
     const auto overSamplingDelay = oversampler->getLatencyInSamples() + 1.0f;
-    const auto reportedDelay = std::ceil (overSamplingDelay);
+    const auto reportedDelay = static_cast<int> (std::ceil (overSamplingDelay));
     const auto fracDelay = reportedDelay - overSamplingDelay;
     setLatencySamples (reportedDelay);
     circBuffDelay = reportedDelay;
@@ -241,7 +241,7 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
     dryWet.reset (sampleRate, dryWetRampLength);
 
-    const auto rmsWindow = RMStime * 0.001f * sampleRate / samplesPerBlock;
+    const auto rmsWindow = juce::roundToInt (RMStime * 0.001f * sampleRate / samplesPerBlock);
     inputMeterSource.resize (getTotalNumInputChannels(), rmsWindow);
 
     grMeterSource.resize (1, rmsWindow);
@@ -280,7 +280,7 @@ bool ValentineAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 }
 #endif
 
-void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
@@ -333,7 +333,8 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     oversampler->processSamplesDown (processBlock);
 
     // Delay processed signal to produce a integral delay amount
-    for (int channel = 0; channel < totalNumOutputChannels; ++channel)
+    const auto numOutputChannels = static_cast<size_t> (totalNumOutputChannels);
+    for (size_t channel = 0; channel < numOutputChannels; ++channel)
     {
         juce::dsp::AudioBlock<float> channelBlock = processBlock.getSingleChannelBlock (channel);
         fracDelayFilters[channel]->process (channelBlock);
@@ -352,14 +353,14 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     dryWet.setTargetValue (mix);
     for (int j = 0; j < currentSamplesPerBlock; ++j)
     {
-        auto mix = dryWet.getNextValue();
+        const auto currentMix = dryWet.getNextValue();
 
         for (int i = 0; i < totalNumOutputChannels; ++i)
         {
             auto processed = processBuffer.getSample (i, j);
             auto unprocessed = buffer.getSample (i, j);
 
-            buffer.setSample (i, j, mix * processed + (1.0f - mix) * unprocessed);
+            buffer.setSample (i, j, mix * processed + (1.0f - currentMix) * unprocessed);
         }
     }
 
@@ -390,10 +391,12 @@ void ValentineAudioProcessor::prepareInputBuffer (juce::AudioBuffer<float>& buff
     for (auto i = numInputChannels; i < numOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    for (int channel = 0; channel < numOutputChannels; ++channel)
+    const auto numChannels = static_cast<size_t> (numOutputChannels);
+    const auto numSamples = static_cast<size_t> (buffer.getNumSamples());
+    for (size_t channel = 0; channel < numChannels; ++channel)
     {
-        auto channelData = buffer.getWritePointer (channel);
-        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+        auto channelData = buffer.getWritePointer (static_cast<int> (channel));
+        for (size_t sample = 0; sample < numSamples; ++sample)
         {
             unProcBuffers[channel]->writeBuffer (channelData[sample]);
             channelData[sample] = unProcBuffers[channel]->readBuffer (circBuffDelay, false);
@@ -467,7 +470,7 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter, f
     }
     else if (parameter == "Mix")
     {
-        mixValue.set (newValue * .01);
+        mixValue.set (newValue * .01f);
     }
     else if (parameter == "Makeup")
     {
@@ -541,7 +544,7 @@ void ValentineAudioProcessor::setStateInformation (const void* data, int sizeInB
 
 void ValentineAudioProcessor::initializeDSP()
 {
-    ffCompressor = std::make_unique<Compressor> (false, 3.84f);
+    ffCompressor = std::make_unique<Compressor> (false);
 
     saturator = std::make_unique<Saturation> (Saturation::Type::inverseHyperbolicSineInterp, .6f);
 

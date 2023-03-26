@@ -22,7 +22,7 @@ void drawRoundedRect (juce::Graphics& g,
 
     auto h = croppedBounds.getHeight();
     auto lineThickness = h * .025f;
-    auto cornerSize = h * .25;
+    auto cornerSize = h * .25f;
 
     g.setColour (colour.darker());
 

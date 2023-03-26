@@ -50,7 +50,7 @@ public:
                    const float radius,
                    const float toAngle,
                    const juce::Rectangle<float> bounds,
-                   juce::Slider& slider,
+                   juce::Slider&,
                    const bool withDropShadow);
 
     void drawRotarySlider (juce::Graphics& g,
@@ -63,7 +63,7 @@ public:
                            const float rotaryEndAngle,
                            juce::Slider&) override;
 
-    juce::Typeface::Ptr getTypefaceForFont (const juce::Font& f) override;
+    juce::Typeface::Ptr getTypefaceForFont (const juce::Font&) override;
 
     juce::Font getTextButtonFont (juce::TextButton&, int buttonHeight) override;
 
@@ -73,7 +73,7 @@ public:
                                juce::Button& button,
                                const juce::Colour& backgroundColour,
                                bool,
-                               bool isButtonDown) override;
+                               bool) override;
 
     void drawFlatButtonBackground (juce::Graphics& g,
                                    tote_bag::FlatTextButton& button,
@@ -87,7 +87,7 @@ public:
                          bool isButtonDown) override;
 
     void drawComboBox (juce::Graphics& g,
-                       int width,
+                       int,
                        int height,
                        bool,
                        int,
@@ -98,15 +98,15 @@ public:
 
     void drawPopupMenuItem (juce::Graphics& g,
                             const juce::Rectangle<int>& area,
-                            bool isSeparator,
-                            bool isActive,
+                            bool,
+                            bool,
                             bool isHighlighted,
                             bool isTicked,
-                            bool hasSubMenu,
+                            bool,
                             const juce::String& text,
-                            const juce::String& shortcutKeyText,
-                            const juce::Drawable* icon,
-                            const juce::Colour* textColour) override;
+                            const juce::String&,
+                            const juce::Drawable*,
+                            const juce::Colour*) override;
 
     juce::Slider::SliderLayout getSliderLayout (juce::Slider& slider) override;
 

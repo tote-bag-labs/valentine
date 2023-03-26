@@ -94,10 +94,10 @@ void PresetPanel::decrementPreset()
 
 void PresetPanel::savePreset()
 {
-    auto currentPresetName = presetManager.getCurrentPresetName();
+    const auto presetName = presetManager.getCurrentPresetName();
 
     juce::String currentPresetPath = presetManager.getCurrentPresetDirectory()
-                                     + static_cast<std::string> (directorySeparator) + currentPresetName;
+                                     + static_cast<std::string> (directorySeparator) + presetName;
 
     juce::FileChooser chooser ("Save a file: ",
                                juce::File (currentPresetPath),

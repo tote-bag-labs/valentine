@@ -69,10 +69,6 @@ FlatTextChooser::~FlatTextChooser()
 {
 }
 
-void FlatTextChooser::paint (juce::Graphics& g)
-{
-}
-
 void FlatTextChooser::resized()
 {
     const auto mainArea = getLocalBounds();
@@ -89,7 +85,7 @@ void FlatTextChooser::resized()
 
     if (mAlignWithParameterSliders)
     {
-        buttonArea.removeFromBottom (buttonArea.getHeight() * .15f);
+        buttonArea.removeFromBottom (static_cast<int>(buttonArea.getHeight() * .15f));
     }
 
     // The buttons themselves shouldn't take up all of the horizontal space

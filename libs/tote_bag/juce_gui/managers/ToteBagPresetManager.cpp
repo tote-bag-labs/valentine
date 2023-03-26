@@ -58,7 +58,7 @@ void ToteBagPresetManager::savePreset (juce::File presetFile)
     processor->getStateInformation (destinationData);
 
     // write the preset data to file
-    presetFile.appendData (destinationData.getData(), static_cast<int> (destinationData.getSize()));
+    presetFile.appendData (destinationData.getData(), destinationData.getSize());
 
     updatePresetList();
 }

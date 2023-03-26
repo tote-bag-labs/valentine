@@ -91,8 +91,9 @@ void CenterPanel::resized()
 {
     auto workingArea = getLocalBounds();
 
-    auto areaFunc = [] (juce::Rectangle<int>& area, int numSliders, int sliderCount) -> juce::Rectangle<int> {
-        return area.removeFromLeft (area.getWidth() / (numSliders - sliderCount));
+    auto areaFunc = [] (juce::Rectangle<int>& area, size_t numSliders, size_t sliderCount) -> juce::Rectangle<int> {
+        int amountToRemove = juce::roundToInt (static_cast<float> (area.getWidth()) / static_cast<float> (numSliders - sliderCount));
+        return area.removeFromLeft (amountToRemove);
     };
 
     const auto paramWidth = juce::roundToInt (workingArea.getWidth() / 5.0f);
@@ -106,7 +107,7 @@ void CenterPanel::resized()
     workingArea.removeFromTop (verticalAlignmentSpacer);
     workingArea.removeFromBottom (verticalAlignmentSpacer);
 
-    const auto borderMargin = paramWidth * .05f;
+    const auto borderMargin = static_cast<int> (paramWidth * .05f);
 
     // Left side
     const auto numLeftColumns = 3;
@@ -123,22 +124,23 @@ void CenterPanel::resized()
         &saturateSlider
     };
 
-    for (int i = 0; i < numLeftColumns; ++i)
+    for (size_t i = 0; i < numLeftColumns; ++i)
     {
         topLeftRowComponents[i]->setBounds (areaFunc (topLeftRowBounds, numLeftColumns, i));
     }
 
+    const auto roundedRowMargin = juce::roundToInt (betweenRowMargin);
     // Margin
-    leftSideBounds.removeFromTop (betweenRowMargin);
+    leftSideBounds.removeFromTop (roundedRowMargin);
 
     // Bottom
     auto bottomRowParamHeight = juce::roundToInt (paramWidth * .65f);
-    const auto smallborderMargin = bottomRowParamHeight * .05f;
+    const auto smallborderMargin = juce::roundToInt (bottomRowParamHeight * .05f);
     bottomLeftRowBorderBounds = leftSideBounds.removeFromTop (bottomRowParamHeight);
 
     auto bottomLeftRowBounds = bottomLeftRowBorderBounds.reduced (smallborderMargin);
 
-    auto ratioBounds = bottomLeftRowBounds.removeFromLeft (bottomLeftRowBounds.getWidth() / 3.0f);
+    auto ratioBounds = bottomLeftRowBounds.removeFromLeft (juce::roundToInt (bottomLeftRowBounds.getWidth() / 3.0f));
     mRatioBox->setBounds (ratioBounds);
 
     const auto numBottomLeftColumns = numLeftColumns - 1;
@@ -148,13 +150,13 @@ void CenterPanel::resized()
         &releaseSlider
     };
 
-    for (int i = 0; i < numBottomLeftColumns; ++i)
+    for (size_t i = 0; i < numBottomLeftColumns; ++i)
     {
         bottomLeftRowComponents[i]->setBounds (areaFunc (bottomLeftRowBounds, numBottomLeftColumns, i));
     }
 
     // Vertical margin
-    workingArea.removeFromLeft (betweenRowMargin);
+    workingArea.removeFromLeft (roundedRowMargin);
 
     const auto numRightColumns = 2;
     auto rightSideBounds = workingArea.removeFromLeft (paramWidth * numRightColumns);
@@ -169,13 +171,13 @@ void CenterPanel::resized()
         &mixSlider
     };
 
-    for (int i = 0; i < numRightColumns; ++i)
+    for (size_t i = 0; i < numRightColumns; ++i)
     {
         topRightRowComponents[i]->setBounds (areaFunc (topRightRowBounds, numRightColumns, i));
     }
 
     // Margin
-    rightSideBounds.removeFromTop (betweenRowMargin);
+    rightSideBounds.removeFromTop (roundedRowMargin);
 
     // Bottom right
     auto logoHeight = juce::roundToInt (paramWidth * .5f);

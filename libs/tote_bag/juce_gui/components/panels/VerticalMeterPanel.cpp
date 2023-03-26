@@ -15,11 +15,10 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 
 //==============================================================================
-VerticalMeterPanel::VerticalMeterPanel (const juce::String& label,
-                                        ReductionMeterPlacement grMeterPlacement,
+VerticalMeterPanel::VerticalMeterPanel (ReductionMeterPlacement reductionMeterPlacement,
                                         foleys::LevelMeterSource* levelMeterSource,
                                         foleys::LevelMeterSource* grMeterSource)
-    : grMeterPlacement (grMeterPlacement)
+    : grMeterPlacement (reductionMeterPlacement)
 {
     using namespace tote_bag::laf_constants;
 
