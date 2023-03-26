@@ -91,7 +91,7 @@ void Bitcrusher::processBlock (juce::AudioBuffer<float>& inAudio, int samplesPer
 
 inline float Bitcrusher::getBitcrushedSample (float inputSample, int bits)
 {
-    const auto q = 1.0f / (std::powf (2.0f, bits) - 1);
+    const auto q = 1.0f / (powf (2.0f, bits) - 1);
 
-    return q * (std::floorf (inputSample / q));
+    return q * (floorf (inputSample / q));
 }
