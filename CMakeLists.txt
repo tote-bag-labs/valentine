@@ -105,18 +105,18 @@ set(SourceFiles
     libs/tote_bag/juce_gui/components/widgets/ParameterSlider.cpp
     libs/tote_bag/juce_gui/components/widgets/ParameterTextButton.cpp
 
-    libs/tote_bag/juce_gui/LookAndFeel/LookAndFeel.h
-    libs/tote_bag/juce_gui/LookAndFeel/LookAndFeelConstants.h
-    libs/tote_bag/juce_gui/LookAndFeel/MeterLookAndFeelMethods.h
-    libs/tote_bag/juce_gui/LookAndFeel/LookAndFeel.cpp
+    libs/tote_bag/juce_gui/lookandfeel/LookAndFeel.h
+    libs/tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h
+    libs/tote_bag/juce_gui/lookandfeel/MeterLookAndFeelMethods.h
+    libs/tote_bag/juce_gui/lookandfeel/LookAndFeel.cpp
 
-    libs/tote_bag/juce_gui/Managers/ToteBagPresetManager.h
-    libs/tote_bag/juce_gui/Managers/RadioButtonGroupManager.h
-    libs/tote_bag/juce_gui/Managers/ToteBagPresetManager.cpp
-    libs/tote_bag/juce_gui/Managers/RadioButtonGroupManager.cpp
+    libs/tote_bag/juce_gui/managers/ToteBagPresetManager.h
+    libs/tote_bag/juce_gui/managers/RadioButtonGroupManager.h
+    libs/tote_bag/juce_gui/managers/ToteBagPresetManager.cpp
+    libs/tote_bag/juce_gui/managers/RadioButtonGroupManager.cpp
 
-    libs/tote_bag/juce_gui/Utilities/GraphicsUtilities.h
-    libs/tote_bag/juce_gui/Utilities/GraphicsUtilities.cpp
+    libs/tote_bag/juce_gui/utilities/GraphicsUtilities.h
+    libs/tote_bag/juce_gui/utilities/GraphicsUtilities.cpp
 
     libs/tote_bag/utils/macros.hpp
     )
