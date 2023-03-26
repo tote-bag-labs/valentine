@@ -193,10 +193,10 @@ jobs:
         # default to user login keychain
         security list-keychains -d user -s login.keychain
 
-    - name: Zip
-      if: ${{ matrix.name == 'Linux' }}
-      working-directory: ${{ env.ARTIFACTS_PATH }}
-      run: 7z a -tzip ${{ env.OUTPUT_FILENAME }}.zip .
+    #- name: Zip
+    #  if: ${{ matrix.name == 'Linux' }}
+    #  working-directory: ${{ env.ARTIFACTS_PATH }}
+    #  run: 7z a -tzip ${{ env.OUTPUT_FILENAME }}.zip .
 
     - name: Generate Installer (Windows) # and Sign with EV cert on Azure (Windows)
       if: ${{ matrix.name == 'Windows' }}
@@ -216,12 +216,12 @@ jobs:
         name: ${{ env.OUTPUT_FILENAME }}.exe
         path: '${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILENAME }}.exe'
 
-    - name: Upload Zip (Linux)
-      if: ${{ matrix.name == 'Linux' }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ env.OUTPUT_FILENAME }}.zip
-        path: '${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILENAME }}.zip'
+    #- name: Upload Zip (Linux)
+    #  if: ${{ matrix.name == 'Linux' }}
+    #  uses: actions/upload-artifact@v3
+    #  with:
+    #    name: ${{ env.OUTPUT_FILENAME }}.zip
+    #    path: '${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILENAME }}.zip'
 
     - name: Upload DMG (MacOS)
       if: ${{ matrix.name == 'macOS' }}
