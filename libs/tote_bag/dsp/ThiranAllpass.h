@@ -55,23 +55,12 @@ public:
 
     void prepare (T inDelay)
     {
-        // This class needs to be refactored. It can only operate as a first order
-        // filter, but here we accept an arbitrary delay amount. This will cause a
-        // crash if a value equal to or larger than 1 is passed in. This is because
-        // this value is truncated and used to determine the order of the filter
-        // values smaller than 1 are truncated to 0, resulting in a buffer size of 1, or
-        // a first order filter. The difference between the passed in delay value and
-        // it's truncated N is used to calculate our coefficients
-        // TODO: make sure this can actually handle all the delay values that may be given to it.
-        // TODO: conversely, refactor to only allow fractional delays of less than one sample.
-        jassert (inDelay < 1);
-
         // get the desired delay and figure out filter order.
         if (delay != inDelay)
         {
             delay = inDelay;
-            N = static_cast<int> (delay);
-            bufSize = N + 1;
+            N = 1;
+            bufSize = N;
 
             xBuf.setSize (bufSize);
             yBuf.setSize (bufSize);
