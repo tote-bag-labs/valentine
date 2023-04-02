@@ -32,22 +32,18 @@ public:
         }
     }
 
-    /** Take a mono AudioBlock and processes it
+    /** Processes a buffer of samples. This should be called after prepare().
+     *  @param buffer The buffer to process.
+     *  @param numSamples The number of samples in the buffer.
      */
-    void process (juce::dsp::AudioBlock<T>& inBlock)
+    void process (T* buffer, size_t numSamples)
     {
-        juce::ScopedNoDenormals noDenormals;
-
-        auto blockLen = inBlock.getNumSamples();
-        auto inAudio = inBlock.getChannelPointer (0);
-
-        for (size_t sample = 0; sample < blockLen; ++sample)
+        for (size_t sample = 0; sample < numSamples; ++sample)
         {
-            const T x = inAudio[sample];
+            const auto x = buffer[sample];
+            const auto y = a1 * x + accumulator;
 
-            const T y = a1 * x + accumulator;
-
-            inAudio[sample] = y;
+            buffer[sample] = y;
             accumulator = x - (a1 * y);
         }
     }

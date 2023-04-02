@@ -337,8 +337,10 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     const auto numOutputChannels = static_cast<size_t> (totalNumOutputChannels);
     for (size_t channel = 0; channel < numOutputChannels; ++channel)
     {
-        juce::dsp::AudioBlock<float> channelBlock = processBlock.getSingleChannelBlock (channel);
-        fracDelayFilters[channel]->process (channelBlock);
+        auto channelPointer = processBlock.getChannelPointer (channel);
+        const auto blockLength = processBlock.getNumSamples();
+
+        fracDelayFilters[channel]->process (channelPointer, blockLength);
     }
 
     // Apply Makeup
