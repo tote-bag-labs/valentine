@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <cassert>
+
 template <typename T>
 class FirstOrderThiranAllpass
 {
@@ -21,6 +23,8 @@ public:
 
     void prepare (T inDelay)
     {
+        assert (inDelay > 0.0);
+
         if (delay != inDelay)
         {
             delay = inDelay;
