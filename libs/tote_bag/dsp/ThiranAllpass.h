@@ -24,17 +24,8 @@ public:
         if (delay != inDelay)
         {
             delay = inDelay;
-            makeCoefficients();
+            updateCoefficients();
         }
-    }
-
-    /** Calculates the filter coefficients. This is called automatically by prepare().
-     *  see Splitting the Unit Delay: Tools for Fractional Delay Filter Design
-     *  T.I. Laakso; V. Valimaki; M. Karjalainen; U.K. Laine; et al.
-     */
-    void makeCoefficients()
-    {
-        a1 = (1.0f - delay) / (1.0f + delay);
     }
 
     /** Take a mono AudioBlock and processes it
@@ -58,6 +49,15 @@ public:
     }
 
 private:
+    /** Calculates the filter coefficients. This is called automatically by prepare().
+     * see Splitting the Unit Delay: Tools for Fractional Delay Filter Design
+     * T.I. Laakso; V. Valimaki; M. Karjalainen; U.K. Laine; et al.
+     */
+    void updateCoefficients()
+    {
+        a1 = (1.0f - delay) / (1.0f + delay);
+    }
+
     T delay = 0.0;
     T a1 = 0.0;
     T accumulator = 0.0;
