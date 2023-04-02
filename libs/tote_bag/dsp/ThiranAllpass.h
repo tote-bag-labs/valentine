@@ -12,15 +12,24 @@
 
 #include <cassert>
 
+/** A first order Thiran allpass filter. This is a simple allpass filter that
+ *  has a single coefficient, a1, and a single state variable, accumulator.
+ *  This filter will sound best for delay times around 1 sample.
+ */
 template <typename T>
 class FirstOrderThiranAllpass
 {
 public:
+    /** Resets the filter state to zero. This should be called before processing.
+     */
     void reset()
     {
         accumulator = 0.0;
     }
 
+    /** Prepares the filter for processing. This should be called before processing.
+     *  @param inDelay The delay time in samples. This should be between 0 and 2.
+     */
     void prepare (T inDelay)
     {
         assert (inDelay > 0.0);
