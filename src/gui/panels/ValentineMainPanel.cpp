@@ -26,12 +26,12 @@ VMainPanel::VMainPanel (ValentineAudioProcessor& processor)
                         &processor.getGrMeterSource())
     , centerPanel (processor)
 {
-    setLookAndFeel (&lookAndFeel);
-
     addAndMakeVisible (presetPanel);
     addAndMakeVisible (centerPanel);
     addAndMakeVisible (inputMeterPanel);
     addAndMakeVisible (outputMeterPanel);
+
+    setLookAndFeel (&lookAndFeel);
 }
 
 VMainPanel::~VMainPanel()

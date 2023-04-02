@@ -35,9 +35,9 @@ public:
 
     void resized() override;
 
-private:
-    tote_bag::LookAndFeel metersLookAndFeel;
+    void lookAndFeelChanged() override;
 
+private:
     FFAU::LevelMeter levelMeter { FFAU::LevelMeter::MeterFlags::Minimal };
 
     std::unique_ptr<FFAU::LevelMeter> gainReductionMeter;
