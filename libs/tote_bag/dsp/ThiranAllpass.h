@@ -29,12 +29,12 @@ public:
     }
 
     /** Calculates the filter coefficients. This is called automatically by prepare().
+     *  see Splitting the Unit Delay: Tools for Fractional Delay Filter Design
+     *  T.I. Laakso; V. Valimaki; M. Karjalainen; U.K. Laine; et al.
      */
     void makeCoefficients()
     {
-        T product = 1.0;
-        product *= (delay - 1.0) / (delay + 1.0);
-        a1 = product;
+        a1 = (1.0f - delay) / (1.0f + delay);
     }
 
     /** Take a mono AudioBlock and processes it

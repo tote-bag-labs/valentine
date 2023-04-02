@@ -222,8 +222,7 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     // for processed data.
     // .5 for the the interpolated tanh() latency,
     // .5 for the interp inverse sine latency
-    // 1.0 for the minimum fractional filter delay.
-    const auto overSamplingDelay = oversampler->getLatencyInSamples() + 2.0f;
+    const auto overSamplingDelay = oversampler->getLatencyInSamples() + 1.0f;
     const auto reportedDelay = static_cast<int> (std::ceil (overSamplingDelay));
     const auto fracDelay = reportedDelay - overSamplingDelay;
     setLatencySamples (reportedDelay);
@@ -232,7 +231,7 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     for (auto& filter : fracDelayFilters)
     {
         filter->reset();
-        filter->prepare (1.0f + fracDelay);
+        filter->prepare (fracDelay);
     }
 
     for (auto& buffer : unProcBuffers)
