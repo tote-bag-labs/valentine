@@ -559,7 +559,7 @@ void ValentineAudioProcessor::initializeDSP()
     bitCrush = std::make_unique<Bitcrusher>();
 
     for (auto& filter : fracDelayFilters)
-        filter.reset (new ThiranAllPass<double>);
+        filter.reset (new FirstOrderThiranAllpass<double>);
 
     for (auto& buffer : unProcBuffers)
     {
