@@ -219,7 +219,8 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
     // Calculate delay, round up. That's the delay reported to host. subtract
     // the original delay from that and you have the fractional delay
-    // for processed data. .5 for the the interpolated tanh() latency,
+    // for processed data.
+    // .5 for the the interpolated tanh() latency,
     // .5 for the interp inverse sine latency
     const auto overSamplingDelay = oversampler->getLatencyInSamples() + 1.0f;
     const auto reportedDelay = static_cast<int> (std::ceil (overSamplingDelay));
@@ -336,8 +337,10 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     const auto numOutputChannels = static_cast<size_t> (totalNumOutputChannels);
     for (size_t channel = 0; channel < numOutputChannels; ++channel)
     {
-        juce::dsp::AudioBlock<float> channelBlock = processBlock.getSingleChannelBlock (channel);
-        fracDelayFilters[channel]->process (channelBlock);
+        auto channelPointer = processBlock.getChannelPointer (channel);
+        const auto blockLength = processBlock.getNumSamples();
+
+        fracDelayFilters[channel]->process (channelPointer, blockLength);
     }
 
     // Apply Makeup
@@ -557,7 +560,7 @@ void ValentineAudioProcessor::initializeDSP()
     bitCrush = std::make_unique<Bitcrusher>();
 
     for (auto& filter : fracDelayFilters)
-        filter.reset (new ThiranAllPass<double>);
+        filter.reset (new FirstOrderThiranAllpass<float>);
 
     for (auto& buffer : unProcBuffers)
     {

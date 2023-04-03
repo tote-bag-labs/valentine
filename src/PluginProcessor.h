@@ -157,7 +157,7 @@ private:
 
     // DSP objects
     std::array<std::unique_ptr<CircularBuffer<float>>, 2> unProcBuffers;
-    std::array<std::unique_ptr<ThiranAllPass<double>>, 2> fracDelayFilters;
+    std::array<std::unique_ptr<FirstOrderThiranAllpass<float>>, 2> fracDelayFilters;
     std::unique_ptr<tote_bag::audio_helpers::SimpleOnePole<float>> dryWetFilter;
     std::unique_ptr<Oversampling> oversampler;
     std::unique_ptr<Compressor> ffCompressor;
