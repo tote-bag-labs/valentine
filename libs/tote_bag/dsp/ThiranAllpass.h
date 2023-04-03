@@ -34,7 +34,7 @@ public:
 
     /** Take a mono AudioBlock and processes it
      */
-    void process (juce::dsp::AudioBlock<float>& inBlock)
+    void process (juce::dsp::AudioBlock<T>& inBlock)
     {
         juce::ScopedNoDenormals noDenormals;
 
