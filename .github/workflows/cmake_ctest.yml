@@ -196,10 +196,10 @@ jobs:
         # default to user login keychain
         security list-keychains -d user -s login.keychain
 
-    #- name: Zip
-    #  if: ${{ matrix.name == 'Linux' }}
-    #  working-directory: ${{ env.ARTIFACTS_PATH }}
-    #  run: 7z a -tzip ${{ env.OUTPUT_FILENAME }}.zip .
+    - name: Zip
+      if: ${{ matrix.name == 'Linux' }}
+      working-directory: ${{ env.ARTIFACTS_PATH }}
+      run: 7z a -tzip ${{ env.OUTPUT_FILENAME }}.zip .
 
     - name: Generate Installer (Windows) # and Sign with EV cert on Azure (Windows)
       if: ${{ matrix.name == 'Windows' }}
