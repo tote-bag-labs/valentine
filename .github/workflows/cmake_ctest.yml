@@ -31,13 +31,16 @@ jobs:
         include:
           - name: Linux
             os: ubuntu-22.04
-            #pluginval-binary: ./pluginval
+            pluginval-binary: ./pluginval
+            pluginval-strictness: 1
           - name: macOS
             os: macos-12
             pluginval-binary: pluginval.app/Contents/MacOS/pluginval
+            pluginval-strictness: 10
           - name: windows
             os: windows-latest
             pluginval-binary: ./pluginval.exe
+            pluginval-strictness: 10
 
     steps:
     - name: Set up Clang
@@ -134,7 +137,7 @@ jobs:
       run: |
         curl -LO "https://github.com/Tracktion/pluginval/releases/download/v1.0.1/pluginval_${{ matrix.name }}.zip"
         7z x pluginval_${{ matrix.name }}.zip
-        ${{ matrix.pluginval-binary }} --strictness-level 10 --verbose --validate "${{ env.VST3_PATH }}"
+        ${{ matrix.pluginval-binary }} --strictness-level ${{ matrix.pluginval-strictness }} --verbose --validate "${{ env.VST3_PATH }}"
 
     - name: Codesign (macOS)
       working-directory: ${{ env.BUILD_DIR }}

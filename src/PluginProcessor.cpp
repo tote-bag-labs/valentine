@@ -50,8 +50,6 @@ ValentineAudioProcessor::~ValentineAudioProcessor()
     {
         treeState.removeParameterListener (param, this);
     }
-
-    testManager->deleteInstance();
 }
 
 //==============================================================================
@@ -59,7 +57,6 @@ ValentineAudioProcessor::~ValentineAudioProcessor()
 juce::AudioProcessorValueTreeState::ParameterLayout
     ValentineAudioProcessor::createParameterLayout()
 {
-    testManager = juce::MessageManager::getInstance();
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
     for (size_t i = 0; i < numParams; ++i)

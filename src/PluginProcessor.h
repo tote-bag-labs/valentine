@@ -166,7 +166,5 @@ private:
     std::unique_ptr<SimpleZOH> simpleZOH;
     std::unique_ptr<Bitcrusher> bitCrush;
 
-    juce::MessageManager* testManager;
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValentineAudioProcessor)
 };
