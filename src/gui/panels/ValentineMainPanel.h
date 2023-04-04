@@ -24,6 +24,7 @@ class VMainPanel : public juce::Component
 {
 public:
     VMainPanel (ValentineAudioProcessor& inProcessor);
+
     ~VMainPanel() override;
 
     void paint (juce::Graphics& g) override;

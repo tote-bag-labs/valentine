@@ -22,12 +22,6 @@ VerticalMeterPanel::VerticalMeterPanel (ReductionMeterPlacement reductionMeterPl
 {
     using namespace tote_bag::laf_constants;
 
-    metersLookAndFeel.setColour (FFAU::LevelMeter::lmBackgroundColour, vPink);
-    metersLookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientLowColour, (vGreen1));
-    metersLookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientMidColour, vGreen2);
-    metersLookAndFeel.setColour (FFAU::LevelMeter::lmMeterMaxOverColour, vRed);
-
-    levelMeter.setLookAndFeel (&metersLookAndFeel);
     levelMeter.setMeterSource (levelMeterSource);
     addAndMakeVisible (levelMeter);
 
@@ -35,13 +29,31 @@ VerticalMeterPanel::VerticalMeterPanel (ReductionMeterPlacement reductionMeterPl
     {
         gainReductionMeter = std::make_unique<FFAU::LevelMeter> (FFAU::LevelMeter::MeterFlags::Reduction);
         gainReductionMeter->setMeterSource (grMeterSource);
-        gainReductionMeter->setLookAndFeel (&metersLookAndFeel);
         addAndMakeVisible (gainReductionMeter.get());
     }
 }
 
 VerticalMeterPanel::~VerticalMeterPanel()
 {
+}
+
+void VerticalMeterPanel::lookAndFeelChanged()
+{
+    using namespace tote_bag::laf_constants;
+
+    auto& lookAndFeel = getLookAndFeel();
+
+    lookAndFeel.setColour (FFAU::LevelMeter::lmBackgroundColour, vPink);
+    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientLowColour, (vGreen1));
+    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientMidColour, vGreen2);
+    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterMaxOverColour, vRed);
+
+    levelMeter.setLookAndFeel (&lookAndFeel);
+
+    if (gainReductionMeter.get())
+    {
+        gainReductionMeter->setLookAndFeel (&lookAndFeel);
+    }
 }
 
 void VerticalMeterPanel::resized()
