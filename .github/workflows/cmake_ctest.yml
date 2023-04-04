@@ -220,11 +220,11 @@ jobs:
         path: '${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILENAME }}.exe'
 
     - name: Upload Zip (Linux)
-     if: ${{ matrix.name == 'Linux' }}
-     uses: actions/upload-artifact@v3
-     with:
-       name: ${{ env.OUTPUT_FILENAME }}.zip
-       path: '${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILENAME }}.zip'
+      if: ${{ matrix.name == 'Linux' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ env.OUTPUT_FILENAME }}.zip
+        path: '${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILENAME }}.zip'
 
     - name: Upload DMG (MacOS)
       if: ${{ matrix.name == 'macOS' }}
