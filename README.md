@@ -70,26 +70,21 @@ If you'd rather just build it from the command line, run
 Contributing to Valentine
 =========================
 
-I'm currently focusing on getting this project off the ground, and as such have limited capacity to review PRs.
-There are exceptions:
+If you'd like to get involved, take a look at [issues.](https://github.com/tote-bag-labs/valentine/issues) I could use help on anything marked [bug](https://github.com/tote-bag-labs/valentine/labels/bug) or [enhancement](https://github.com/tote-bag-labs/valentine/labels/enhancement).
 
-- I would like to offer Valentine on Linux, but haven't the set up to see why it's not currently working.
-
-- Valentine has 0 unit test coverage. I would love to change that.
+I'm currently not taking pull requests for new features.
 
 
-TODO
-====
+TODO for Valentine v1.0.0
+=========================
 
-- Get it working on Linux
+- Clean up code
 
 - Write tests
 
-- Code cleanup
+- Finalize parameters and parameter ranges
 
-- Decide on final parameter set and ranges
-
-- Algorithm tweaks
+- Tweak the algorithm
 
 - Write an instruction manual
 
