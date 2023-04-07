@@ -10,11 +10,13 @@
 
 #pragma once
 
+#include "tote_bag/juce_gui/utilities/tbl_font.h"
+
 #include <ff_meters/ff_meters.h>
-#include <juce_gui_basics/juce_gui_basics.h>
 
 namespace tote_bag
 {
+
 class FlatTextButton;
 
 class LookAndFeel : public juce::LookAndFeel_V4,
@@ -62,8 +64,6 @@ public:
                            const float rotaryStartAngle,
                            const float rotaryEndAngle,
                            juce::Slider&) override;
-
-    juce::Typeface::Ptr getTypefaceForFont (const juce::Font&) override;
 
     juce::Font getTextButtonFont (juce::TextButton&, int buttonHeight) override;
 
@@ -114,6 +114,9 @@ public:
         knobColourId = 0x1001800,
         pointerColourId = 0x1001801
     };
+
+private:
+    FontHolder fontHolder;
 
 #include "MeterLookAndFeelMethods.h"
 };

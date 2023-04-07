@@ -117,6 +117,8 @@ set(SourceFiles
 
     libs/tote_bag/juce_gui/utilities/GraphicsUtilities.h
     libs/tote_bag/juce_gui/utilities/GraphicsUtilities.cpp
+    libs/tote_bag/juce_gui/utilities/tbl_font.h
+    libs/tote_bag/juce_gui/utilities/tbl_font.cpp
 
     libs/tote_bag/utils/macros.hpp
     )
