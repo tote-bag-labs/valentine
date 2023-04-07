@@ -22,8 +22,6 @@ LookAndFeel::LookAndFeel()
 
     setupDefaultMeterColours();
 
-    setDefaultLookAndFeel (this);
-
     // slider colours
     setColour (ColourIds::knobColourId, juce::Colours::grey);
     setColour (ColourIds::pointerColourId, juce::Colours::black);
