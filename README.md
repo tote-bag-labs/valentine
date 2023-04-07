@@ -1,4 +1,7 @@
-[![Valentine](https://github.com/Tote-Bag-Labs/valentine/actions/workflows/cmake_ctest.yml/badge.svg)](https://github.com/Tote-Bag-Labs/valentine/actions/workflows/cmake_ctest.yml)
+![Valentine](docs/valentine_screenshot.png)
+
+[![](https://github.com/Tote-Bag-Labs/valentine/actions/workflows/cmake_ctest.yml/badge.svg)](https://github.com/Tote-Bag-Labs/valentine/actions/workflows/cmake_ctest.yml)
+
 
 V A L E N T I N E
 ==================
