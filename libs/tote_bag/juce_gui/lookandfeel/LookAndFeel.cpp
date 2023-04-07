@@ -13,27 +13,14 @@
 
 #include "tote_bag/juce_gui/components/widgets/FlatTextButton.h"
 
-#include "BinaryData.h"
-
-namespace
-{
-const juce::Font getCustomFont()
-{
-    static auto typeface = juce::Typeface::createSystemTypefaceFor (BinaryData::MontserratMedium_ttf,
-                                                                    BinaryData::MontserratMedium_ttfSize);
-    return juce::Font (typeface);
-}
-}
-
 namespace tote_bag
 {
+
 LookAndFeel::LookAndFeel()
 {
     using namespace tote_bag::laf_constants;
 
     setupDefaultMeterColours();
-
-    setDefaultLookAndFeel (this);
 
     // slider colours
     setColour (ColourIds::knobColourId, juce::Colours::grey);
@@ -213,21 +200,16 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
     drawKnob (g, knobRadius, toAngle, bounds, slider, true);
 }
 
-//=============================================================================
-
-juce::Typeface::Ptr LookAndFeel::getTypefaceForFont (const juce::Font&)
-{
-    return getCustomFont().getTypefacePtr();
-}
-
 juce::Font LookAndFeel::getTextButtonFont (juce::TextButton&, int buttonHeight)
 {
-    return { juce::jmax (7.0f, buttonHeight * 0.8f) };
+    const auto fontHeight = juce::jmax (7.0f, buttonHeight * 0.8f);
+    return fontHolder.getFont("MontserratMedium_ttf").withHeight (fontHeight);
 }
 
 juce::Font LookAndFeel::getLabelFont (juce::Label& l)
 {
-    return { static_cast<float> (l.getHeight()) };
+    const auto fontHeight = static_cast<float> (l.getHeight());
+    return fontHolder.getFont("MontserratMedium_ttf").withHeight (fontHeight);
 }
 
 void LookAndFeel::drawButtonBackground (juce::Graphics& g,
@@ -328,7 +310,7 @@ void LookAndFeel::drawComboBox (juce::Graphics& g,
     const auto boxBounds = box.getLocalBounds();
 
     const auto fontHeight = juce::jmax (7.0f, height * 0.6f);
-    g.setFont (juce::Font (fontHeight));
+    g.setFont (fontHolder.getFont("MontserratMedium_ttf").withHeight (fontHeight));
 
     g.setColour (box.findColour (juce::ComboBox::backgroundColourId));
 
@@ -361,7 +343,7 @@ void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
     g.setColour (myTextColour);
 
     auto fHeight = juce::jmax (7.0f, r.getHeight() * 0.6f);
-    g.setFont (juce::Font (fHeight));
+    g.setFont (fontHolder.getFont("MontserratMedium_ttf").withHeight (fHeight));
 
     r.setLeft (10);
     r.setY (1);
