@@ -93,5 +93,5 @@ inline float Bitcrusher::getBitcrushedSample (float inputSample, float bits)
 {
     const auto q = 1.0f / powf (2.0f, bits);
 
-    return q * (floorf (inputSample / q));
+    return q * floorf ((inputSample / q));
 }
