@@ -84,12 +84,12 @@ void Bitcrusher::processBlock (juce::AudioBuffer<float>& inAudio, int samplesPer
         for (int sample = 0; sample < samplesPerBlock; ++sample)
         {
             const float inputSample = channelData[sample];
-            channelData[sample] = getBitcrushedSample(inputSample, bits);
+            channelData[sample] = asymmetricBitcrush(inputSample, bits);
         }
     }
 }
 
-inline float Bitcrusher::getBitcrushedSample (float inputSample, float bits)
+inline float Bitcrusher::asymmetricBitcrush (float inputSample, float bits)
 {
     const auto q = 1.0f / powf (2.0f, bits);
 
