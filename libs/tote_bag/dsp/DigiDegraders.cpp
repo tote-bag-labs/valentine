@@ -70,9 +70,7 @@ void Bitcrusher::setParams (float inBitDepth)
 
 void Bitcrusher::processBlock (juce::AudioBuffer<float>& inAudio, int samplesPerBlock, int numChannels)
 {
-    auto bD = bitDepth.get();
-    auto intBitDepth = static_cast<int> (bD);
-    auto frac = bD - intBitDepth;
+    const auto bits = bitDepth.get();
 
     for (int channel = 0; channel < numChannels; ++channel)
     {
@@ -81,15 +79,12 @@ void Bitcrusher::processBlock (juce::AudioBuffer<float>& inAudio, int samplesPer
         for (int sample = 0; sample < samplesPerBlock; ++sample)
         {
             const float inputSample = channelData[sample];
-            auto y1 = getBitcrushedSample (inputSample, intBitDepth);
-            auto y2 = getBitcrushedSample (inputSample, intBitDepth + 1);
-
-            channelData[sample] = tote_bag::audio_helpers::linearInterp (y1, y2, frac);
+            channelData[sample] = getBitcrushedSample(inputSample, bits);
         }
     }
 }
 
-inline float Bitcrusher::getBitcrushedSample (float inputSample, int bits)
+inline float Bitcrusher::getBitcrushedSample (float inputSample, float bits)
 {
     const auto q = 1.0f / (powf (2.0f, bits) - 1);
 

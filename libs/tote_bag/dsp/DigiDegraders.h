@@ -47,7 +47,7 @@ public:
 
     void setParams (float inBitDepth);
     void processBlock (juce::AudioBuffer<float>& inAudio, int samplesPerBlock, int numChannels);
-    float getBitcrushedSample (float inputSample, int bits);
+    float getBitcrushedSample (float inputSample, float bits);
 
 private:
     juce::Atomic<float> bitDepth { 16.0f };
