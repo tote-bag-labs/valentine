@@ -425,8 +425,8 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter, f
         bitCrush->setParams (juce::jmap (newValue,
                                          FFCompParameterMin[bitCrushIndex],
                                          FFCompParameterMax[bitCrushIndex],
-                                         17.0f,
-                                         3.0f));
+                                         16.0f,
+                                         1.0f));
         if (newValue >= 1.0001f)
             crushOn.set (true);
         else

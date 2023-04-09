@@ -11,6 +11,8 @@
 #include "DigiDegraders.h"
 #include "tote_bag/dsp/AudioHelpers.h"
 
+#include <cassert>
+
 void SimpleZOH::setResampleOffset (double inHostSr)
 {
     /*
@@ -65,14 +67,15 @@ inline float SimpleZOH::getZOHSample (const float* channelData, int sampleIndex,
 
 void Bitcrusher::setParams (float inBitDepth)
 {
+    // An bit depth of 0 will cause a divide by zero error
+    assert(inBitDepth > 0);
+
     bitDepth.set (inBitDepth);
 }
 
 void Bitcrusher::processBlock (juce::AudioBuffer<float>& inAudio, int samplesPerBlock, int numChannels)
 {
-    auto bD = bitDepth.get();
-    auto intBitDepth = static_cast<int> (bD);
-    auto frac = bD - intBitDepth;
+    const auto bits = bitDepth.get();
 
     for (int channel = 0; channel < numChannels; ++channel)
     {
@@ -81,17 +84,14 @@ void Bitcrusher::processBlock (juce::AudioBuffer<float>& inAudio, int samplesPer
         for (int sample = 0; sample < samplesPerBlock; ++sample)
         {
             const float inputSample = channelData[sample];
-            auto y1 = getBitcrushedSample (inputSample, intBitDepth);
-            auto y2 = getBitcrushedSample (inputSample, intBitDepth + 1);
-
-            channelData[sample] = tote_bag::audio_helpers::linearInterp (y1, y2, frac);
+            channelData[sample] = asymmetricBitcrush(inputSample, bits);
         }
     }
 }
 
-inline float Bitcrusher::getBitcrushedSample (float inputSample, int bits)
+inline float Bitcrusher::asymmetricBitcrush (float inputSample, float bits)
 {
-    const auto q = 1.0f / (powf (2.0f, bits) - 1);
+    const auto q = 1.0f / powf (2.0f, bits);
 
-    return q * (floorf (inputSample / q));
+    return q * floorf ((inputSample / q));
 }

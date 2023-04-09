@@ -47,7 +47,25 @@ public:
 
     void setParams (float inBitDepth);
     void processBlock (juce::AudioBuffer<float>& inAudio, int samplesPerBlock, int numChannels);
-    float getBitcrushedSample (float inputSample, int bits);
+
+    /** Returns a bitcrushed sample—with a twist.
+     *
+     *  The typical calculation for a uniform bitcrusher is:
+     *
+     *  quantization = 1 / (2 ^ bits)
+     *  output = quantization * floor((input / quantization) + 0.5)
+     *
+     * This makes the quantization (nearest step) the same for negative
+     * and positive numbers.
+     *
+     * Omitting the 0.5 results in quantization (nearest lesser step) that
+     * effectively makes the signal greater for negative values and smaller
+     * for positive values.
+     *
+     * It also sounds very cool.
+     *
+     */
+    float asymmetricBitcrush (float inputSample, float bits);
 
 private:
     juce::Atomic<float> bitDepth { 16.0f };
