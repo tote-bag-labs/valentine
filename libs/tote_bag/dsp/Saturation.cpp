@@ -11,13 +11,13 @@
 #include "Saturation.h"
 #include "tote_bag/dsp/AudioHelpers.h"
 
-Saturation::Saturation (Type sType, double asymm)
+Saturation::Saturation (Type sType, float asymm)
     : saturationType (sType)
     , asymmetry (asymm)
 {
 }
 
-void Saturation::setParams (double inSaturation)
+void Saturation::setParams (float inSaturation)
 {
     smoothedSat.setTargetValue (inSaturation);
 }
@@ -37,21 +37,21 @@ void Saturation::reset (double sampleRate)
     smoothedSat.reset (sampleRate, gainRampSec);
 }
 
-inline double Saturation::calcGain (double inputSample, double sat)
+inline float Saturation::calcGain (float inputSample, float sat)
 {
-    return ((inputSample >= 0.0 && asymmetry > 0.0) || (inputSample < 0.0 && asymmetry < 0.0)) ? sat * (1.0 + 4.0 * abs (asymmetry)) : sat;
+    return ((inputSample >= 0.0f && asymmetry > 0.0f) || (inputSample < 0.0f && asymmetry < 0.0f)) ? sat * (1.0f + 4.0f * abs (asymmetry)) : sat;
 }
 
 //===============================================================================
-inline double Saturation::inverseHyperbolicSine (double x, double gain)
+inline float Saturation::inverseHyperbolicSine (float x, float gain)
 {
-    double xScaled = x * gain;
-    return log (xScaled + sqrt (xScaled * xScaled + 1.0)) / gain;
+    auto xScaled = x * gain;
+    return log (xScaled + sqrt (xScaled * xScaled + 1.0f)) / gain;
 }
 
-inline float Saturation::inverseHyperbolicSineInterp (float x, int channel)
+inline float Saturation::inverseHyperbolicSineInterp (float x, size_t channel)
 {
-    auto stateSample = xState.getSample (channel, 0);
+    auto stateSample = xState.getSample (static_cast<int> (channel), 0);
     auto diff = x - stateSample;
 
     auto antiDeriv = invHypeSineAntiDeriv (x);
@@ -66,7 +66,7 @@ inline float Saturation::inverseHyperbolicSineInterp (float x, int channel)
         output = (antiDeriv - antiderivState[channel]) / diff;
     }
 
-    xState.setSample (channel, 0, x);
+    xState.setSample (static_cast<int> (channel), 0, x);
     antiderivState[channel] = antiDeriv;
 
     return output;
@@ -74,7 +74,7 @@ inline float Saturation::inverseHyperbolicSineInterp (float x, int channel)
 
 inline float Saturation::invHypeSineAntiDeriv (float x)
 {
-    return x * inverseHyperbolicSine (x, 1.0f) - sqrt (x * x + 1.0);
+    return x * inverseHyperbolicSine (x, 1.0f) - sqrt (x * x + 1.0f);
 }
 
 inline float Saturation::sineArcTangent (float x, float gain)
@@ -83,16 +83,16 @@ inline float Saturation::sineArcTangent (float x, float gain)
     return (xScaled / sqrt (1.f + xScaled * xScaled)) / gain;
 }
 
-inline double Saturation::hyperbolicTangent (double x, double gain)
+inline float Saturation::hyperbolicTangent (float x, float gain)
 {
-    double xScaled = x * gain;
+    auto xScaled = x * gain;
     return std::tanh (xScaled) / gain;
 }
 
-inline double Saturation::interpolatedHyperbolicTangent (double x, int channel)
+inline float Saturation::interpolatedHyperbolicTangent (float x, size_t channel)
 
 {
-    auto stateSample = xState.getSample (channel, 0);
+    auto stateSample = xState.getSample (static_cast<int> (channel), 0);
     auto diff = x - stateSample;
     auto output = 0.0f;
     auto antiDeriv = hyperTanFirstAntiDeriv (x);
@@ -107,20 +107,21 @@ inline double Saturation::interpolatedHyperbolicTangent (double x, int channel)
         output = (antiDeriv - antiderivState[channel]) / diff;
     }
 
-    xState.setSample (channel, 0, x);
+    xState.setSample (static_cast<int> (channel), 0, x);
     antiderivState[channel] = antiDeriv;
 
     return output;
 }
 
-double Saturation::hyperTanFirstAntiDeriv (double x)
+float Saturation::hyperTanFirstAntiDeriv (float x)
 {
     return std::log (tote_bag::audio_helpers::ClampedCosh (x));
 }
 
+
 //===============================================================================
 
-inline double Saturation::processSample (double inputSample, int channel, double sat)
+inline float Saturation::processSample (float inputSample, size_t channel, float sat)
 {
     auto gain = calcGain (inputSample, sat);
 
@@ -157,15 +158,16 @@ void Saturation::processBlock (juce::dsp::AudioBlock<float>& inAudio)
     auto numChannels = inAudio.getNumChannels();
     auto samplesPerBlock = inAudio.getNumSamples();
 
-    for (int i = 0; i < samplesPerBlock; ++i)
+    for (size_t i = 0; i < samplesPerBlock; ++i)
     {
-        for (int j = 0; j < numChannels; ++j)
+        for (size_t j = 0; j < numChannels; ++j)
         {
-            inAudio.setSample (j,
-                               i,
-                               processSample (inAudio.getSample (j, i),
-                                              j,
-                                              smoothedSat.getNextValue()));
+            auto input = inAudio.getChannelPointer (j);
+            auto x = input[i];
+
+            auto y = processSample (x, j, smoothedSat.getNextValue());
+
+            input[i] = y;
         }
     }
 }
