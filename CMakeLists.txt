@@ -121,6 +121,7 @@ set(SourceFiles
     libs/tote_bag/juce_gui/utilities/tbl_font.cpp
 
     libs/tote_bag/utils/macros.hpp
+    libs/tote_bag/utils/type_helpers.hpp
     )
 
 target_sources("${PROJECT_NAME}" PRIVATE ${SourceFiles})

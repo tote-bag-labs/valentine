@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "tote_bag/utils/type_helpers.hpp"
+
 #include <algorithm>
 #include <cmath>
 
@@ -86,6 +88,26 @@ FloatType fastClip (FloatType x, FloatType minimumValue, FloatType maximumValue)
     return (x);
 }
 
+template <typename FloatType>
+constexpr std::pair<FloatType, FloatType> coshRange()
+{
+    // Copilot spat these ranges out (!) when I started typing them.
+    // I had loosely figured out the ranges to be
+    // +- 710.0 and +- 88.0 for double and float respectively.
+    if constexpr (std::is_same<FloatType, double>::value)
+    {
+        return { -710.4758600739439, 710.4758600739439 };
+    }
+    else if constexpr (std::is_same<FloatType, float>::value)
+    {
+        return { -88.3762626647949, 88.3762626647949 };
+    }
+    else
+    {
+        static_assert (type_helpers::dependent_false<FloatType>::value, "ClampedCosh only supports float types");
+    }
+}
+
 /** Returns cosh(x), clamping input beforehand to prevent overflow.
     The bounds used are found by brute force: e.g. running std::cosh with values
     increasing until overflow occurs. I am assuming here that this is well
@@ -96,10 +118,9 @@ FloatType fastClip (FloatType x, FloatType minimumValue, FloatType maximumValue)
 template <typename FloatType>
 inline FloatType ClampedCosh (FloatType x)
 {
-    static constexpr FloatType coshMin = -710.0;
-    static constexpr FloatType coshMax = 710.0;
+    const auto [min, max] = coshRange<FloatType>();
 
-    return std::cosh (std::clamp (x, coshMin, coshMax));
+    return std::cosh (std::clamp (x, min, max));
 }
 
 /** Returns the the next power of 2 greater than `x`. Returns `x` if it is a power of 2
