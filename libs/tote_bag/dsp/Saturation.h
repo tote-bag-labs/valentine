@@ -37,29 +37,29 @@ public:
         interpolatedHyperbolicTangent
     };
 
-    Saturation (Type sType, double asymm = 0.0);
+    Saturation (Type sType, float asymm = 0.0);
 
-    void setParams (double inSaturation);
+    void setParams (float inSaturation);
 
     void reset (double sampleRate);
 
-    inline double calcGain (double inputSample, double sat);
+    inline float calcGain (float inputSample, float sat);
 
-    inline double processSample (double inputSample, int channel, double sat);
+    inline float processSample (float inputSample, size_t channel, float sat);
 
     //==============================================================
 
-    inline double inverseHyperbolicSine (double x, double gain);
+    inline float inverseHyperbolicSine (float x, float gain);
 
-    inline float inverseHyperbolicSineInterp (float x, int channel);
+    inline float inverseHyperbolicSineInterp (float x, size_t channel);
 
     inline float sineArcTangent (float x, float gain);
 
-    inline double hyperbolicTangent (double x, double gain);
+    inline float hyperbolicTangent (float x, float gain);
 
-    inline double interpolatedHyperbolicTangent (double x, int channel);
+    inline float interpolatedHyperbolicTangent (float x, size_t channel);
 
-    inline double hyperTanFirstAntiDeriv (double x);
+    inline float hyperTanFirstAntiDeriv (float x);
 
     inline float invHypeSineAntiDeriv (float x);
 
@@ -70,13 +70,13 @@ public:
 private:
     Type saturationType;
 
-    double asymmetry { 0.0 };
+    float asymmetry { 0.0f };
 
-    const double gainRampSec { .005 };
+    const float gainRampSec { .005f };
 
-    juce::SmoothedValue<double, juce::ValueSmoothingTypes::Linear> smoothedSat { 1.0f };
-    juce::AudioBuffer<double> xState;
-    std::array<double, 2> antiderivState;
+    juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> smoothedSat { 1.0f };
+    juce::AudioBuffer<float> xState;
+    std::array<float, 2> antiderivState;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Saturation)
 };
