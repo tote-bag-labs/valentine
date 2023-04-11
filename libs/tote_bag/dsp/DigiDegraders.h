@@ -31,8 +31,7 @@ public:
 private:
     float resampleOffset { -1 },
         downsampleCoeff { 1.0f };
-    bool sampleRateChanged { true };
-    const double refSampleRate { 44100 };
+
     juce::Atomic<double> currentHostSampleRate;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleZOH)
