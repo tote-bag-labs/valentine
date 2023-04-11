@@ -25,12 +25,12 @@ TEST_CASE ("Next power of two", "[Audio Helpers]")
 TEST_CASE ("Clamped cosh won't blow up", "[Audio Helpers]")
 {
     // cosh will overflow floats at ~71.0f
-    const auto floatResult = tote_bag::audio_helpers::ClampedCosh (750.0f);
+    const auto floatResult = tote_bag::audio_helpers::clampedCosh (750.0f);
 
     REQUIRE (std::fpclassify (floatResult) == FP_NORMAL);
 
     // cosh will overflow doubles at ~710.0
-    const auto doubleResult = tote_bag::audio_helpers::ClampedCosh (750.0);
+    const auto doubleResult = tote_bag::audio_helpers::clampedCosh (750.0);
 
     REQUIRE (std::fpclassify (doubleResult) == FP_NORMAL);
 }

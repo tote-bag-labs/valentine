@@ -118,7 +118,7 @@ float Saturation::hyperTanFirstAntiDeriv (float x)
     using namespace tote_bag::audio_helpers;
 
     // Casting to double is necessary to avoid overflow in the exponential function
-    const auto x1 = ClampedCosh (static_cast<double> (x));
+    const auto x1 = clampedCosh (static_cast<double> (x));
     const auto x2 = std::log (x1);
 
     return static_cast<float> (x2);

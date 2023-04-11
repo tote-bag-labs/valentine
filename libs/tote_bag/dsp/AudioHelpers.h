@@ -116,7 +116,7 @@ constexpr std::pair<FloatType, FloatType> coshRange()
     if aliasing becomes an issue.
  */
 template <typename FloatType>
-inline FloatType ClampedCosh (FloatType x)
+inline FloatType clampedCosh (FloatType x)
 {
     const auto [min, max] = coshRange<FloatType>();
 
