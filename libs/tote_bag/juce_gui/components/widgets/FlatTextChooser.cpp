@@ -84,7 +84,7 @@ void FlatTextChooser::resized()
 
     if (mAlignWithParameterSliders)
     {
-        buttonArea.removeFromBottom (static_cast<int>(buttonArea.getHeight() * .15f));
+        buttonArea.removeFromBottom (static_cast<int> (buttonArea.getHeight() * .15f));
     }
 
     // The buttons themselves shouldn't take up all of the horizontal space
