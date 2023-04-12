@@ -38,7 +38,8 @@ option(JUCE_ENABLE_MODULE_SOURCE_GROUPS "Show all module sources in IDE projects
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
    add_compile_options (-fdiagnostics-color=always)
 elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-   add_compile_options (-fcolor-diagnostics)
+   add_compile_options (-fcolor-diagnostics
+                        -Werror)
 endif ()
 
 # JUCE is setup as a submodule in the /JUCE folder
