@@ -34,6 +34,13 @@ set_property(GLOBAL PROPERTY USE_FOLDERS YES)
 # Create a /Modules directory in the IDE with the JUCE Module code
 option(JUCE_ENABLE_MODULE_SOURCE_GROUPS "Show all module sources in IDE projects" ON)
 
+# Color our warnings and errors
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+   add_compile_options (-fdiagnostics-color=always)
+elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+   add_compile_options (-fcolor-diagnostics)
+endif ()
+
 # JUCE is setup as a submodule in the /JUCE folder
 # Locally, you'll need to run `git submodule update --init --recursive` once
 # and `git submodule update --remote --merge` to keep it up to date
@@ -245,10 +252,3 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/tests PREFIX "" FILES ${TestFiles}
 # We have to manually provide the source directory here for now
 include(${Catch2_SOURCE_DIR}/extras/Catch.cmake)
 catch_discover_tests(Tests)
-
-# Color our warnings and errors
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-   add_compile_options (-fdiagnostics-color=always)
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-   add_compile_options (-fcolor-diagnostics)
-endif ()
