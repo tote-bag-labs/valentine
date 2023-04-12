@@ -23,7 +23,6 @@ FlatTextChooser::FlatTextChooser (const juce::String& labelText,
                                   juce::AudioParameterChoice* param = nullptr,
                                   bool alignWithParameterSliders = false)
     : mLabel (labelText + " Chooser", labelText)
-    , mParameter (param)
     , mAlignWithParameterSliders (alignWithParameterSliders)
 {
     mLabel.setColour (juce::Label::textColourId, juce::Colours::black);
@@ -85,7 +84,7 @@ void FlatTextChooser::resized()
 
     if (mAlignWithParameterSliders)
     {
-        buttonArea.removeFromBottom (static_cast<int>(buttonArea.getHeight() * .15f));
+        buttonArea.removeFromBottom (static_cast<int> (buttonArea.getHeight() * .15f));
     }
 
     // The buttons themselves shouldn't take up all of the horizontal space

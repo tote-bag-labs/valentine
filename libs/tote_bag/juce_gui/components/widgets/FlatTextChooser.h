@@ -45,7 +45,6 @@ private:
 
     // Depends on mButtons. Must be destroyed first.
     std::unique_ptr<RadioButtonGroupManager> mButtonState;
-    juce::AudioParameterChoice* mParameter;
 
     // TODO: remove this awful kludge
     // If true, the bottom of the chooser will be adjusted

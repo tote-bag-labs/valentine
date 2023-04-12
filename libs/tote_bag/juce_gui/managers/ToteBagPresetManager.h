@@ -70,7 +70,5 @@ private:
 
     juce::AudioProcessor* processor;
 
-    bool presetIsDirty = false;
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ToteBagPresetManager)
 };
