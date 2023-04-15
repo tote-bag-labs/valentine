@@ -43,15 +43,14 @@ inline float Saturation::calcGain (float inputSample, float sat)
 }
 
 //===============================================================================
-inline float Saturation::inverseHyperbolicSine (float x, float gain)
+inline float Saturation::inverseHyperbolicSine (float x)
 {
-    auto xScaled = x * gain;
-    return log (xScaled + sqrt (xScaled * xScaled + 1.0f)) / gain;
+    return log (x + sqrt (x * x + 1.0f));
 }
 
 inline float Saturation::invHypeSineAntiDeriv (float x)
 {
-    return x * inverseHyperbolicSine (x, 1.0f) - sqrt (x * x + 1.0f);
+    return x * inverseHyperbolicSine (x) - sqrt (x * x + 1.0f);
 }
 
 inline float Saturation::inverseHyperbolicSineInterp (float x, size_t channel)
@@ -64,7 +63,7 @@ inline float Saturation::inverseHyperbolicSineInterp (float x, size_t channel)
     if (abs (diff) < 0.001f)
     {
         auto input = (x + stateSample) / 2.f;
-        output = inverseHyperbolicSine (input, 1.0f);
+        output = inverseHyperbolicSine (input);
     }
     else
     {
@@ -138,7 +137,7 @@ inline float Saturation::processSample (float inputSample, size_t channel, float
     switch (saturationType)
     {
         case Type::inverseHyperbolicSine:
-            return inverseHyperbolicSine (inputSample, gain);
+            return inverseHyperbolicSine (inputSample * gain) / gain;
 
         case Type::sineArcTangent:
             return sineArcTangent (inputSample, gain);

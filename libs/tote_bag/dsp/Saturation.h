@@ -49,7 +49,7 @@ public:
 
     //==============================================================
 
-    inline float inverseHyperbolicSine (float x, float gain);
+    inline float inverseHyperbolicSine (float x);
 
     inline float invHypeSineAntiDeriv (float x);
 
