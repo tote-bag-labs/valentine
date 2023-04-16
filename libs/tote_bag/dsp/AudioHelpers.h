@@ -96,11 +96,11 @@ constexpr std::pair<FloatType, FloatType> coshRange()
     // +- 710.0 and +- 88.0 for double and float respectively.
     if constexpr (std::is_same<FloatType, double>::value)
     {
-        return { -710.4758600739439, 710.4758600739439 };
+        return { -710.0, 710.0 };
     }
     else if constexpr (std::is_same<FloatType, float>::value)
     {
-        return { -88.3762626647949, 88.3762626647949 };
+        return { -88.0f, 88.0f };
     }
     else
     {

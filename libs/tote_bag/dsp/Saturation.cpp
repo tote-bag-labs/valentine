@@ -43,10 +43,14 @@ inline float Saturation::calcGain (float inputSample, float sat)
 }
 
 //===============================================================================
-inline float Saturation::inverseHyperbolicSine (float x, float gain)
+inline float Saturation::inverseHyperbolicSine (float x)
 {
-    auto xScaled = x * gain;
-    return log (xScaled + sqrt (xScaled * xScaled + 1.0f)) / gain;
+    return log (x + sqrt (x * x + 1.0f));
+}
+
+inline float Saturation::invHypeSineAntiDeriv (float x)
+{
+    return x * inverseHyperbolicSine (x) - sqrt (x * x + 1.0f);
 }
 
 inline float Saturation::inverseHyperbolicSineInterp (float x, size_t channel)
@@ -59,7 +63,7 @@ inline float Saturation::inverseHyperbolicSineInterp (float x, size_t channel)
     if (abs (diff) < 0.001f)
     {
         auto input = (x + stateSample) / 2.f;
-        output = inverseHyperbolicSine (input, 1.0f);
+        output = inverseHyperbolicSine (input);
     }
     else
     {
@@ -72,21 +76,26 @@ inline float Saturation::inverseHyperbolicSineInterp (float x, size_t channel)
     return output;
 }
 
-inline float Saturation::invHypeSineAntiDeriv (float x)
-{
-    return x * inverseHyperbolicSine (x, 1.0f) - sqrt (x * x + 1.0f);
-}
-
 inline float Saturation::sineArcTangent (float x, float gain)
 {
     float xScaled = x * gain;
     return (xScaled / sqrt (1.f + xScaled * xScaled)) / gain;
 }
 
-inline float Saturation::hyperbolicTangent (float x, float gain)
+inline float Saturation::hyperbolicTangent (float x)
 {
-    auto xScaled = x * gain;
-    return std::tanh (xScaled) / gain;
+    return std::tanh (x);
+}
+
+float Saturation::hyperTanFirstAntiDeriv (float x)
+{
+    using namespace tote_bag::audio_helpers;
+
+    // Casting to double is necessary to avoid overflow in the exponential function
+    const auto x1 = clampedCosh (static_cast<double> (x));
+    const auto x2 = std::log (x1);
+
+    return static_cast<float> (x2);
 }
 
 inline float Saturation::interpolatedHyperbolicTangent (float x, size_t channel)
@@ -100,7 +109,7 @@ inline float Saturation::interpolatedHyperbolicTangent (float x, size_t channel)
     if (abs (diff) < 0.001)
     {
         auto input = (x + stateSample) / 2.f;
-        output = hyperbolicTangent (input, 1.0f);
+        output = hyperbolicTangent (input);
     }
     else
     {
@@ -111,17 +120,6 @@ inline float Saturation::interpolatedHyperbolicTangent (float x, size_t channel)
     antiderivState[channel] = antiDeriv;
 
     return output;
-}
-
-float Saturation::hyperTanFirstAntiDeriv (float x)
-{
-    using namespace tote_bag::audio_helpers;
-
-    // Casting to double is necessary to avoid overflow in the exponential function
-    const auto x1 = clampedCosh (static_cast<double> (x));
-    const auto x2 = std::log (x1);
-
-    return static_cast<float> (x2);
 }
 
 //===============================================================================
@@ -138,19 +136,19 @@ inline float Saturation::processSample (float inputSample, size_t channel, float
     switch (saturationType)
     {
         case Type::inverseHyperbolicSine:
-            return inverseHyperbolicSine (inputSample, gain);
+            return inverseHyperbolicSine (inputSample * gain) * compensationGain<inverseHyperbolicSineTag> (gain);
 
         case Type::sineArcTangent:
             return sineArcTangent (inputSample, gain);
 
         case Type::hyperbolicTangent:
-            return hyperbolicTangent (inputSample, gain);
+            return hyperbolicTangent (inputSample * gain) * compensationGain<hyperbolicTangentTag> (gain);
 
         case Type::inverseHyperbolicSineInterp:
-            return inverseHyperbolicSineInterp (inputSample * gain, channel) / gain;
+            return inverseHyperbolicSineInterp (inputSample * gain, channel) * compensationGain<inverseHyperbolicSineTag> (gain);
 
         case Type::interpolatedHyperbolicTangent:
-            return interpolatedHyperbolicTangent (inputSample * gain, channel) / gain;
+            return interpolatedHyperbolicTangent (inputSample * gain, channel) * compensationGain<hyperbolicTangentTag> (gain);
 
         default:
             //somehow the distortion type was not set. It must be set!
