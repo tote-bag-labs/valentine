@@ -59,9 +59,9 @@ public:
 
     inline float hyperbolicTangent (float x, float gain);
 
-    inline float interpolatedHyperbolicTangent (float x, size_t channel);
-
     inline float hyperTanFirstAntiDeriv (float x);
+
+    inline float interpolatedHyperbolicTangent (float x, size_t channel);
 
     //==============================================================
 
