@@ -51,6 +51,8 @@ public:
 
     inline float inverseHyperbolicSine (float x, float gain);
 
+    inline float invHypeSineAntiDeriv (float x);
+
     inline float inverseHyperbolicSineInterp (float x, size_t channel);
 
     inline float sineArcTangent (float x, float gain);
@@ -60,8 +62,6 @@ public:
     inline float interpolatedHyperbolicTangent (float x, size_t channel);
 
     inline float hyperTanFirstAntiDeriv (float x);
-
-    inline float invHypeSineAntiDeriv (float x);
 
     //==============================================================
 

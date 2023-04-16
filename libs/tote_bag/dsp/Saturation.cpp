@@ -49,6 +49,11 @@ inline float Saturation::inverseHyperbolicSine (float x, float gain)
     return log (xScaled + sqrt (xScaled * xScaled + 1.0f)) / gain;
 }
 
+inline float Saturation::invHypeSineAntiDeriv (float x)
+{
+    return x * inverseHyperbolicSine (x, 1.0f) - sqrt (x * x + 1.0f);
+}
+
 inline float Saturation::inverseHyperbolicSineInterp (float x, size_t channel)
 {
     auto stateSample = xState.getSample (static_cast<int> (channel), 0);
@@ -70,11 +75,6 @@ inline float Saturation::inverseHyperbolicSineInterp (float x, size_t channel)
     antiderivState[channel] = antiDeriv;
 
     return output;
-}
-
-inline float Saturation::invHypeSineAntiDeriv (float x)
-{
-    return x * inverseHyperbolicSine (x, 1.0f) - sqrt (x * x + 1.0f);
 }
 
 inline float Saturation::sineArcTangent (float x, float gain)
