@@ -136,19 +136,19 @@ inline float Saturation::processSample (float inputSample, size_t channel, float
     switch (saturationType)
     {
         case Type::inverseHyperbolicSine:
-            return inverseHyperbolicSine (inputSample * gain) / gain;
+            return inverseHyperbolicSine (inputSample * gain) * compensationGain<inverseHyperbolicSineTag> (gain);
 
         case Type::sineArcTangent:
             return sineArcTangent (inputSample, gain);
 
         case Type::hyperbolicTangent:
-            return hyperbolicTangent (inputSample * gain) / gain;
+            return hyperbolicTangent (inputSample * gain) * compensationGain<hyperbolicTangentTag> (gain);
 
         case Type::inverseHyperbolicSineInterp:
-            return inverseHyperbolicSineInterp (inputSample * gain, channel) / gain;
+            return inverseHyperbolicSineInterp (inputSample * gain, channel) * compensationGain<inverseHyperbolicSineTag> (gain);
 
         case Type::interpolatedHyperbolicTangent:
-            return interpolatedHyperbolicTangent (inputSample * gain, channel) / gain;
+            return interpolatedHyperbolicTangent (inputSample * gain, channel) * compensationGain<hyperbolicTangentTag> (gain);
 
         default:
             //somehow the distortion type was not set. It must be set!
