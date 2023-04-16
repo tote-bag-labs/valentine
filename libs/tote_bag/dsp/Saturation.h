@@ -57,7 +57,7 @@ public:
 
     inline float sineArcTangent (float x, float gain);
 
-    inline float hyperbolicTangent (float x, float gain);
+    inline float hyperbolicTangent (float x);
 
     inline float hyperTanFirstAntiDeriv (float x);
 
