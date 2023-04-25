@@ -82,7 +82,7 @@ void FlatTextChooser::resized()
 
     // The buttons themselves shouldn't take up all of the horizontal space
     // given to this component
-    const auto sideMargin = juce::roundToInt (buttonArea.getHeight() * .6f);
+    const auto sideMargin = juce::roundToInt (buttonArea.getWidth() * .3f);
     buttonArea.reduce (sideMargin, 0);
 
     const auto numButtons = mButtons.size();
