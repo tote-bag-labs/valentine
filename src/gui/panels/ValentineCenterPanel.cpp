@@ -101,7 +101,7 @@ void CenterPanel::resized()
     auto betweenRowMargin = paramWidth * .1f;
 
     // 1.65 to reflect that the bottom half is .65 the height of the top row
-    auto totalParamHeight = (paramWidth * 1.65f) + betweenRowMargin;
+    auto totalParamHeight = (paramWidth * 1.75f) + betweenRowMargin;
     auto verticalAlignmentSpacer = juce::roundToInt ((workingArea.getHeight() - totalParamHeight) * .5f);
     workingArea.removeFromTop (verticalAlignmentSpacer);
     workingArea.removeFromBottom (verticalAlignmentSpacer);
@@ -133,7 +133,7 @@ void CenterPanel::resized()
     leftSideBounds.removeFromTop (roundedRowMargin);
 
     // Bottom
-    auto bottomRowParamHeight = juce::roundToInt (paramWidth * .65f);
+    auto bottomRowParamHeight = juce::roundToInt (paramWidth * .75f);
     const auto smallborderMargin = juce::roundToInt (bottomRowParamHeight * .05f);
     bottomLeftRowBorderBounds = leftSideBounds.removeFromTop (bottomRowParamHeight);
 
