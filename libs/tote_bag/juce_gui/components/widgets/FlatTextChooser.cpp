@@ -78,7 +78,7 @@ void FlatTextChooser::resized()
     mLabel.setBounds (labelArea);
 
     // Make some more space between label and buttons
-    buttonArea.removeFromTop (labelHeight);
+    buttonArea.removeFromTop (juce::roundToInt(labelHeight * .70f));
 
     // The buttons themselves shouldn't take up all of the horizontal space
     // given to this component
