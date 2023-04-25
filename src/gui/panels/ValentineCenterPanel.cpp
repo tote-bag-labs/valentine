@@ -67,8 +67,7 @@ CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
                                                                      k20_1RatioLabel.data(),
                                                                      k1000_1RatioLabel.data() },
                                                                  8001,
-                                                                 ratioParam,
-                                                                 true);
+                                                                 ratioParam);
     }
 
     addAndMakeVisible (mRatioBox.get());
