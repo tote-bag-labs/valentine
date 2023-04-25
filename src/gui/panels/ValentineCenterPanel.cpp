@@ -140,6 +140,7 @@ void CenterPanel::resized()
     auto bottomLeftRowBounds = bottomLeftRowBorderBounds.reduced (smallborderMargin);
 
     auto ratioBounds = bottomLeftRowBounds.removeFromLeft (juce::roundToInt (bottomLeftRowBounds.getWidth() / 3.0f));
+    ratioBounds.removeFromBottom (juce::roundToInt(ratioBounds.getHeight() * .025f));
     mRatioBox->setBounds (ratioBounds);
 
     const auto numBottomLeftColumns = numLeftColumns - 1;
