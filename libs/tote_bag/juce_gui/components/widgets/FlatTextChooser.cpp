@@ -20,10 +20,8 @@ namespace tote_bag
 FlatTextChooser::FlatTextChooser (const juce::String& labelText,
                                   const std::vector<std::string>& choices,
                                   int paramGroupId,
-                                  juce::AudioParameterChoice* param = nullptr,
-                                  bool alignWithParameterSliders = false)
+                                  juce::AudioParameterChoice* param = nullptr)
     : mLabel (labelText + " Chooser", labelText)
-    , mAlignWithParameterSliders (alignWithParameterSliders)
 {
     mLabel.setColour (juce::Label::textColourId, juce::Colours::black);
     mLabel.setJustificationType (juce::Justification::centredTop);
@@ -80,16 +78,11 @@ void FlatTextChooser::resized()
     mLabel.setBounds (labelArea);
 
     // Make some more space between label and buttons
-    buttonArea.removeFromTop (labelHeight);
-
-    if (mAlignWithParameterSliders)
-    {
-        buttonArea.removeFromBottom (static_cast<int> (buttonArea.getHeight() * .15f));
-    }
+    buttonArea.removeFromTop (juce::roundToInt(labelHeight * .70f));
 
     // The buttons themselves shouldn't take up all of the horizontal space
     // given to this component
-    const auto sideMargin = juce::roundToInt (buttonArea.getHeight() * .6f);
+    const auto sideMargin = juce::roundToInt (buttonArea.getWidth() * .3f);
     buttonArea.reduce (sideMargin, 0);
 
     const auto numButtons = mButtons.size();
