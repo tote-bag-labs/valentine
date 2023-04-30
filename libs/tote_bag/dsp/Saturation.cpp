@@ -96,7 +96,7 @@ inline float Saturation::interpolatedHyperbolicTangent (float x, size_t channel)
     auto output = 0.0f;
     auto antiDeriv = hyperTanFirstAntiDeriv (x);
 
-    if (abs (diff) < 0.001)
+    if (abs (diff) < 1.0e-6f)
     {
         auto input = (x + stateSample) / 2.f;
         output = std::tanh (input);
