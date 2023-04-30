@@ -70,27 +70,30 @@ public:
     void processBlock (juce::dsp::AudioBlock<float>& inAudio);
 
 private:
-  // tags - first step towards a templated version of this class
-  struct inverseHyperbolicSineTag {};
-  struct hyperbolicTangentTag {};
+    // tags - first step towards a templated version of this class
+    struct inverseHyperbolicSineTag
+    {
+    };
+    struct hyperbolicTangentTag
+    {
+    };
 
-  template <typename SaturationType, typename FloatType>
-  auto compensationGain(FloatType inputGain)
-  {
-    if constexpr (std::is_same<SaturationType, inverseHyperbolicSineTag>::value)
+    template <typename SaturationType, typename FloatType>
+    auto compensationGain (FloatType inputGain)
     {
-      return static_cast<FloatType>(1.0) / inverseHyperbolicSine(inputGain);
+        if constexpr (std::is_same<SaturationType, inverseHyperbolicSineTag>::value)
+        {
+            return static_cast<FloatType> (1.0) / inverseHyperbolicSine (inputGain);
+        }
+        else if constexpr (std::is_same<SaturationType, hyperbolicTangentTag>::value)
+        {
+            return static_cast<FloatType> (1.0) / hyperbolicTangent (inputGain);
+        }
+        else
+        {
+            static_assert (tote_bag::type_helpers::dependent_false<SaturationType>::value, "Unsupported saturation type.");
+        }
     }
-    else if constexpr (std::is_same<SaturationType, hyperbolicTangentTag>::value)
-    {
-      return static_cast<FloatType>(1.0) / hyperbolicTangent(inputGain);
-    }
-    else
-    {
-      static_assert(tote_bag::type_helpers::dependent_false<SaturationType>::value, "Unsupported saturation type.");
-    }
-  }
-
 
     Type saturationType;
 
