@@ -55,7 +55,7 @@ inline float Saturation::inverseHyperbolicSineInterp (float x, size_t channel)
 
     auto antiDeriv = invHypeSineAntiDeriv (x);
     auto output = 0.0f;
-    if (abs (diff) < 0.001f)
+    if (abs (diff) < 1.0e-4f)
     {
         auto input = (x + stateSample) / 2.f;
         output = std::asinh (input);
