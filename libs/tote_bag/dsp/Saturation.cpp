@@ -77,11 +77,6 @@ inline float Saturation::sineArcTangent (float x, float gain)
     return (xScaled / sqrt (1.f + xScaled * xScaled)) / gain;
 }
 
-inline float Saturation::hyperbolicTangent (float x)
-{
-    return std::tanh (x);
-}
-
 float Saturation::hyperTanFirstAntiDeriv (float x)
 {
     using namespace tote_bag::audio_helpers;
@@ -104,7 +99,7 @@ inline float Saturation::interpolatedHyperbolicTangent (float x, size_t channel)
     if (abs (diff) < 0.001)
     {
         auto input = (x + stateSample) / 2.f;
-        output = hyperbolicTangent (input);
+        output = std::tanh (input);
     }
     else
     {
@@ -137,7 +132,7 @@ inline float Saturation::processSample (float inputSample, size_t channel, float
             return sineArcTangent (inputSample, gain);
 
         case Type::hyperbolicTangent:
-            return hyperbolicTangent (inputSample * gain) * compensationGain<hyperbolicTangentTag> (gain);
+            return std::tanh (inputSample * gain) * compensationGain<hyperbolicTangentTag> (gain);
 
         case Type::inverseHyperbolicSineInterp:
             return inverseHyperbolicSineInterp (inputSample * gain, channel) * compensationGain<inverseHyperbolicSineTag> (gain);

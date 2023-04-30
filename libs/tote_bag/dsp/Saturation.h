@@ -57,8 +57,6 @@ public:
 
     inline float sineArcTangent (float x, float gain);
 
-    inline float hyperbolicTangent (float x);
-
     inline float hyperTanFirstAntiDeriv (float x);
 
     inline float interpolatedHyperbolicTangent (float x, size_t channel);
@@ -85,7 +83,7 @@ private:
         }
         else if constexpr (std::is_same<SaturationType, hyperbolicTangentTag>::value)
         {
-            return static_cast<FloatType> (1.0) / hyperbolicTangent (inputGain);
+            return static_cast<FloatType> (1.0) / std::tanh (inputGain);
         }
         else
         {
