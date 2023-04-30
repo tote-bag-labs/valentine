@@ -51,8 +51,6 @@ public:
 
     //==============================================================
 
-    inline float inverseHyperbolicSine (float x);
-
     inline float invHypeSineAntiDeriv (float x);
 
     inline float inverseHyperbolicSineInterp (float x, size_t channel);
@@ -83,7 +81,7 @@ private:
     {
         if constexpr (std::is_same<SaturationType, inverseHyperbolicSineTag>::value)
         {
-            return static_cast<FloatType> (1.0) / inverseHyperbolicSine (inputGain);
+            return static_cast<FloatType> (1.0) / std::asinh (inputGain);
         }
         else if constexpr (std::is_same<SaturationType, hyperbolicTangentTag>::value)
         {
