@@ -40,7 +40,7 @@ ValentineAudioProcessor::ValentineAudioProcessor()
     ffCompressor->setKnee (kneeValues[defaultRatioIndex]);
     ffCompressor->setThreshold (thresholdValues[defaultRatioIndex]);
     bitCrush->setParams (17.0);
-    saturator->setParams (.001f);
+    saturator->setParams (kMinSaturationGain);
     boundedSaturator->setParams (boundedSatGain);
 }
 

@@ -209,5 +209,5 @@ static constexpr std::array<float, 5> thresholdValues = {
     -10.0f,
 };
 
-static constexpr float kMinSaturationGain = .001f;
+static constexpr float kMinSaturationGain = 1.0f;
 static constexpr float kMaxSaturationGain = 30.0f;

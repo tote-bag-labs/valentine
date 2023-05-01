@@ -43,14 +43,9 @@ inline float Saturation::calcGain (float inputSample, float sat)
 }
 
 //===============================================================================
-inline float Saturation::inverseHyperbolicSine (float x)
-{
-    return log (x + sqrt (x * x + 1.0f));
-}
-
 inline float Saturation::invHypeSineAntiDeriv (float x)
 {
-    return x * inverseHyperbolicSine (x) - sqrt (x * x + 1.0f);
+    return x * std::asinh (x) - sqrt (x * x + 1.0f);
 }
 
 inline float Saturation::inverseHyperbolicSineInterp (float x, size_t channel)
@@ -60,10 +55,10 @@ inline float Saturation::inverseHyperbolicSineInterp (float x, size_t channel)
 
     auto antiDeriv = invHypeSineAntiDeriv (x);
     auto output = 0.0f;
-    if (abs (diff) < 0.001f)
+    if (abs (diff) < 1.0e-4f)
     {
         auto input = (x + stateSample) / 2.f;
-        output = inverseHyperbolicSine (input);
+        output = std::asinh (input);
     }
     else
     {
@@ -80,11 +75,6 @@ inline float Saturation::sineArcTangent (float x, float gain)
 {
     float xScaled = x * gain;
     return (xScaled / sqrt (1.f + xScaled * xScaled)) / gain;
-}
-
-inline float Saturation::hyperbolicTangent (float x)
-{
-    return std::tanh (x);
 }
 
 float Saturation::hyperTanFirstAntiDeriv (float x)
@@ -106,10 +96,10 @@ inline float Saturation::interpolatedHyperbolicTangent (float x, size_t channel)
     auto output = 0.0f;
     auto antiDeriv = hyperTanFirstAntiDeriv (x);
 
-    if (abs (diff) < 0.001)
+    if (abs (diff) < 1.0e-6f)
     {
         auto input = (x + stateSample) / 2.f;
-        output = hyperbolicTangent (input);
+        output = std::tanh (input);
     }
     else
     {
@@ -136,13 +126,13 @@ inline float Saturation::processSample (float inputSample, size_t channel, float
     switch (saturationType)
     {
         case Type::inverseHyperbolicSine:
-            return inverseHyperbolicSine (inputSample * gain) * compensationGain<inverseHyperbolicSineTag> (gain);
+            return std::asinh (inputSample * gain) * compensationGain<inverseHyperbolicSineTag> (gain);
 
         case Type::sineArcTangent:
             return sineArcTangent (inputSample, gain);
 
         case Type::hyperbolicTangent:
-            return hyperbolicTangent (inputSample * gain) * compensationGain<hyperbolicTangentTag> (gain);
+            return std::tanh (inputSample * gain) * compensationGain<hyperbolicTangentTag> (gain);
 
         case Type::inverseHyperbolicSineInterp:
             return inverseHyperbolicSineInterp (inputSample * gain, channel) * compensationGain<inverseHyperbolicSineTag> (gain);
