@@ -94,22 +94,11 @@ inline const std::array<juce::String, numParams>& VParameterUnit()
     return unitLabels;
 }
 
-namespace
-{
-
-constexpr std::string_view k4_1RatioLabel = "4";
-constexpr std::string_view k8_1RatioLabel = "8";
-constexpr std::string_view k12_1RatioLabel = "12";
-constexpr std::string_view k20_1RatioLabel = "20";
-constexpr std::string_view k1000_1RatioLabel = "∞";
-
-}
-
 static constexpr std::array<float, numParams> FFCompParameterMin = {
     -24.0f,
     0.0f,
     0.0f,
-    0,
+    1.0f,
     0.02f,
     50.0f,
     0.0f,
@@ -122,7 +111,7 @@ static constexpr std::array<float, numParams> FFCompParameterMax = {
     48.0f,
     100.0f,
     100.0f,
-    4,
+    21.0f,
     10.0f,
     1100.0f,
     100.0f,
@@ -135,7 +124,7 @@ static constexpr std::array<float, numParams> FFCompParameterDefaults = {
     0.0f,
     0.0f,
     0.0f,
-    1,
+    4.0f,
     1.3f,
     350.0f,
     100.0f,
@@ -148,7 +137,7 @@ static constexpr std::array<float, numParams> FFCompParameterIncrement = {
     0.00001f,
     0.00001f,
     0.00001f,
-    1.0f,
+    0.00001f,
     0.00001f,
     0.00001f,
     0.00001f,
@@ -161,7 +150,7 @@ static constexpr std::array<float, numParams> FFCompParamCenter = {
     23.0f,
     60.0f,
     60.0f,
-    3.0f,
+    6.0f,
     5.0f,
     300.0f,
     50.0f,
@@ -174,7 +163,7 @@ static constexpr std::array<int, numParams> VParamPrecision = {
     2,
     2,
     2,
-    0,
+    2,
     2,
     2,
     0,

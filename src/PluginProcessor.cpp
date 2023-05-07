@@ -35,11 +35,12 @@ ValentineAudioProcessor::ValentineAudioProcessor()
     }
 
     //initialize processor params
-    const auto defaultRatioIndex = static_cast<size_t> (
-        FFCompParameterDefaults[getParameterIndex (VParameter::ratio)]);
-    ffCompressor->setRatio (ratioValues[defaultRatioIndex]);
-    ffCompressor->setKnee (kneeValues[defaultRatioIndex]);
-    ffCompressor->setThreshold (thresholdValues[defaultRatioIndex]);
+    const auto defaultRatio =
+        FFCompParameterDefaults[static_cast<size_t> (VParameter::ratio)];
+
+    ffCompressor->setRatio (defaultRatio);
+    ffCompressor->setKnee (kneeValues[3]);
+    ffCompressor->setThreshold (thresholdValues[3]);
     bitCrush->setParams (17.0);
     saturator->setParams (kMinSaturationGain);
     boundedSaturator->setParams (boundedSatGain);
@@ -63,30 +64,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     for (size_t i = 0; i < numParams; ++i)
     {
         const auto paramType = static_cast<VParameter> (i);
-        if (paramType == VParameter::ratio)
-        {
-            juce::StringArray ratioChoices;
-            for (const auto ratio : ratioValues)
-            {
-                ratioChoices.add (juce::String (ratio));
-            }
 
-            const auto ratioParameterIndex = getParameterIndex (VParameter::ratio);
-            params.push_back (std::make_unique<juce::AudioParameterChoice> (
-                juce::ParameterID {FFCompParameterID()[ratioParameterIndex],
-                                   ValentineParameterVersion},
-                FFCompParameterLabel()[ratioParameterIndex],
-                ratioChoices,
-                FFCompParameterDefaults[ratioParameterIndex]));
-        }
-        else if (paramType == VParameter::nice || paramType == VParameter::bypass)
+        if (paramType == VParameter::nice || paramType == VParameter::bypass)
         {
             params.push_back (std::make_unique<juce::AudioParameterBool> (
                 juce::ParameterID {FFCompParameterID()[i], ValentineParameterVersion},
                 FFCompParameterLabel()[i],
                 false));
         }
-
         else
         {
             auto rangeToUse =
@@ -113,6 +98,19 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                         return juce::String (value, 1);
                     }
                     return juce::String (static_cast<int> (value));
+                };
+            }
+            else if (paramType == VParameter::ratio)
+            {
+                stringFromValue = [] (float value, int) {
+                    const auto absValue = std::abs (value);
+
+                    if (absValue
+                        >= FFCompParameterMax[static_cast<size_t> (VParameter::ratio)])
+                    {
+                        return juce::String (juce::CharPointer_UTF8 ("∞"));
+                    }
+                    return juce::String (value, 2);
                 };
             }
             else
@@ -472,17 +470,22 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
     }
     else if (parameter == "Ratio")
     {
-        ratioIndex = static_cast<size_t> (newValue);
-        ffCompressor->setRatio (ratioValues[ratioIndex]);
-        ffCompressor->setKnee (kneeValues[ratioIndex]);
+        if (newValue >= FFCompParameterMax[static_cast<size_t> (VParameter::ratio)])
+        {
+            ffCompressor->setRatio (1000.0f);
+            ffCompressor->setKnee (0.f);
+        }
+
+        ffCompressor->setRatio (newValue);
+        ffCompressor->setKnee (kneeValues[2]);
 
         if (niceModeOn)
         {
-            ffCompressor->setThreshold (thresholdValues[ratioIndex] + kNiceOffset);
+            ffCompressor->setThreshold (thresholdValues[2] + kNiceOffset);
         }
         else
         {
-            ffCompressor->setThreshold (thresholdValues[ratioIndex]);
+            ffCompressor->setThreshold (thresholdValues[2]);
         }
     }
     else if (parameter == "Compress")
@@ -502,12 +505,12 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
         if (newValue > 0.5)
         {
             niceModeOn = true;
-            ffCompressor->setThreshold (thresholdValues[ratioIndex] + kNiceOffset);
+            ffCompressor->setThreshold (thresholdValues[2] + kNiceOffset);
         }
         else
         {
             niceModeOn = false;
-            ffCompressor->setThreshold (thresholdValues[ratioIndex]);
+            ffCompressor->setThreshold (thresholdValues[2]);
         }
     }
     else if (parameter == "Bypass")
