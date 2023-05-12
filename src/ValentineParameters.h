@@ -37,6 +37,9 @@ const size_t getParameterIndex (VParameter param)
     return static_cast<size_t> (param);
 }
 
+inline constexpr float kMinSaturationGain = 1.0f;
+inline constexpr float kMaxSaturationGain = 30.0f;
+
 // The largest the ratio can be as far as the parameter itself is concerned.
 // Processing, we actually use a ratio of 1000:1 for this ratio value.
 inline constexpr float kRatioParameterMax = 21.0f;
@@ -214,6 +217,3 @@ static constexpr std::array<int, numParams> VParamPrecision = {
 };
 
 //==================================================================================
-
-static constexpr float kMinSaturationGain = 1.0f;
-static constexpr float kMaxSaturationGain = 30.0f;
