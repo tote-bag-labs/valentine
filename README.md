@@ -12,6 +12,8 @@ louder, more compressed, and more saturated. Turning crush up adds digital disto
 The real fun is in processing signal with some ambience, be it a room or a reverb. With the right input gain
 and release settings, you can introduce pumping and breathing artifacts.
 
+I'm writing about the development process [here](https://josediazrohena.github.io/).
+
 Getting Valentine
 =================
 Download the latest precompiled binaries [here](https://github.com/Tote-Bag-Labs/valentine/releases/latest).
