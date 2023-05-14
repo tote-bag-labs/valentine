@@ -11,6 +11,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include "tote_bag/utils/tbl_math.hpp"
+
 //==============================================================================
 ValentineAudioProcessor::ValentineAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -37,10 +39,20 @@ ValentineAudioProcessor::ValentineAudioProcessor()
     //initialize processor params
     const auto defaultRatio =
         FFCompParameterDefaults[static_cast<size_t> (VParameter::ratio)];
-
     ffCompressor->setRatio (defaultRatio);
-    ffCompressor->setKnee (kneeValues[3]);
-    ffCompressor->setThreshold (thresholdValues[3]);
+
+    const auto kneeValue =
+        tote_bag::math::piecewiseLinearInterpolate (kRatioControlPoints,
+                                                    kKneeControlPoints,
+                                                    defaultRatio);
+    ffCompressor->setKnee (kneeValue);
+
+    const auto thresholdValue =
+        tote_bag::math::piecewiseLinearInterpolate (kRatioControlPoints,
+                                                    kThresholdControlPoints,
+                                                    defaultRatio);
+    ffCompressor->setThreshold (thresholdValue);
+
     bitCrush->setParams (17.0);
     saturator->setParams (kMinSaturationGain);
     boundedSaturator->setParams (boundedSatGain);
@@ -472,21 +484,24 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
     {
         if (newValue >= FFCompParameterMax[static_cast<size_t> (VParameter::ratio)])
         {
-            ffCompressor->setRatio (1000.0f);
-            ffCompressor->setKnee (0.f);
+            ffCompressor->setRatio (
+                FFCompParameterMax[static_cast<size_t> (VParameter::ratio)]);
+            ffCompressor->setKnee (kKneeMax);
+            ffCompressor->setThreshold (kThresholdMax);
         }
 
         ffCompressor->setRatio (newValue);
-        ffCompressor->setKnee (kneeValues[2]);
 
-        if (niceModeOn)
-        {
-            ffCompressor->setThreshold (thresholdValues[2] + kNiceOffset);
-        }
-        else
-        {
-            ffCompressor->setThreshold (thresholdValues[2]);
-        }
+        auto kneeValue = tote_bag::math::piecewiseLinearInterpolate (kRatioControlPoints,
+                                                                     kKneeControlPoints,
+                                                                     newValue);
+        ffCompressor->setKnee (kneeValue);
+        auto thresholdValue =
+            tote_bag::math::piecewiseLinearInterpolate (kRatioControlPoints,
+                                                        kThresholdControlPoints,
+                                                        newValue);
+
+        ffCompressor->setThreshold (thresholdValue);
     }
     else if (parameter == "Compress")
     {
@@ -505,12 +520,10 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
         if (newValue > 0.5)
         {
             niceModeOn = true;
-            ffCompressor->setThreshold (thresholdValues[2] + kNiceOffset);
         }
         else
         {
             niceModeOn = false;
-            ffCompressor->setThreshold (thresholdValues[2]);
         }
     }
     else if (parameter == "Bypass")

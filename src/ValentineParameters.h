@@ -139,7 +139,7 @@ static constexpr std::array<float, numParams> FFCompParameterMin = {
     -24.0f,
     0.0f,
     0.0f,
-    1.0f,
+    kRatioMin,
     0.02f,
     50.0f,
     0.0f,
@@ -152,7 +152,7 @@ static constexpr std::array<float, numParams> FFCompParameterMax = {
     48.0f,
     100.0f,
     100.0f,
-    21.0f,
+    kRatioParameterMax,
     10.0f,
     1100.0f,
     100.0f,
@@ -211,32 +211,6 @@ static constexpr std::array<int, numParams> VParamPrecision = {
     2,
     0,
     0,
-};
-
-//==================================================================================
-
-static constexpr std::array<int, 5> ratioValues = {
-    4,
-    8,
-    12,
-    20,
-    1000,
-};
-
-static constexpr std::array<float, 5> kneeValues = {
-    6.0f,
-    3.84f,
-    2.16f,
-    .96f,
-    0.0f,
-};
-
-static constexpr std::array<float, 5> thresholdValues = {
-    -18.0f,
-    -14.0f,
-    -13.0f,
-    -12.0f,
-    -10.0f,
 };
 
 //==================================================================================
