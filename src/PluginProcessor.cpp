@@ -77,7 +77,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     {
         const auto paramType = static_cast<VParameter> (i);
 
-        if (paramType == VParameter::nice || paramType == VParameter::bypass)
+        if (paramType == VParameter::bypass)
         {
             params.push_back (std::make_unique<juce::AudioParameterBool> (
                 juce::ParameterID {FFCompParameterID()[i], ValentineParameterVersion},
