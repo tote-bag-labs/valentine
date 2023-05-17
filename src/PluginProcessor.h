@@ -82,19 +82,37 @@ public:
     /** Returns the saved GUI width. Used by Editor to decide what dimesions
         to use during construction.
      */
-    const int getSavedGUIwidth() { return savedWidth.get(); }
+    const int getSavedGUIwidth()
+    {
+        return savedWidth.get();
+    }
 
-    FFAU::LevelMeterSource& getInputMeterSource() { return inputMeterSource; }
-    FFAU::LevelMeterSource& getOutputMeterSource() { return outputMeterSource; }
-    FFAU::LevelMeterSource& getGrMeterSource() { return grMeterSource; }
+    FFAU::LevelMeterSource& getInputMeterSource()
+    {
+        return inputMeterSource;
+    }
+    FFAU::LevelMeterSource& getOutputMeterSource()
+    {
+        return outputMeterSource;
+    }
+    FFAU::LevelMeterSource& getGrMeterSource()
+    {
+        return grMeterSource;
+    }
 
     /** Called in Editor destructor to save the gui width
      */
-    void saveGUIwidth (const int w) { savedWidth.set (w); }
+    void saveGUIwidth (const int w)
+    {
+        savedWidth.set (w);
+    }
 
     juce::AudioProcessorValueTreeState treeState;
 
-    ToteBagPresetManager& getPresetManager() { return presetManager; }
+    ToteBagPresetManager& getPresetManager()
+    {
+        return presetManager;
+    }
 
 private:
     ToteBagPresetManager presetManager;
@@ -109,27 +127,27 @@ private:
 
     using Oversampling = juce::dsp::Oversampling<float>;
 
-    const int oversampleFactor { 2 };
-    int circBuffDelay { -1 };
+    const int oversampleFactor {2};
+    int circBuffDelay {-1};
 
-    const float boundedSatGain { 1.0f },
-        downSampleRate { 27500.0f },
-        RMStime { 50.0f };
+    const float boundedSatGain {1.0f}, downSampleRate {27500.0f}, RMStime {50.0f};
 
     // drop gain before processing...maybe
-    const float internalBias { juce::Decibels::decibelsToGain (-9.f) };
-    const float invInternalBias { 1.0f / internalBias };
+    const float internalBias {juce::Decibels::decibelsToGain (-9.f)};
+    const float invInternalBias {1.0f / internalBias};
 
     juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> dryWet;
 
-    const double dryWetRampLength { .10 }; // in seconds, used in .reset()
+    const double dryWetRampLength {.10}; // in seconds, used in .reset()
 
     // used to maintain state for ApplyGainRamp
     // compress and makeup are addressed in dB, interface-wise, but handled linearly here
-    float smoothedGain { 1.0f },
-        currentGain { juce::Decibels::decibelsToGain (FFCompParameterDefaults[getParameterIndex (VParameter::inputGain)]) },
-        currentMakeup { juce::Decibels::decibelsToGain (FFCompParameterDefaults[getParameterIndex (VParameter::makeupGain)]) },
-        currentNiceGain { 1.0f };
+    float smoothedGain {1.0f},
+        currentGain {juce::Decibels::decibelsToGain (
+            FFCompParameterDefaults[getParameterIndex (VParameter::inputGain)])},
+        currentMakeup {juce::Decibels::decibelsToGain (
+            FFCompParameterDefaults[getParameterIndex (VParameter::makeupGain)])},
+        currentNiceGain {1.0f};
 
     // Used to index into ratio array
     size_t ratioIndex = 0;
@@ -139,18 +157,18 @@ private:
     bool niceModeOn = false;
 
     // compress and makeup are addressed in dB, interface-wise, but handled linearly here
-    juce::Atomic<float> compressValue { juce::Decibels::decibelsToGain (FFCompParameterDefaults[getParameterIndex (VParameter::inputGain)]) },
-        mixValue { 1.0f },
-        makeupValue { juce::Decibels::decibelsToGain (FFCompParameterDefaults[getParameterIndex (VParameter::makeupGain)]) },
-        currentWidth { 0.0f },
-        currentHeight { 0.0f },
-        newNiceGain { 1.0f },
-        newNiceInvGain { 1.0f };
+    juce::Atomic<float> compressValue {juce::Decibels::decibelsToGain (
+        FFCompParameterDefaults[getParameterIndex (VParameter::inputGain)])},
+        mixValue {1.0f},
+        makeupValue {juce::Decibels::decibelsToGain (
+            FFCompParameterDefaults[getParameterIndex (VParameter::makeupGain)])},
+        currentWidth {0.0f}, currentHeight {0.0f}, newNiceGain {1.0f},
+        newNiceInvGain {1.0f};
 
-    juce::Atomic<int> savedWidth { 0 };
+    juce::Atomic<int> savedWidth {0};
 
-    juce::Atomic<bool> crushOn { false };
-    juce::Atomic<bool> bypassOn { false };
+    juce::Atomic<bool> crushOn {false};
+    juce::Atomic<bool> bypassOn {false};
 
     // This is used for, yes you guessed it, processing
     juce::AudioBuffer<float> processBuffer;
