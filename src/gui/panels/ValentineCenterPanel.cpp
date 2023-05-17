@@ -55,22 +55,6 @@ CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
                             tote_bag::laf_constants::vPinkDark);
     versionLabel.setJustificationType (juce::Justification::centredTop);
     addAndMakeVisible (versionLabel);
-
-    // Ratio box
-    if (auto ratioParam = dynamic_cast<juce::AudioParameterChoice*> (processor.treeState.getParameter (FFCompParameterID()[getParameterIndex (VParameter::ratio)])))
-    {
-        mRatioBox = std::make_unique<tote_bag::FlatTextChooser> (FFCompParameterLabel()[getParameterIndex (VParameter::ratio)],
-                                                                 std::vector<std::string> {
-                                                                     k4_1RatioLabel.data(),
-                                                                     k8_1RatioLabel.data(),
-                                                                     k12_1RatioLabel.data(),
-                                                                     k20_1RatioLabel.data(),
-                                                                     k1000_1RatioLabel.data() },
-                                                                 8001,
-                                                                 ratioParam);
-    }
-
-    addAndMakeVisible (mRatioBox.get());
 }
 
 CenterPanel::~CenterPanel()
@@ -139,20 +123,15 @@ void CenterPanel::resized()
 
     auto bottomLeftRowBounds = bottomLeftRowBorderBounds.reduced (smallborderMargin);
 
-    auto ratioBounds = bottomLeftRowBounds.removeFromLeft (juce::roundToInt (bottomLeftRowBounds.getWidth() / 3.0f));
-    ratioBounds.removeFromBottom (juce::roundToInt(ratioBounds.getHeight() * .025f));
-    mRatioBox->setBounds (ratioBounds);
-
-    const auto numBottomLeftColumns = numLeftColumns - 1;
-
-    std::array<Component*, numBottomLeftColumns> bottomLeftRowComponents = {
+    std::array<Component*, numLeftColumns> bottomLeftRowComponents = {
+        &ratioSlider,
         &attackSlider,
         &releaseSlider
     };
 
-    for (size_t i = 0; i < numBottomLeftColumns; ++i)
+    for (size_t i = 0; i < numLeftColumns; ++i)
     {
-        bottomLeftRowComponents[i]->setBounds (areaFunc (bottomLeftRowBounds, numBottomLeftColumns, i));
+        bottomLeftRowComponents[i]->setBounds (areaFunc (bottomLeftRowBounds, numLeftColumns, i));
     }
 
     // Vertical margin

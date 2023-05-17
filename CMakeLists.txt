@@ -122,6 +122,7 @@ set(SourceFiles
 
     libs/tote_bag/utils/macros.hpp
     libs/tote_bag/utils/type_helpers.hpp
+    libs/tote_bag/utils/tbl_math.hpp
     )
 
 target_sources("${PROJECT_NAME}" PRIVATE ${SourceFiles})

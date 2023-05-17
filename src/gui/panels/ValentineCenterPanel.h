@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "tote_bag/juce_gui/components/widgets/FlatTextChooser.h"
 #include "tote_bag/juce_gui/components/widgets/LabelSlider.h"
 #include "tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h"
 
@@ -48,8 +47,6 @@ private:
 
     juce::Label versionLabel;
     std::unique_ptr<juce::Drawable> vLogo;
-
-    std::unique_ptr<tote_bag::FlatTextChooser> mRatioBox;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CenterPanel)
 };
