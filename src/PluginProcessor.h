@@ -149,8 +149,6 @@ private:
             FFCompParameterDefaults[getParameterIndex (VParameter::makeupGain)])},
         currentNiceGain {1.0f};
 
-    // Used to index into ratio array
-    size_t ratioIndex = 0;
     // Raises compressor threshold setting when Nice mode is on
     static constexpr float kNiceOffset = 9.0f;
     // Determines whether offset is used when setting compressor threshold
