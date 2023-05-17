@@ -515,17 +515,6 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
     {
         makeupValue.set (juce::Decibels::decibelsToGain (newValue));
     }
-    else if (parameter == "Nice")
-    {
-        if (newValue > 0.5)
-        {
-            niceModeOn = true;
-        }
-        else
-        {
-            niceModeOn = false;
-        }
-    }
     else if (parameter == "Bypass")
     {
         bypassOn.set (newValue > 0.5f);
