@@ -74,30 +74,53 @@ private:
     {
     };
 
+    /** Returns the compensation gain for a given saturation type and input gain.
+     *  This allows us to increase input gain without changing the output level.
+     *
+     *  Generally, the gain is found using the following: 1.0 / f(inputGain).
+     *  With some functions this will inappropriately boost output level
+     *  for small values. In these cases, we simply return 1.0 / inputGain.
+     *
+     *  Note: The tolerance point determining when we use this alternate calculation
+     *  may need to be adjusted for different saturation types.
+     */
     template <typename SaturationType, typename FloatType>
     auto compensationGain (FloatType inputGain)
     {
         if constexpr (std::is_same<SaturationType, inverseHyperbolicSineTag>::value)
         {
+            // Tolerance determined by eyballing graphs in desmos
+            constexpr FloatType tolerance = 1.02;
+            if (inputGain <= tolerance)
+            {
+                return static_cast<FloatType> (1.0) / inputGain;
+            }
             return static_cast<FloatType> (1.0) / std::asinh (inputGain);
         }
         else if constexpr (std::is_same<SaturationType, hyperbolicTangentTag>::value)
         {
+            // Tolerance determined by eyballing graphs in desmos
+            constexpr FloatType tolerance = 1.02;
+            if (inputGain <= tolerance)
+            {
+                return static_cast<FloatType> (1.0) / inputGain;
+            }
             return static_cast<FloatType> (1.0) / std::tanh (inputGain);
         }
         else
         {
-            static_assert (tote_bag::type_helpers::dependent_false<SaturationType>::value, "Unsupported saturation type.");
+            static_assert (tote_bag::type_helpers::dependent_false<SaturationType>::value,
+                           "Unsupported saturation type.");
         }
     }
 
     Type saturationType;
 
-    float asymmetry { 0.0f };
+    float asymmetry {0.0f};
 
-    const float gainRampSec { .005f };
+    const float gainRampSec {.005f};
 
-    juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> smoothedSat { 1.0f };
+    juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> smoothedSat {1.0f};
     juce::AudioBuffer<float> xState;
     std::array<float, 2> antiderivState;
 
