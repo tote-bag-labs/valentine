@@ -83,6 +83,12 @@ private:
         }
         else if constexpr (std::is_same<SaturationType, hyperbolicTangentTag>::value)
         {
+            // Tolerance determined by eyballing graphs in desmos
+            constexpr FloatType tolerance = 1.02;
+            if (inputGain <= tolerance)
+            {
+                return static_cast<FloatType> (1.0) / inputGain;
+            }
             return static_cast<FloatType> (1.0) / std::tanh (inputGain);
         }
         else
