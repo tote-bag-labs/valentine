@@ -87,17 +87,18 @@ private:
         }
         else
         {
-            static_assert (tote_bag::type_helpers::dependent_false<SaturationType>::value, "Unsupported saturation type.");
+            static_assert (tote_bag::type_helpers::dependent_false<SaturationType>::value,
+                           "Unsupported saturation type.");
         }
     }
 
     Type saturationType;
 
-    float asymmetry { 0.0f };
+    float asymmetry {0.0f};
 
-    const float gainRampSec { .005f };
+    const float gainRampSec {.005f};
 
-    juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> smoothedSat { 1.0f };
+    juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> smoothedSat {1.0f};
     juce::AudioBuffer<float> xState;
     std::array<float, 2> antiderivState;
 
