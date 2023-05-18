@@ -166,7 +166,7 @@ static constexpr std::array<float, numParams> FFCompParameterDefaults = {
     1.3f,
     350.0f,
     100.0f,
-    8.0f,
+    0.0f,
     0.0f,
 };
 
