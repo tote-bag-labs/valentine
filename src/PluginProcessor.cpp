@@ -576,9 +576,7 @@ void ValentineAudioProcessor::initializeDSP()
     saturator =
         std::make_unique<Saturation> (Saturation::Type::inverseHyperbolicSineInterp, .6f);
 
-    boundedSaturator =
-        std::make_unique<Saturation> (Saturation::Type::interpolatedHyperbolicTangent,
-                                      -.4f);
+    boundedSaturator = std::make_unique<Saturation> (Saturation::Type::hyperbolicTangent);
 
     oversampler =
         std::make_unique<Oversampling> (2,
