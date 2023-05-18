@@ -86,7 +86,7 @@ TEST_CASE ("piecewiseLinearInterpolation - basics", "[Math]")
     {
         const std::array<float, 5> inputRange = {0.0f, 1.0f, 2.0f, 3.0f, 5.0f};
         const std::array<float, 5> outputRange = {10.0f, 20.0f, 30.0f, 40.0f, 50.0f};
-        const auto result = piecewiseLinearInterpolate (inputRange, outputRange, 1.5f);
+        const auto result = piecewiseRemap (inputRange, outputRange, 1.5f);
         REQUIRE (result == 25.0f);
     }
 
@@ -94,7 +94,7 @@ TEST_CASE ("piecewiseLinearInterpolation - basics", "[Math]")
     {
         const std::array<float, 5> inputRange = {0.0f, 1.0f, 2.0f, 3.0f, 5.0f};
         const std::array<float, 5> outputRange = {50.0f, 40.0f, 30.0f, 20.0f, 10.0f};
-        const auto result = piecewiseLinearInterpolate (inputRange, outputRange, 1.5f);
+        const auto result = piecewiseRemap (inputRange, outputRange, 1.5f);
         REQUIRE (result == 35.0f);
     }
 
@@ -102,7 +102,7 @@ TEST_CASE ("piecewiseLinearInterpolation - basics", "[Math]")
     {
         const std::array<float, 5> inputRange = {0.0f, 1.0f, 2.0f, 3.0f, 5.0f};
         const std::array<float, 5> outputRange = {-10.0f, -20.0f, -30.0f, -40.0f, -50.0f};
-        const auto result = piecewiseLinearInterpolate (inputRange, outputRange, 1.5f);
+        const auto result = piecewiseRemap (inputRange, outputRange, 1.5f);
         REQUIRE (result == -25.0f);
     }
 
@@ -110,7 +110,7 @@ TEST_CASE ("piecewiseLinearInterpolation - basics", "[Math]")
     {
         const std::array<float, 5> inputRange = {0.0f, 1.0f, 2.0f, 3.0f, 5.0f};
         const std::array<float, 5> outputRange = {-10.0f, -20.0f, -30.0f, -40.0f, -50.0f};
-        const auto result = piecewiseLinearInterpolate (inputRange, outputRange, 3.0f);
+        const auto result = piecewiseRemap (inputRange, outputRange, 3.0f);
         REQUIRE (result == -40.0f);
     }
 }

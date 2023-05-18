@@ -41,16 +41,14 @@ ValentineAudioProcessor::ValentineAudioProcessor()
         FFCompParameterDefaults[static_cast<size_t> (VParameter::ratio)];
     ffCompressor->setRatio (defaultRatio);
 
-    const auto kneeValue =
-        tote_bag::math::piecewiseLinearInterpolate (kRatioControlPoints,
-                                                    kKneeControlPoints,
-                                                    defaultRatio);
+    const auto kneeValue = tote_bag::math::piecewiseRemap (kRatioControlPoints,
+                                                           kKneeControlPoints,
+                                                           defaultRatio);
     ffCompressor->setKnee (kneeValue);
 
-    const auto thresholdValue =
-        tote_bag::math::piecewiseLinearInterpolate (kRatioControlPoints,
-                                                    kThresholdControlPoints,
-                                                    defaultRatio);
+    const auto thresholdValue = tote_bag::math::piecewiseRemap (kRatioControlPoints,
+                                                                kThresholdControlPoints,
+                                                                defaultRatio);
     ffCompressor->setThreshold (thresholdValue);
 
     bitCrush->setParams (17.0);
@@ -492,14 +490,13 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
 
         ffCompressor->setRatio (newValue);
 
-        auto kneeValue = tote_bag::math::piecewiseLinearInterpolate (kRatioControlPoints,
-                                                                     kKneeControlPoints,
-                                                                     newValue);
+        auto kneeValue = tote_bag::math::piecewiseRemap (kRatioControlPoints,
+                                                         kKneeControlPoints,
+                                                         newValue);
         ffCompressor->setKnee (kneeValue);
-        auto thresholdValue =
-            tote_bag::math::piecewiseLinearInterpolate (kRatioControlPoints,
-                                                        kThresholdControlPoints,
-                                                        newValue);
+        auto thresholdValue = tote_bag::math::piecewiseRemap (kRatioControlPoints,
+                                                              kThresholdControlPoints,
+                                                              newValue);
 
         ffCompressor->setThreshold (thresholdValue);
     }
