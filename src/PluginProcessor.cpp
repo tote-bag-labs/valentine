@@ -77,7 +77,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     {
         const auto paramType = static_cast<VParameter> (i);
 
-        if (paramType == VParameter::nice || paramType == VParameter::bypass)
+        if (paramType == VParameter::bypass)
         {
             params.push_back (std::make_unique<juce::AudioParameterBool> (
                 juce::ParameterID {FFCompParameterID()[i], ValentineParameterVersion},
@@ -514,17 +514,6 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
     else if (parameter == "Makeup")
     {
         makeupValue.set (juce::Decibels::decibelsToGain (newValue));
-    }
-    else if (parameter == "Nice")
-    {
-        if (newValue > 0.5)
-        {
-            niceModeOn = true;
-        }
-        else
-        {
-            niceModeOn = false;
-        }
     }
     else if (parameter == "Bypass")
     {
