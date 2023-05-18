@@ -74,6 +74,16 @@ private:
     {
     };
 
+    /** Returns the compensation gain for a given saturation type and input gain.
+     *  This allows us to increase input gain without changing the output level.
+     *
+     *  Generally, the gain is found using the following: 1.0 / f(inputGain).
+     *  With some functions this will inappropriately boost output level
+     *  for small values. In these cases, we simply return 1.0 / inputGain.
+     *
+     *  Note: The tolerance point determining when we use this alternate calculation
+     *  may need to be adjusted for different saturation types.
+     */
     template <typename SaturationType, typename FloatType>
     auto compensationGain (FloatType inputGain)
     {
