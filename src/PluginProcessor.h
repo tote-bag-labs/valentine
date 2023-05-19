@@ -144,17 +144,16 @@ private:
     // compress and makeup are addressed in dB, interface-wise, but handled linearly here
     float smoothedGain {1.0f},
         currentGain {juce::Decibels::decibelsToGain (
-            FFCompParameterDefaults[getParameterIndex (VParameter::inputGain)])},
-        currentMakeup {juce::Decibels::decibelsToGain (
-            FFCompParameterDefaults[getParameterIndex (VParameter::makeupGain)])};
+            FFCompParameterDefaults[getParameterIndex (VParameter::inputGain)])};
+
+    juce::Atomic<bool> makeupValueChanged {false};
+    juce::Atomic<float> makeupValue {juce::Decibels::decibelsToGain (
+        FFCompParameterDefaults[getParameterIndex (VParameter::makeupGain)])};
 
     // compress and makeup are addressed in dB, interface-wise, but handled linearly here
     juce::Atomic<float> compressValue {juce::Decibels::decibelsToGain (
         FFCompParameterDefaults[getParameterIndex (VParameter::inputGain)])},
-        mixValue {1.0f},
-        makeupValue {juce::Decibels::decibelsToGain (
-            FFCompParameterDefaults[getParameterIndex (VParameter::makeupGain)])},
-        currentWidth {0.0f}, currentHeight {0.0f};
+        mixValue {1.0f}, currentWidth {0.0f}, currentHeight {0.0f};
 
     juce::Atomic<int> savedWidth {0};
 
@@ -163,6 +162,8 @@ private:
 
     // This is used for, yes you guessed it, processing
     juce::AudioBuffer<float> processBuffer;
+
+    juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> makeupGainSmoothed;
 
     // DSP objects
     std::array<std::unique_ptr<CircularBuffer<float>>, 2> unProcBuffers;

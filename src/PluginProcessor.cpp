@@ -261,6 +261,10 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     ffCompressor->setMeterSource (&grMeterSource);
 
     outputMeterSource.resize (getTotalNumOutputChannels(), rmsWindow);
+
+    makeupGainSmoothed.reset (sampleRate, .001f);
+    makeupGainSmoothed.setTargetValue (*treeState.getRawParameterValue (
+        FFCompParameterID()[getParameterIndex (VParameter::makeupGain)]));
 }
 
 void ValentineAudioProcessor::releaseResources()
@@ -353,6 +357,15 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     ffCompressor->process (highSampleRateBlock);
     saturator->processBlock (highSampleRateBlock);
+
+    // Apply output gain
+    if (makeupValueChanged.get())
+    {
+        makeupGainSmoothed.setTargetValue (makeupValue.get());
+        makeupValueChanged.set (false);
+    }
+    highSampleRateBlock.multiplyBy (makeupGainSmoothed);
+
     boundedSaturator->processBlock (highSampleRateBlock);
     oversampler->processSamplesDown (processBlock);
 
@@ -365,14 +378,6 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
         fracDelayFilters[channel]->process (channelPointer, blockLength);
     }
-
-    // Apply Makeup
-    auto m = makeupValue.get();
-    for (int i = 0; i < totalNumOutputChannels; ++i)
-    {
-        processBuffer.applyGainRamp (i, 0, bufferSize, currentMakeup, m);
-    }
-    currentMakeup = m;
 
     // Get and apply mix
     auto mix = mixValue.get();
@@ -511,6 +516,7 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
     else if (parameter == "Makeup")
     {
         makeupValue.set (juce::Decibels::decibelsToGain (newValue));
+        makeupValueChanged = true;
     }
     else if (parameter == "Bypass")
     {
