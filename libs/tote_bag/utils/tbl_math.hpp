@@ -49,20 +49,22 @@ std::pair<ValueType, ValueType>
     return std::make_pair (inputRange[indices.first], inputRange[indices.second]);
 }
 
-/** Interpolates a value from one range of the other, using sections corresponding to
+/** Remaps a value from one range of the other, using sections corresponding to
  *  the upper and lower bounds of the input value as found in the input range.
  */
 template <typename ValueType, size_t ArraySize>
-ValueType piecewiseLinearInterpolate (const std::array<ValueType, ArraySize> inputRange,
-                                      const std::array<ValueType, ArraySize> outputRange,
-                                      const ValueType input)
+ValueType piecewiseRemap (const std::array<ValueType, ArraySize> inputSegments,
+                          const std::array<ValueType, ArraySize> outputSegments,
+                          const ValueType input)
 {
-    const auto [lowerBound, upperBound] = findNearestIndices (inputRange, input);
-    const auto normalizedInput = (input - inputRange[lowerBound])
-                                 / (inputRange[upperBound] - inputRange[lowerBound]);
+    const auto [lowerBound, upperBound] = findNearestIndices (inputSegments, input);
+    // clang-format off
+    const auto normalizedInput = (input - inputSegments[lowerBound])
+                               / (inputSegments[upperBound] - inputSegments[lowerBound]);
+    // clang-format on
 
-    return outputRange[lowerBound]
-           + (outputRange[upperBound] - outputRange[lowerBound]) * normalizedInput;
+    return outputSegments[lowerBound]
+           + (outputSegments[upperBound] - outputSegments[lowerBound]) * normalizedInput;
 }
 
 } // namespace math
