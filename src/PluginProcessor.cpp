@@ -63,7 +63,6 @@ ValentineAudioProcessor::ValentineAudioProcessor()
 
     bitCrush->setParams (17.0);
     saturator->setParams (kMinSaturationGain);
-    boundedSaturator->setParams (boundedSatGain);
 }
 
 ValentineAudioProcessor::~ValentineAudioProcessor()
@@ -584,6 +583,7 @@ void ValentineAudioProcessor::initializeDSP()
         std::make_unique<Saturation> (Saturation::Type::inverseHyperbolicSineInterp, .6f);
 
     boundedSaturator = std::make_unique<Saturation> (Saturation::Type::hyperbolicTangent);
+    boundedSaturator->setParams (detail::kNeg4_5dbGain);
 
     oversampler =
         std::make_unique<Oversampling> (2,
