@@ -115,8 +115,8 @@ void CenterPanel::resized()
     auto topLeftRowBounds = topLeftRowBorderBounds.reduced (borderMargin);
 
     std::array<LabelSlider*, numLeftColumns> topLeftRowComponents = {
-        &inputSlider,
         &crushSlider,
+        &inputSlider,
         &saturateSlider,
     };
 
