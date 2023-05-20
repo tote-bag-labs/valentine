@@ -21,14 +21,22 @@
 //==============================================================================
 
 CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
-    : inputSlider (FFCompParameterID()[getParameterIndex (VParameter::inputGain)], processor.treeState)
-    , crushSlider (FFCompParameterID()[getParameterIndex (VParameter::bitCrush)], processor.treeState)
-    , saturateSlider (FFCompParameterID()[getParameterIndex (VParameter::saturation)], processor.treeState)
-    , ratioSlider (FFCompParameterID()[getParameterIndex (VParameter::ratio)], processor.treeState)
-    , attackSlider (FFCompParameterID()[getParameterIndex (VParameter::attack)], processor.treeState)
-    , releaseSlider (FFCompParameterID()[getParameterIndex (VParameter::release)], processor.treeState)
-    , mixSlider (FFCompParameterID()[getParameterIndex (VParameter::dryWet)], processor.treeState)
-    , outputSlider (FFCompParameterID()[getParameterIndex (VParameter::makeupGain)], processor.treeState)
+    : inputSlider (FFCompParameterID()[getParameterIndex (VParameter::inputGain)],
+                   processor.treeState)
+    , crushSlider (FFCompParameterID()[getParameterIndex (VParameter::bitCrush)],
+                   processor.treeState)
+    , saturateSlider (FFCompParameterID()[getParameterIndex (VParameter::saturation)],
+                      processor.treeState)
+    , ratioSlider (FFCompParameterID()[getParameterIndex (VParameter::ratio)],
+                   processor.treeState)
+    , attackSlider (FFCompParameterID()[getParameterIndex (VParameter::attack)],
+                    processor.treeState)
+    , releaseSlider (FFCompParameterID()[getParameterIndex (VParameter::release)],
+                     processor.treeState)
+    , mixSlider (FFCompParameterID()[getParameterIndex (VParameter::dryWet)],
+                 processor.treeState)
+    , outputSlider (FFCompParameterID()[getParameterIndex (VParameter::makeupGain)],
+                    processor.treeState)
 {
     // Top left sliders
     addAndMakeVisible (inputSlider);
@@ -74,8 +82,12 @@ void CenterPanel::resized()
 {
     auto workingArea = getLocalBounds();
 
-    auto areaFunc = [] (juce::Rectangle<int>& area, size_t numSliders, size_t sliderCount) -> juce::Rectangle<int> {
-        int amountToRemove = juce::roundToInt (static_cast<float> (area.getWidth()) / static_cast<float> (numSliders - sliderCount));
+    auto areaFunc = [] (juce::Rectangle<int>& area,
+                        size_t numSliders,
+                        size_t sliderCount) -> juce::Rectangle<int> {
+        int amountToRemove =
+            juce::roundToInt (static_cast<float> (area.getWidth())
+                              / static_cast<float> (numSliders - sliderCount));
         return area.removeFromLeft (amountToRemove);
     };
 
@@ -86,7 +98,8 @@ void CenterPanel::resized()
 
     // 1.65 to reflect that the bottom half is .65 the height of the top row
     auto totalParamHeight = (paramWidth * 1.75f) + betweenRowMargin;
-    auto verticalAlignmentSpacer = juce::roundToInt ((workingArea.getHeight() - totalParamHeight) * .5f);
+    auto verticalAlignmentSpacer =
+        juce::roundToInt ((workingArea.getHeight() - totalParamHeight) * .5f);
     workingArea.removeFromTop (verticalAlignmentSpacer);
     workingArea.removeFromBottom (verticalAlignmentSpacer);
 
@@ -104,12 +117,13 @@ void CenterPanel::resized()
     std::array<LabelSlider*, numLeftColumns> topLeftRowComponents = {
         &inputSlider,
         &crushSlider,
-        &saturateSlider
+        &saturateSlider,
     };
 
     for (size_t i = 0; i < numLeftColumns; ++i)
     {
-        topLeftRowComponents[i]->setBounds (areaFunc (topLeftRowBounds, numLeftColumns, i));
+        topLeftRowComponents[i]->setBounds (
+            areaFunc (topLeftRowBounds, numLeftColumns, i));
     }
 
     const auto roundedRowMargin = juce::roundToInt (betweenRowMargin);
@@ -126,12 +140,13 @@ void CenterPanel::resized()
     std::array<Component*, numLeftColumns> bottomLeftRowComponents = {
         &ratioSlider,
         &attackSlider,
-        &releaseSlider
+        &releaseSlider,
     };
 
     for (size_t i = 0; i < numLeftColumns; ++i)
     {
-        bottomLeftRowComponents[i]->setBounds (areaFunc (bottomLeftRowBounds, numLeftColumns, i));
+        bottomLeftRowComponents[i]->setBounds (
+            areaFunc (bottomLeftRowBounds, numLeftColumns, i));
     }
 
     // Vertical margin
@@ -145,14 +160,13 @@ void CenterPanel::resized()
 
     auto topRightRowBounds = topRightRowBorderBounds.reduced (borderMargin);
 
-    std::array<LabelSlider*, numRightColumns> topRightRowComponents = {
-        &outputSlider,
-        &mixSlider
-    };
+    std::array<LabelSlider*, numRightColumns> topRightRowComponents = {&outputSlider,
+                                                                       &mixSlider};
 
     for (size_t i = 0; i < numRightColumns; ++i)
     {
-        topRightRowComponents[i]->setBounds (areaFunc (topRightRowBounds, numRightColumns, i));
+        topRightRowComponents[i]->setBounds (
+            areaFunc (topRightRowBounds, numRightColumns, i));
     }
 
     // Margin
@@ -162,9 +176,14 @@ void CenterPanel::resized()
     auto logoHeight = juce::roundToInt (paramWidth * .5f);
     auto versionHeight = juce::roundToInt (logoHeight * .25);
 
-    auto logoBounds = rightSideBounds.removeFromTop (logoHeight).removeFromLeft (paramWidth * numRightColumns).reduced (borderMargin);
+    auto logoBounds = rightSideBounds.removeFromTop (logoHeight)
+                          .removeFromLeft (paramWidth * numRightColumns)
+                          .reduced (borderMargin);
     auto versionBounds = logoBounds.removeFromBottom (versionHeight);
 
-    vLogo->setTransformToFit (logoBounds.toFloat(), juce::RectanglePlacement (juce::RectanglePlacement::xMid | juce::RectanglePlacement::yTop));
+    vLogo->setTransformToFit (
+        logoBounds.toFloat(),
+        juce::RectanglePlacement (juce::RectanglePlacement::xMid
+                                  | juce::RectanglePlacement::yTop));
     versionLabel.setBounds (versionBounds);
 }
