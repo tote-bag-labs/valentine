@@ -61,7 +61,7 @@ ValentineAudioProcessor::ValentineAudioProcessor()
                                                                 defaultRatio);
     ffCompressor->setThreshold (thresholdValue);
 
-    bitCrush->setParams (17.0);
+    bitCrush->setParams (kMaxBits);
     saturator->setParams (kMinSaturationGain);
 }
 
