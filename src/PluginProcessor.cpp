@@ -14,6 +14,16 @@
 #include "tote_bag/utils/tbl_math.hpp"
 
 //==============================================================================
+
+// TODO: maybe remove once final clipper gain is decided. Or move
+// if it seems like a good idea to store these as general constants.
+namespace detail
+{
+inline constexpr float kNeg3dbGain = 0.7079457844f;
+inline constexpr float kNeg6dbGain = 0.5011872336f;
+inline constexpr float kNeg4_5dbGain = 0.5956621435f;
+}
+
 ValentineAudioProcessor::ValentineAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
     : AudioProcessor (BusesProperties()
