@@ -17,8 +17,8 @@
 constexpr int ValentineParameterVersion = 1;
 
 enum class VParameter {
-    inputGain = 0,
-    bitCrush,
+    bitCrush = 0,
+    inputGain,
     saturation,
     ratio,
     attack,
@@ -89,8 +89,8 @@ static constexpr auto numParams = static_cast<int> (VParameter::TOTAL_NUM_PARAME
 inline const std::array<juce::String, numParams>& FFCompParameterID()
 {
     static const std::array<juce::String, numParams> parameterIDs = {
-        "Compress",
         "Crush",
+        "Compress",
         "Saturate",
         "Ratio",
         "AttackTime",
@@ -106,8 +106,8 @@ inline const std::array<juce::String, numParams>& FFCompParameterID()
 inline const std::array<juce::String, numParams>& FFCompParameterLabel()
 {
     static const std::array<juce::String, numParams> parameterLabels = {
-        "Compress",
         "Crush",
+        "Compress",
         "Saturate",
         "Ratio",
         "Attack",
@@ -123,8 +123,8 @@ inline const std::array<juce::String, numParams>& FFCompParameterLabel()
 inline const std::array<juce::String, numParams>& VParameterUnit()
 {
     static const std::array<juce::String, numParams> unitLabels = {
-        " dB",
         " %",
+        " dB",
         " %",
         "",
         " ms",
@@ -138,8 +138,8 @@ inline const std::array<juce::String, numParams>& VParameterUnit()
 }
 
 static constexpr std::array<float, numParams> FFCompParameterMin = {
-    -24.0f,
     0.0f,
+    -24.0f,
     0.0f,
     kRatioMin,
     0.02f,
@@ -150,8 +150,8 @@ static constexpr std::array<float, numParams> FFCompParameterMin = {
 };
 
 static constexpr std::array<float, numParams> FFCompParameterMax = {
-    48.0f,
     100.0f,
+    48.0f,
     100.0f,
     kRatioParameterMax,
     10.0f,
@@ -186,8 +186,8 @@ static constexpr std::array<float, numParams> FFCompParameterIncrement = {
 };
 
 static constexpr std::array<float, numParams> FFCompParamCenter = {
-    23.0f,
     60.0f,
+    23.0f,
     60.0f,
     6.0f,
     5.0f,
