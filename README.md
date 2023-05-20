@@ -28,25 +28,19 @@ Signal Path
 Valentine is a non-linear processor. As such, knowing the signal path makes it easier
 to get your desired result. Here it is:
 
-**Crush** -> **Input** -> Compression -> **Saturation** -> Soft Clip -> **Output** -> **Mix**
+**Crush** -> **Compress** -> **Saturate** -> Soft Clip -> **Output** -> **Mix**
 
 Parameters
 ----------
 - **Crush**: increases the amount of bit crushing. Downsamples the signal to 27.5kHz for any setting greater than 0%.
-- **Input**: sets the gain before compresison. Use this to increase the amount of compression and distortion affecting the signal.
+- **Compress**: sets the gain before compresison. Use this to increase the amount of compression and distortion affecting the signal.
 - **Ratio**: sets the compression ratio. "Infinity" is more like 1000:1. Increasing this also increases the threshold and decreases the knee.
 - **Attack**: sets compression attack time.
 - **Release**: sets compression release time.
-- **Saturation**: increases the amount of saturation.
+- **Saturate**: increases the amount of saturation.
 - **Output**: sets the wet signal's output gain before mix.
 - **Mix**:  increases the amount of wet signal in the processor's output.
 - **Bypass**: bypasses all processing.
-
-**[Secret Parameter]**
-- **Nice**: raises the compressor's threshold when "on". Find this in your DAW's automation section or wherever the parameter's can be exposed
-in that DAW's format. I removed this from the UI because it was hard to reason about / communicate the purpose of visually but forgot to
-actually remove the parameter. Then some friends said "what happened to Nice?". So I'm letting you know about it now. This may be removed in the 1.0.0 release
-
 
 Building Valentine
 ==================
