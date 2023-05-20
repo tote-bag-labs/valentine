@@ -470,7 +470,7 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
         else
             crushOn.set (false);
     }
-    else if (parameter == "Saturation")
+    else if (parameter == "Saturate")
     {
         const auto saturateIndex = static_cast<int> (VParameter::saturation);
         saturator->setParams (juce::jmap (newValue,
