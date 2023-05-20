@@ -91,7 +91,7 @@ inline const std::array<juce::String, numParams>& FFCompParameterID()
     static const std::array<juce::String, numParams> parameterIDs = {
         "Compress",
         "Crush",
-        "Saturation",
+        "Saturate",
         "Ratio",
         "AttackTime",
         "ReleaseTime",
@@ -106,9 +106,9 @@ inline const std::array<juce::String, numParams>& FFCompParameterID()
 inline const std::array<juce::String, numParams>& FFCompParameterLabel()
 {
     static const std::array<juce::String, numParams> parameterLabels = {
-        "Input",
+        "Compress",
         "Crush",
-        "Saturation",
+        "Saturate",
         "Ratio",
         "Attack",
         "Release",
