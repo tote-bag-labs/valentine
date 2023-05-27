@@ -160,6 +160,8 @@ private:
 
     juce::Atomic<bool> crushOn {false};
     juce::Atomic<bool> bypassOn {false};
+    juce::Atomic<bool> clipOn {
+        FFCompParameterDefaults[static_cast<size_t> (VParameter::outputClip)] > 0.0f};
 
     // This is used for, yes you guessed it, processing
     juce::AudioBuffer<float> processBuffer;

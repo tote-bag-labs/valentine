@@ -84,12 +84,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     {
         const auto paramType = static_cast<VParameter> (i);
 
-        if (paramType == VParameter::bypass)
+        if (paramType == VParameter::bypass || paramType == VParameter::outputClip)
         {
+            const bool defaultValue = FFCompParameterDefaults[i] > 0.5f;
+
             params.push_back (std::make_unique<juce::AudioParameterBool> (
                 juce::ParameterID {FFCompParameterID()[i], ValentineParameterVersion},
                 FFCompParameterLabel()[i],
-                false));
+                defaultValue));
         }
         else
         {
@@ -362,7 +364,12 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     ffCompressor->process (highSampleRateBlock);
     saturator->processBlock (highSampleRateBlock);
-    boundedSaturator->processBlock (highSampleRateBlock);
+
+    if (clipOn.get())
+    {
+        boundedSaturator->processBlock (highSampleRateBlock);
+    }
+
     oversampler->processSamplesDown (processBlock);
 
     // Delay processed signal to produce a integral delay amount
@@ -524,6 +531,10 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
     else if (parameter == "Bypass")
     {
         bypassOn.set (newValue > 0.5f);
+    }
+    else if (parameter == "OutputClip")
+    {
+        clipOn.set (newValue > 0.5f);
     }
 }
 

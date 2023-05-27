@@ -26,6 +26,7 @@ enum class VParameter {
     makeupGain,
     dryWet,
     bypass,
+    outputClip,
     TOTAL_NUM_PARAMETERS
 };
 
@@ -98,6 +99,7 @@ inline const std::array<juce::String, numParams>& FFCompParameterID()
         "Makeup",
         "Mix",
         "Bypass",
+        "OutputClip",
     };
 
     return parameterIDs;
@@ -115,6 +117,7 @@ inline const std::array<juce::String, numParams>& FFCompParameterLabel()
         "Output",
         "Mix",
         "Bypass",
+        "Clip",
     };
 
     return parameterLabels;
@@ -132,6 +135,7 @@ inline const std::array<juce::String, numParams>& VParameterUnit()
         " dB",
         " %",
         "",
+        "",
     };
 
     return unitLabels;
@@ -147,6 +151,7 @@ static constexpr std::array<float, numParams> FFCompParameterMin = {
     -12.0f,
     0.0f,
     0.0f,
+    0.0f,
 };
 
 static constexpr std::array<float, numParams> FFCompParameterMax = {
@@ -158,6 +163,7 @@ static constexpr std::array<float, numParams> FFCompParameterMax = {
     1100.0f,
     24.0f,
     100.0f,
+    1.0f,
     1.0f,
 };
 
@@ -171,6 +177,7 @@ static constexpr std::array<float, numParams> FFCompParameterDefaults = {
     0.0f,
     100.0f,
     0.0f,
+    1.0f,
 };
 
 static constexpr std::array<float, numParams> FFCompParameterIncrement = {
@@ -182,6 +189,7 @@ static constexpr std::array<float, numParams> FFCompParameterIncrement = {
     0.00001f,
     0.00001f,
     0.00001f,
+    1.0f,
     1.0f,
 };
 
@@ -195,6 +203,7 @@ static constexpr std::array<float, numParams> FFCompParamCenter = {
     0.0f,
     50.0f,
     0.5f,
+    0.5f,
 };
 
 static constexpr std::array<int, numParams> VParamPrecision = {
@@ -205,6 +214,7 @@ static constexpr std::array<int, numParams> VParamPrecision = {
     2,
     2,
     2,
+    0,
     0,
     0,
 };
