@@ -23,8 +23,8 @@ enum class VParameter {
     ratio,
     attack,
     release,
-    dryWet,
     makeupGain,
+    dryWet,
     bypass,
     TOTAL_NUM_PARAMETERS
 };
@@ -95,8 +95,8 @@ inline const std::array<juce::String, numParams>& FFCompParameterID()
         "Ratio",
         "AttackTime",
         "ReleaseTime",
-        "Mix",
         "Makeup",
+        "Mix",
         "Bypass",
     };
 
@@ -112,8 +112,8 @@ inline const std::array<juce::String, numParams>& FFCompParameterLabel()
         "Ratio",
         "Attack",
         "Release",
-        "Mix",
         "Output",
+        "Mix",
         "Bypass",
     };
 
@@ -129,8 +129,8 @@ inline const std::array<juce::String, numParams>& VParameterUnit()
         "",
         " ms",
         " ms",
-        " %",
         " dB",
+        " %",
         "",
     };
 
@@ -144,8 +144,8 @@ static constexpr std::array<float, numParams> FFCompParameterMin = {
     kRatioMin,
     0.02f,
     50.0f,
-    0.0f,
     -12.0f,
+    0.0f,
     0.0f,
 };
 
@@ -156,8 +156,8 @@ static constexpr std::array<float, numParams> FFCompParameterMax = {
     kRatioParameterMax,
     10.0f,
     1100.0f,
-    100.0f,
     24.0f,
+    100.0f,
     1.0f,
 };
 
@@ -168,8 +168,8 @@ static constexpr std::array<float, numParams> FFCompParameterDefaults = {
     4.0f,
     1.3f,
     350.0f,
-    100.0f,
     0.0f,
+    100.0f,
     0.0f,
 };
 
@@ -192,8 +192,8 @@ static constexpr std::array<float, numParams> FFCompParamCenter = {
     6.0f,
     5.0f,
     300.0f,
-    50.0f,
     0.0f,
+    50.0f,
     0.5f,
 };
 
@@ -204,8 +204,8 @@ static constexpr std::array<int, numParams> VParamPrecision = {
     2,
     2,
     2,
-    0,
     2,
+    0,
     0,
 };
 
