@@ -40,7 +40,7 @@ const size_t getParameterIndex (VParameter param)
 inline constexpr float kMinBits = 1.0f;
 inline constexpr float kMaxBits = 16.0f;
 
-inline constexpr float kMinSaturationGain = 1.0f;
+inline constexpr float kMinSaturationGain = 0.5f;
 inline constexpr float kMaxSaturationGain = 30.0f;
 
 // The largest the ratio can be as far as the parameter itself is concerned.
