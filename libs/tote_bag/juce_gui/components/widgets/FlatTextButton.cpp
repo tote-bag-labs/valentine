@@ -19,12 +19,22 @@ FlatTextButton::FlatTextButton (juce::String name)
 {
 }
 
-void FlatTextButton::paintButton (juce::Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+void FlatTextButton::paintButton (juce::Graphics& g,
+                                  bool shouldDrawButtonAsHighlighted,
+                                  bool shouldDrawButtonAsDown)
 {
-    if (auto* lnf = dynamic_cast<LookAndFeel*> (&getLookAndFeel()))
+    if (auto* lnf = dynamic_cast<tote_bag::LookAndFeel*> (&getLookAndFeel()))
     {
-        lnf->drawFlatButtonBackground (g, *this, findColour (getToggleState() ? buttonOnColourId : buttonColourId), shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown);
-        lnf->drawButtonText (g, *this, shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown);
+        lnf->drawFlatButtonBackground (
+            g,
+            *this,
+            findColour (getToggleState() ? buttonOnColourId : buttonColourId),
+            shouldDrawButtonAsHighlighted,
+            shouldDrawButtonAsDown);
+        lnf->drawButtonText (g,
+                             *this,
+                             shouldDrawButtonAsHighlighted,
+                             shouldDrawButtonAsDown);
     }
     else
     {
