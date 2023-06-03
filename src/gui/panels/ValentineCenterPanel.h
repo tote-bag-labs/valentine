@@ -11,6 +11,7 @@
 #pragma once
 
 #include "tote_bag/juce_gui/components/widgets/LabelSlider.h"
+#include "tote_bag/juce_gui/components/widgets/ParameterTextButton.h"
 #include "tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
@@ -44,6 +45,8 @@ private:
     juce::Rectangle<int> topRightRowBorderBounds;
     LabelSlider mixSlider;
     LabelSlider outputSlider;
+
+    ParameterTextButton outputClipButton;
 
     juce::Label versionLabel;
     std::unique_ptr<juce::Drawable> vLogo;
