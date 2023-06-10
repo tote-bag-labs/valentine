@@ -65,6 +65,8 @@ public:
 
     void processBlock (juce::dsp::AudioBlock<float>& inAudio);
 
+    void clearBuffers();
+
 private:
     // tags - first step towards a templated version of this class
     struct inverseHyperbolicSineTag

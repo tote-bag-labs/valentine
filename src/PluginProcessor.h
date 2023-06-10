@@ -204,6 +204,7 @@ private:
     juce::Atomic<bool> bypassOn {false};
     juce::Atomic<bool> clipOn {
         FFCompParameterDefaults[static_cast<size_t> (VParameter::outputClip)] > 0.0f};
+    juce::Atomic<bool> clipOnState = false;
 
     juce::Atomic<bool> latencyChanged = false;
 
