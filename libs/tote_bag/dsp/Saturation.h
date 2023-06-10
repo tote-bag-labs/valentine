@@ -122,6 +122,7 @@ private:
 
     juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> smoothedSat {1.0f};
     juce::AudioBuffer<float> xState;
+    // I guess we're assuming first order ADAA, stereo here.
     std::array<float, 2> antiderivState;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Saturation)

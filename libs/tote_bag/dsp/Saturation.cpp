@@ -15,6 +15,9 @@ Saturation::Saturation (Type sType, float asymm)
     : saturationType (sType)
     , asymmetry (asymm)
 {
+    // Stereo. TODO: don't use AudioBuffer. Refactor this so
+    // we have state when we need it.
+    xState.setSize (2, 1);
 }
 
 void Saturation::setParams (float inSaturation)
@@ -24,18 +27,14 @@ void Saturation::setParams (float inSaturation)
 
 void Saturation::reset (double sampleRate)
 {
-    if (xState.getNumChannels() > 0)
-        xState.clear();
-
-    else if (saturationType == Type::inverseHyperbolicSineInterp
-             || saturationType == Type::interpolatedHyperbolicTangent)
-    {
-        xState.setSize (2, 1);
-        xState.clear();
-        antiderivState.fill (0.0);
-    }
-
     smoothedSat.reset (sampleRate, gainRampSec);
+    clearBuffers();
+}
+
+void Saturation::clearBuffers()
+{
+    xState.clear();
+    antiderivState.fill (0.0);
 }
 
 inline float Saturation::calcGain (float inputSample, float sat)
