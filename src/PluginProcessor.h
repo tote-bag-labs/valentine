@@ -115,6 +115,40 @@ public:
     }
 
 private:
+    /** Finds and sets the correct processing delay for compensate for latency
+     *  caused by processing.
+     *
+     *  On @p init this will find the maximum reported latency for the system,
+     *  report it to the host, and set clean buffer delays to that amount.
+     *
+     *  In all cases, it will use that maximum reported latency to find the correct
+     *  amount of delay to apply to the processed buffer in order to ensure that the
+     *  delay at output never changes, and is always integral, which can help hosts
+     *  do latency compensation.
+     */
+    void updateLatencyCompensation (bool init);
+
+    /** This is the maximum system latency, rounded up.
+     *  Maximum system latency = oversampling latency + ADAA clipper latency.
+     *
+     *  Used as both the latency reported to host as well as the target for
+     *  processing delay, which is calculated whenever the graph changes.
+     *
+     *  During processing, this should never change, as any changes to actual
+     *  latency will reduce processing latency and therefore can be adjusted by
+     *  increasing the processing delay. It may, however, increase if sample
+     *  rate changes. So we need to update it when that happens.
+     */
+    int cleanBufferDelay = 0;
+
+    /** As the name suggests, this is the latency introduced by oversampling.
+     *  this should only change if host sample rate changes, so we cache it here
+     *  as the clean buffer delay is only updated at that time. Otherwise, we risk
+     *  getting the compensation wrong if somehow the oversampler latency changes
+     *  without prepareToPlay() being called.
+     */
+    float overSamplingLatency = 0.0f;
+
     ToteBagPresetManager presetManager;
 
     FFAU::LevelMeterSource inputMeterSource;
@@ -136,7 +170,15 @@ private:
     const float internalBias {juce::Decibels::decibelsToGain (-9.f)};
     const float invInternalBias {1.0f / internalBias};
 
-    juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> dryWet;
+    using SmoothedFloat = juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear>;
+    SmoothedFloat dryWet;
+
+    std::array<SmoothedFloat, 2> processedDelayTime;
+
+    using LatencyCompensation =
+        juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Lagrange3rd>;
+    LatencyCompensation processedDelayLine;
+    LatencyCompensation cleanDelayLine;
 
     const double dryWetRampLength {.10}; // in seconds, used in .reset()
 
@@ -163,12 +205,12 @@ private:
     juce::Atomic<bool> clipOn {
         FFCompParameterDefaults[static_cast<size_t> (VParameter::outputClip)] > 0.0f};
 
+    juce::Atomic<bool> latencyChanged = false;
+
     // This is used for, yes you guessed it, processing
     juce::AudioBuffer<float> processBuffer;
 
     // DSP objects
-    std::array<std::unique_ptr<CircularBuffer<float>>, 2> unProcBuffers;
-    std::array<std::unique_ptr<FirstOrderThiranAllpass<float>>, 2> fracDelayFilters;
     std::unique_ptr<tote_bag::audio_helpers::SimpleOnePole<float>> dryWetFilter;
     std::unique_ptr<Oversampling> oversampler;
     std::unique_ptr<Compressor> ffCompressor;
