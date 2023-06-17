@@ -92,7 +92,7 @@ private:
         if constexpr (std::is_same<SaturationType, inverseHyperbolicSineTag>::value)
         {
             // Tolerance determined by eyballing graphs in desmos
-            constexpr FloatType tolerance = 1.02;
+            constexpr auto tolerance = static_cast<FloatType> (1.02);
             if (inputGain <= tolerance)
             {
                 return static_cast<FloatType> (1.0) / inputGain;
@@ -102,7 +102,7 @@ private:
         else if constexpr (std::is_same<SaturationType, hyperbolicTangentTag>::value)
         {
             // Tolerance determined by eyballing graphs in desmos
-            constexpr FloatType tolerance = 1.02;
+            constexpr auto tolerance = static_cast<FloatType> (1.02);
             if (inputGain <= tolerance)
             {
                 return static_cast<FloatType> (1.0) / inputGain;
