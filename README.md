@@ -37,7 +37,8 @@ Parameters
 - **Ratio**: sets the compression ratio. "Infinity" is more like 1000:1. Increasing this also increases the threshold and decreases the knee.
 - **Attack**: sets compression attack time.
 - **Release**: sets compression release time.
-- **Saturate**: increases the amount of saturation.
+- **Saturate**: sets the amount of gain applied to signal before Valentine's waveshaper. This gain is compensated to prevent a huge volume boost
+when you just want more dirt. Note: at `0%` signal is actually attenuated before the waveshaper, allowing for a cleaner sound when needed.
 - **Output**: sets the wet signal's output gain before mix.
 - **Mix**:  increases the amount of wet signal in the processor's output.
 - **Bypass**: bypasses all processing.

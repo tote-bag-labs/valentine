@@ -65,6 +65,8 @@ public:
 
     void processBlock (juce::dsp::AudioBlock<float>& inAudio);
 
+    void clearBuffers();
+
 private:
     // tags - first step towards a templated version of this class
     struct inverseHyperbolicSineTag
@@ -90,7 +92,7 @@ private:
         if constexpr (std::is_same<SaturationType, inverseHyperbolicSineTag>::value)
         {
             // Tolerance determined by eyballing graphs in desmos
-            constexpr FloatType tolerance = 1.02;
+            constexpr auto tolerance = static_cast<FloatType> (1.02);
             if (inputGain <= tolerance)
             {
                 return static_cast<FloatType> (1.0) / inputGain;
@@ -100,7 +102,7 @@ private:
         else if constexpr (std::is_same<SaturationType, hyperbolicTangentTag>::value)
         {
             // Tolerance determined by eyballing graphs in desmos
-            constexpr FloatType tolerance = 1.02;
+            constexpr auto tolerance = static_cast<FloatType> (1.02);
             if (inputGain <= tolerance)
             {
                 return static_cast<FloatType> (1.0) / inputGain;
@@ -122,6 +124,7 @@ private:
 
     juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> smoothedSat {1.0f};
     juce::AudioBuffer<float> xState;
+    // I guess we're assuming first order ADAA, stereo here.
     std::array<float, 2> antiderivState;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Saturation)

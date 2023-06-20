@@ -36,6 +36,8 @@ ValentineAudioProcessor::ValentineAudioProcessor()
                           )
     , treeState (*this, nullptr, "PARAMETER", createParameterLayout())
     , presetManager (this)
+    , processedDelayLine (32)
+    , cleanDelayLine (32)
 #endif
 {
     initializeDSP();
@@ -84,12 +86,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     {
         const auto paramType = static_cast<VParameter> (i);
 
-        if (paramType == VParameter::bypass)
+        if (paramType == VParameter::bypass || paramType == VParameter::outputClip)
         {
+            const bool defaultValue = FFCompParameterDefaults[i] > 0.5f;
+
             params.push_back (std::make_unique<juce::AudioParameterBool> (
                 juce::ParameterID {FFCompParameterID()[i], ValentineParameterVersion},
                 FFCompParameterLabel()[i],
-                false));
+                defaultValue));
         }
         else
         {
@@ -237,28 +241,7 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     boundedSaturator->reset (sampleRate);
     simpleZOH->setParams (static_cast<float> (sampleRate / downSampleRate));
 
-    // Calculate delay, round up. That's the delay reported to host. subtract
-    // the original delay from that and you have the fractional delay
-    // for processed data.
-    // .5 for the the interpolated tanh() latency,
-    // .5 for the interp inverse sine latency
-    const auto overSamplingDelay = oversampler->getLatencyInSamples() + 1.0f;
-    const auto reportedDelay = static_cast<int> (std::ceil (overSamplingDelay));
-    const auto fracDelay = reportedDelay - overSamplingDelay;
-    setLatencySamples (reportedDelay);
-    circBuffDelay = reportedDelay;
-
-    for (auto& filter : fracDelayFilters)
-    {
-        filter->reset();
-        filter->prepare (fracDelay);
-    }
-
-    for (auto& buffer : unProcBuffers)
-    {
-        buffer->setSize (samplesPerBlock);
-        buffer->reset();
-    }
+    updateLatencyCompensation (true);
 
     dryWet.reset (sampleRate, dryWetRampLength);
 
@@ -311,6 +294,12 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     auto bufferSize = buffer.getNumSamples();
     auto currentSamplesPerBlock = bufferSize;
 
+    if (latencyChanged.get())
+    {
+        updateLatencyCompensation (false);
+        latencyChanged.set (false);
+    }
+
     // We need to prepare the process buffer first. The input buffer is delayed to account for
     // oversampling latency. Copying into the process buffer after this, then, would undo the
     // purpose of the delay: maintaining phase coherence between processed and unprocessed
@@ -362,17 +351,35 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     ffCompressor->process (highSampleRateBlock);
     saturator->processBlock (highSampleRateBlock);
-    boundedSaturator->processBlock (highSampleRateBlock);
+
+    const auto clip = clipOn.get();
+    if (clip)
+    {
+        // Clear the buffers if clip just got turned back on
+        if (!clipOnState.get())
+        {
+            boundedSaturator->clearBuffers();
+            clipOnState.set (clip);
+        }
+        boundedSaturator->processBlock (highSampleRateBlock);
+    }
+
     oversampler->processSamplesDown (processBlock);
 
     // Delay processed signal to produce a integral delay amount
-    const auto numOutputChannels = static_cast<size_t> (totalNumOutputChannels);
-    for (size_t channel = 0; channel < numOutputChannels; ++channel)
+    const auto blockLength = static_cast<int> (processBlock.getNumSamples());
+    for (int channel = 0; channel < totalNumOutputChannels; ++channel)
     {
-        auto channelPointer = processBlock.getChannelPointer (channel);
-        const auto blockLength = processBlock.getNumSamples();
+        for (int sample = 0; sample < blockLength; ++sample)
+        {
+            const auto x = processBlock.getSample (channel, sample);
+            processedDelayLine.pushSample (channel, x);
 
-        fracDelayFilters[channel]->process (channelPointer, blockLength);
+            const auto delay =
+                processedDelayTime[static_cast<size_t> (channel)].getNextValue();
+            const auto y = processedDelayLine.popSample (channel, delay);
+            processBlock.setSample (channel, sample, y);
+        }
     }
 
     // Apply Makeup
@@ -427,16 +434,16 @@ void ValentineAudioProcessor::prepareInputBuffer (juce::AudioBuffer<float>& buff
     for (auto i = numInputChannels; i < numOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    const auto numChannels = static_cast<size_t> (numOutputChannels);
-    const auto numSamples = static_cast<size_t> (buffer.getNumSamples());
-    for (size_t channel = 0; channel < numChannels; ++channel)
+    const auto numSamples = buffer.getNumSamples();
+    for (int channel = 0; channel < numOutputChannels; ++channel)
     {
-        auto channelData = buffer.getWritePointer (static_cast<int> (channel));
-        for (size_t sample = 0; sample < numSamples; ++sample)
+        for (int sample = 0; sample < numSamples; ++sample)
         {
-            unProcBuffers[channel]->writeBuffer (channelData[sample]);
-            channelData[sample] =
-                unProcBuffers[channel]->readBuffer (circBuffDelay, false);
+            const auto x = buffer.getSample (channel, sample);
+            cleanDelayLine.pushSample (channel, x);
+
+            const auto y = cleanDelayLine.popSample (channel, cleanBufferDelay);
+            buffer.setSample (channel, sample, y);
         }
     }
 }
@@ -525,6 +532,11 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
     {
         bypassOn.set (newValue > 0.5f);
     }
+    else if (parameter == "OutputClip")
+    {
+        clipOn.set (newValue > 0.5f);
+        latencyChanged.set (true);
+    }
 }
 
 //==============================================================================
@@ -591,14 +603,6 @@ void ValentineAudioProcessor::initializeDSP()
                                         Oversampling::filterHalfBandPolyphaseIIR);
     simpleZOH = std::make_unique<SimpleZOH>();
     bitCrush = std::make_unique<Bitcrusher>();
-
-    for (auto& filter : fracDelayFilters)
-        filter.reset (new FirstOrderThiranAllpass<float>);
-
-    for (auto& buffer : unProcBuffers)
-    {
-        buffer.reset (new CircularBuffer<float>);
-    }
 }
 
 //==============================================================================
@@ -610,3 +614,49 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 }
 
 //==============================================================================
+
+void ValentineAudioProcessor::updateLatencyCompensation (bool init)
+{
+    // First order ADAA
+    const float saturatorLatency = 0.5f;
+    const float maximumClipperLatency = 0.5f;
+
+    overSamplingLatency = oversampler->getLatencyInSamples();
+
+    const auto maximumDelay =
+        overSamplingLatency + saturatorLatency + maximumClipperLatency;
+    cleanBufferDelay = static_cast<int> (std::ceil (maximumDelay));
+
+    const auto numOutputChannels = getTotalNumOutputChannels();
+    if (init)
+    {
+        // We report the maximum possible latency and adjust the delays
+        // to maintain it
+        setLatencySamples (cleanBufferDelay);
+
+        juce::dsp::ProcessSpec delaySpec {getSampleRate(),
+                                          static_cast<juce::uint32> (getBlockSize()),
+                                          static_cast<juce::uint32> (numOutputChannels)};
+
+        processedDelayLine.prepare (delaySpec);
+        cleanDelayLine.prepare (delaySpec);
+    }
+
+    const auto currentClipperLatency = clipOn.get() ? maximumClipperLatency : 0.0f;
+    const auto currentDelay =
+        overSamplingLatency + saturatorLatency + currentClipperLatency;
+    const auto processBufferDelay = cleanBufferDelay - currentDelay;
+
+    for (size_t channel = 0; channel < static_cast<size_t> (numOutputChannels); ++channel)
+    {
+        if (init)
+        {
+            processedDelayTime[channel].reset (getSampleRate(), 1.0f);
+            processedDelayTime[channel].setCurrentAndTargetValue (processBufferDelay);
+        }
+        else
+        {
+            processedDelayTime[channel].setTargetValue (processBufferDelay);
+        }
+    }
+}

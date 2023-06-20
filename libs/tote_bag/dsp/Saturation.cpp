@@ -15,6 +15,9 @@ Saturation::Saturation (Type sType, float asymm)
     : saturationType (sType)
     , asymmetry (asymm)
 {
+    // Stereo. TODO: don't use AudioBuffer. Refactor this so
+    // we have state when we need it.
+    xState.setSize (2, 1);
 }
 
 void Saturation::setParams (float inSaturation)
@@ -24,22 +27,22 @@ void Saturation::setParams (float inSaturation)
 
 void Saturation::reset (double sampleRate)
 {
-    if (xState.getNumChannels() > 0)
-        xState.clear();
-
-    else if (saturationType == Type::inverseHyperbolicSineInterp || saturationType == Type::interpolatedHyperbolicTangent)
-    {
-        xState.setSize (2, 1);
-        xState.clear();
-        antiderivState.fill (0.0);
-    }
-
     smoothedSat.reset (sampleRate, gainRampSec);
+    clearBuffers();
+}
+
+void Saturation::clearBuffers()
+{
+    xState.clear();
+    antiderivState.fill (0.0);
 }
 
 inline float Saturation::calcGain (float inputSample, float sat)
 {
-    return ((inputSample >= 0.0f && asymmetry > 0.0f) || (inputSample < 0.0f && asymmetry < 0.0f)) ? sat * (1.0f + 4.0f * abs (asymmetry)) : sat;
+    return ((inputSample >= 0.0f && asymmetry > 0.0f)
+            || (inputSample < 0.0f && asymmetry < 0.0f))
+               ? sat * (1.0f + 4.0f * abs (asymmetry))
+               : sat;
 }
 
 //===============================================================================
@@ -126,19 +129,23 @@ inline float Saturation::processSample (float inputSample, size_t channel, float
     switch (saturationType)
     {
         case Type::inverseHyperbolicSine:
-            return std::asinh (inputSample * gain) * compensationGain<inverseHyperbolicSineTag> (gain);
+            return std::asinh (inputSample * gain)
+                   * compensationGain<inverseHyperbolicSineTag> (gain);
 
         case Type::sineArcTangent:
             return sineArcTangent (inputSample, gain);
 
         case Type::hyperbolicTangent:
-            return std::tanh (inputSample * gain) * compensationGain<hyperbolicTangentTag> (gain);
+            return std::tanh (inputSample * gain)
+                   * compensationGain<hyperbolicTangentTag> (gain);
 
         case Type::inverseHyperbolicSineInterp:
-            return inverseHyperbolicSineInterp (inputSample * gain, channel) * compensationGain<inverseHyperbolicSineTag> (gain);
+            return inverseHyperbolicSineInterp (inputSample * gain, channel)
+                   * compensationGain<inverseHyperbolicSineTag> (gain);
 
         case Type::interpolatedHyperbolicTangent:
-            return interpolatedHyperbolicTangent (inputSample * gain, channel) * compensationGain<hyperbolicTangentTag> (gain);
+            return interpolatedHyperbolicTangent (inputSample * gain, channel)
+                   * compensationGain<hyperbolicTangentTag> (gain);
 
         default:
             //somehow the distortion type was not set. It must be set!

@@ -37,6 +37,9 @@ CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
                  processor.treeState)
     , outputSlider (FFCompParameterID()[getParameterIndex (VParameter::makeupGain)],
                     processor.treeState)
+    , outputClipButton ("Clip",
+                        FFCompParameterID()[static_cast<size_t> (VParameter::outputClip)],
+                        processor.treeState)
 {
     // Top left sliders
     addAndMakeVisible (inputSlider);
@@ -50,6 +53,7 @@ CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
 
     // Top right sliders
     addAndMakeVisible (mixSlider);
+    addAndMakeVisible (outputClipButton);
     addAndMakeVisible (outputSlider);
 
     // Logo
@@ -159,6 +163,15 @@ void CenterPanel::resized()
     topRightRowBorderBounds = rightSideBounds.removeFromTop (paramWidth);
 
     auto topRightRowBounds = topRightRowBorderBounds.reduced (borderMargin);
+
+    const auto clipButtonWidth = juce::roundToInt (topRightRowBounds.getWidth() * .5f);
+    auto clipButtonBounds =
+        topRightRowBounds.removeFromBottom (juce::roundToInt (clipButtonWidth * .1f))
+            .removeFromLeft (clipButtonWidth)
+            .reduced (juce::roundToInt (clipButtonWidth * .35f), 0);
+    outputClipButton.setBounds (clipButtonBounds);
+
+    topRightRowBounds.removeFromBottom (juce::roundToInt (roundedRowMargin * .5f));
 
     std::array<LabelSlider*, numRightColumns> topRightRowComponents = {&outputSlider,
                                                                        &mixSlider};
