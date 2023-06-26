@@ -126,7 +126,7 @@ inline const std::array<juce::String, numParams>& FFCompParameterLabel()
 inline const std::array<juce::String, numParams>& VParameterUnit()
 {
     static const std::array<juce::String, numParams> unitLabels = {
-        " %",
+        "",
         " dB",
         " %",
         "",
@@ -155,7 +155,7 @@ static constexpr std::array<float, numParams> FFCompParameterMin = {
 };
 
 static constexpr std::array<float, numParams> FFCompParameterMax = {
-    100.0f,
+    10.0f,
     48.0f,
     100.0f,
     kRatioParameterMax,
@@ -194,7 +194,7 @@ static constexpr std::array<float, numParams> FFCompParameterIncrement = {
 };
 
 static constexpr std::array<float, numParams> FFCompParamCenter = {
-    60.0f,
+    6.0f,
     23.0f,
     60.0f,
     6.0f,
