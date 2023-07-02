@@ -115,6 +115,8 @@ public:
     }
 
 private:
+    ToteBagPresetManager presetManager;
+
     /** Finds and sets the correct processing delay for compensate for latency
      *  caused by processing.
      *
@@ -149,7 +151,19 @@ private:
      */
     float overSamplingLatency = 0.0f;
 
-    ToteBagPresetManager presetManager;
+    /** Triggers latency recalculation if true.
+     *  Changes to processing that change latency should set this true as well.
+     */
+    juce::Atomic<bool> latencyChanged = false;
+
+    using LatencyCompensation =
+        juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Lagrange3rd>;
+    LatencyCompensation processedDelayLine;
+    LatencyCompensation cleanDelayLine;
+
+    using SmoothedFloat = juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear>;
+    SmoothedFloat dryWet;
+    std::array<SmoothedFloat, 2> processedDelayTime;
 
     FFAU::LevelMeterSource inputMeterSource;
     FFAU::LevelMeterSource outputMeterSource;
@@ -160,27 +174,6 @@ private:
     bool presetIsLoading = false;
 
     using Oversampling = juce::dsp::Oversampling<float>;
-
-    const int oversampleFactor {2};
-    int circBuffDelay {-1};
-
-    const float boundedSatGain {1.0f}, downSampleRate {27500.0f}, RMStime {50.0f};
-
-    // drop gain before processing...maybe
-    const float internalBias {juce::Decibels::decibelsToGain (-9.f)};
-    const float invInternalBias {1.0f / internalBias};
-
-    using SmoothedFloat = juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear>;
-    SmoothedFloat dryWet;
-
-    std::array<SmoothedFloat, 2> processedDelayTime;
-
-    using LatencyCompensation =
-        juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Lagrange3rd>;
-    LatencyCompensation processedDelayLine;
-    LatencyCompensation cleanDelayLine;
-
-    const double dryWetRampLength {.10}; // in seconds, used in .reset()
 
     // used to maintain state for ApplyGainRamp
     // compress and makeup are addressed in dB, interface-wise, but handled linearly here
@@ -205,8 +198,6 @@ private:
     juce::Atomic<bool> clipOn {
         FFCompParameterDefaults[static_cast<size_t> (VParameter::outputClip)] > 0.0f};
     juce::Atomic<bool> clipOnState = false;
-
-    juce::Atomic<bool> latencyChanged = false;
 
     // This is used for, yes you guessed it, processing
     juce::AudioBuffer<float> processBuffer;

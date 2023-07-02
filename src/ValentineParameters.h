@@ -38,10 +38,10 @@ const size_t getParameterIndex (VParameter param)
 }
 
 inline constexpr float kMinBits = 1.0f;
-inline constexpr float kMaxBits = 16.0f;
+inline constexpr float kMaxBits = 12.0f;
 
 inline constexpr float kMinSaturationGain = 0.5f;
-inline constexpr float kMaxSaturationGain = 30.0f;
+inline constexpr float kMaxSaturationGain = 31.62f;
 
 // The largest the ratio can be as far as the parameter itself is concerned.
 // Processing, we actually use a ratio of 1000:1 for this ratio value.
@@ -126,9 +126,9 @@ inline const std::array<juce::String, numParams>& FFCompParameterLabel()
 inline const std::array<juce::String, numParams>& VParameterUnit()
 {
     static const std::array<juce::String, numParams> unitLabels = {
-        " %",
+        "",
         " dB",
-        " %",
+        "",
         "",
         " ms",
         " ms",
@@ -142,24 +142,24 @@ inline const std::array<juce::String, numParams>& VParameterUnit()
 }
 
 static constexpr std::array<float, numParams> FFCompParameterMin = {
-    0.0f,
+    1.0f,
     -24.0f,
-    0.0f,
+    1.0f,
     kRatioMin,
     0.02f,
-    50.0f,
-    -12.0f,
+    2.0f,
+    -24.0f,
     0.0f,
     0.0f,
     0.0f,
 };
 
 static constexpr std::array<float, numParams> FFCompParameterMax = {
-    100.0f,
-    48.0f,
-    100.0f,
-    kRatioParameterMax,
     10.0f,
+    48.0f,
+    10.0f,
+    kRatioParameterMax,
+    30.0f,
     1100.0f,
     24.0f,
     100.0f,
@@ -194,9 +194,9 @@ static constexpr std::array<float, numParams> FFCompParameterIncrement = {
 };
 
 static constexpr std::array<float, numParams> FFCompParamCenter = {
-    60.0f,
+    5.0f,
     23.0f,
-    60.0f,
+    5.0f,
     6.0f,
     5.0f,
     300.0f,
