@@ -162,13 +162,8 @@ private:
     using Oversampling = juce::dsp::Oversampling<float>;
 
     const int oversampleFactor {2};
-    int circBuffDelay {-1};
 
-    const float boundedSatGain {1.0f}, downSampleRate {27500.0f}, RMStime {50.0f};
-
-    // drop gain before processing...maybe
-    const float internalBias {juce::Decibels::decibelsToGain (-9.f)};
-    const float invInternalBias {1.0f / internalBias};
+    const float downSampleRate {27500.0f}, RMStime {50.0f};
 
     using SmoothedFloat = juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear>;
     SmoothedFloat dryWet;
