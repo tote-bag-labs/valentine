@@ -147,7 +147,7 @@ static constexpr std::array<float, numParams> FFCompParameterMin = {
     1.0f,
     kRatioMin,
     0.02f,
-    50.0f,
+    2.0f,
     -24.0f,
     0.0f,
     0.0f,
