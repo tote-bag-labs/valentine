@@ -17,11 +17,7 @@
 
 namespace
 {
-// TODO: maybe remove once final clipper gain is decided. Or move
-// if it seems like a good idea to store these as general constants.
-inline constexpr float kNeg3dbGain = 0.7079457844f;
 inline constexpr float kNeg6dbGain = 0.5011872336f;
-inline constexpr float kNeg4_5dbGain = 0.5956621435f;
 inline constexpr int kOversampleFactor = 2;
 inline constexpr float kDownSampleRate = 27500.0f;
 inline constexpr float kRmsTime = 50.0f;
@@ -599,7 +595,7 @@ void ValentineAudioProcessor::initializeDSP()
         std::make_unique<Saturation> (Saturation::Type::inverseHyperbolicSineInterp, .6f);
 
     boundedSaturator = std::make_unique<Saturation> (Saturation::Type::hyperbolicTangent);
-    boundedSaturator->setParams (kNeg4_5dbGain);
+    boundedSaturator->setParams (kNeg6dbGain);
 
     oversampler =
         std::make_unique<Oversampling> (2,
