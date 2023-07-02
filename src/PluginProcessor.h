@@ -161,10 +161,6 @@ private:
 
     using Oversampling = juce::dsp::Oversampling<float>;
 
-    const int oversampleFactor {2};
-
-    const float downSampleRate {27500.0f}, RMStime {50.0f};
-
     using SmoothedFloat = juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear>;
     SmoothedFloat dryWet;
 
@@ -174,8 +170,6 @@ private:
         juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Lagrange3rd>;
     LatencyCompensation processedDelayLine;
     LatencyCompensation cleanDelayLine;
-
-    const double dryWetRampLength {.10}; // in seconds, used in .reset()
 
     // used to maintain state for ApplyGainRamp
     // compress and makeup are addressed in dB, interface-wise, but handled linearly here

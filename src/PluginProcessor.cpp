@@ -22,6 +22,10 @@ namespace
 inline constexpr float kNeg3dbGain = 0.7079457844f;
 inline constexpr float kNeg6dbGain = 0.5011872336f;
 inline constexpr float kNeg4_5dbGain = 0.5956621435f;
+inline constexpr int kOversampleFactor = 2;
+inline constexpr float kDownSampleRate = 27500.0f;
+inline constexpr float kRmsTime = 50.0f;
+inline constexpr double kDryWetRampLength = .10;
 }
 
 ValentineAudioProcessor::ValentineAudioProcessor()
@@ -221,7 +225,7 @@ void ValentineAudioProcessor::changeProgramName (int, const juce::String&)
 //==============================================================================
 void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    const auto oversampleMultiplier = static_cast<int> (pow (2, oversampleFactor));
+    const auto oversampleMultiplier = static_cast<int> (pow (2, kOversampleFactor));
 
     processBuffer.setSize (2, samplesPerBlock);
     processBuffer.clear();
@@ -239,14 +243,14 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
     saturator->reset (sampleRate);
     boundedSaturator->reset (sampleRate);
-    simpleZOH->setParams (static_cast<float> (sampleRate / downSampleRate));
+    simpleZOH->setParams (static_cast<float> (sampleRate / kDownSampleRate));
 
     updateLatencyCompensation (true);
 
-    dryWet.reset (sampleRate, dryWetRampLength);
+    dryWet.reset (sampleRate, kDryWetRampLength);
 
     const auto rmsWindow =
-        juce::roundToInt (RMStime * 0.001f * sampleRate / samplesPerBlock);
+        juce::roundToInt (kRmsTime * 0.001f * sampleRate / samplesPerBlock);
     inputMeterSource.resize (getTotalNumInputChannels(), rmsWindow);
 
     grMeterSource.resize (1, rmsWindow);
@@ -599,7 +603,7 @@ void ValentineAudioProcessor::initializeDSP()
 
     oversampler =
         std::make_unique<Oversampling> (2,
-                                        oversampleFactor,
+                                        kOversampleFactor,
                                         Oversampling::filterHalfBandPolyphaseIIR);
     simpleZOH = std::make_unique<SimpleZOH>();
     bitCrush = std::make_unique<Bitcrusher>();
