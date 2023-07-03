@@ -156,7 +156,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                 FFCompParameterDefaults[i],
                 VParameterUnit()[i],
                 juce::AudioProcessorParameter::genericParameter,
-                stringFromValue,
+                std::move (stringFromValue),
                 nullptr));
         }
     }
