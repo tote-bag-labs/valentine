@@ -58,7 +58,7 @@ std::function<juce::String (float, int)> makeStringFromValueFunction (VParameter
             {
                 return juce::String (juce::CharPointer_UTF8 ("∞"));
             }
-            return juce::String (value, 2);
+            return getPrecisionAdjustedValueString (value);
         };
     }
     else
