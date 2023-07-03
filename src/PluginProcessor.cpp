@@ -39,7 +39,7 @@ juce::String getPrecisionAdjustedValueString (float value)
     {
         return juce::String (value, 1);
     }
-    return juce::String (static_cast<int> (value));
+    return juce::String (juce::roundToInt (value));
 }
 
 std::function<juce::String (float, int)> makeStringFromValueFunction (VParameter param)
@@ -63,7 +63,7 @@ std::function<juce::String (float, int)> makeStringFromValueFunction (VParameter
     }
     else
     {
-        return [] (float value, int) { return juce::String (static_cast<int> (value)); };
+        return [] (float value, int) { return juce::String (juce::roundToInt (value)); };
     }
 }
 }
