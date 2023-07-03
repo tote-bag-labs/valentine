@@ -22,6 +22,43 @@ inline constexpr int kOversampleFactor = 2;
 inline constexpr float kDownSampleRate = 27500.0f;
 inline constexpr float kRmsTime = 50.0f;
 inline constexpr double kDryWetRampLength = .10;
+
+std::function<juce::String (float, int)> makeStringFromValueFunction (VParameter param)
+{
+    if ((param == VParameter::attack) || (param == VParameter::release)
+        || (param == VParameter::inputGain) || (param == VParameter::makeupGain))
+    {
+        return [] (float value, int) {
+            const auto absValue = std::abs (value);
+
+            if (absValue < 10.0f)
+            {
+                return juce::String (value, 2);
+            }
+            if (absValue < 100.0f)
+            {
+                return juce::String (value, 1);
+            }
+            return juce::String (static_cast<int> (value));
+        };
+    }
+    if (param == VParameter::ratio)
+    {
+        return [] (float value, int) {
+            const auto absValue = std::abs (value);
+
+            if (absValue >= FFCompParameterMax[static_cast<size_t> (VParameter::ratio)])
+            {
+                return juce::String (juce::CharPointer_UTF8 ("∞"));
+            }
+            return juce::String (value, 2);
+        };
+    }
+    else
+    {
+        return [] (float value, int) { return juce::String (static_cast<int> (value)); };
+    }
+}
 }
 
 ValentineAudioProcessor::ValentineAudioProcessor()
@@ -102,44 +139,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                                                 FFCompParameterMax[i],
                                                 FFCompParameterIncrement[i]);
             rangeToUse.setSkewForCentre (FFCompParamCenter[i]);
-            std::function<juce::String (float value, int maximumStringLength)>
-                stringFromValue = nullptr;
 
-            if ((paramType == VParameter::attack) || (paramType == VParameter::release)
-                || (paramType == VParameter::inputGain)
-                || (paramType == VParameter::makeupGain))
-            {
-                stringFromValue = [] (float value, int) {
-                    const auto absValue = std::abs (value);
+            auto stringFromValue = makeStringFromValueFunction (paramType);
 
-                    if (absValue < 10.0f)
-                    {
-                        return juce::String (value, 2);
-                    }
-                    if (absValue < 100.0f)
-                    {
-                        return juce::String (value, 1);
-                    }
-                    return juce::String (static_cast<int> (value));
-                };
-            }
-            else if (paramType == VParameter::ratio)
-            {
-                stringFromValue = [] (float value, int) {
-                    const auto absValue = std::abs (value);
-
-                    if (absValue
-                        >= FFCompParameterMax[static_cast<size_t> (VParameter::ratio)])
-                    {
-                        return juce::String (juce::CharPointer_UTF8 ("∞"));
-                    }
-                    return juce::String (value, 2);
-                };
-            }
-            else
-            {
-                stringFromValue = [] (int value, int) { return juce::String (value); };
-            }
             params.push_back (std::make_unique<juce::AudioParameterFloat> (
                 juce::ParameterID {FFCompParameterID()[i], ValentineParameterVersion},
                 FFCompParameterLabel()[i],
