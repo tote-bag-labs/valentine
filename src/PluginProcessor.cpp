@@ -23,24 +23,31 @@ inline constexpr float kDownSampleRate = 27500.0f;
 inline constexpr float kRmsTime = 50.0f;
 inline constexpr double kDryWetRampLength = .10;
 
+/** Returns a juce::String for a given value, with
+ *  the level of precision adjusted based on the value
+ *  size.
+ */
+juce::String getPrecisionAdjustedValueString (float value)
+{
+    const auto absValue = std::abs (value);
+
+    if (absValue < 10.0f)
+    {
+        return juce::String (value, 2);
+    }
+    if (absValue < 100.0f)
+    {
+        return juce::String (value, 1);
+    }
+    return juce::String (static_cast<int> (value));
+}
+
 std::function<juce::String (float, int)> makeStringFromValueFunction (VParameter param)
 {
     if ((param == VParameter::attack) || (param == VParameter::release)
         || (param == VParameter::inputGain) || (param == VParameter::makeupGain))
     {
-        return [] (float value, int) {
-            const auto absValue = std::abs (value);
-
-            if (absValue < 10.0f)
-            {
-                return juce::String (value, 2);
-            }
-            if (absValue < 100.0f)
-            {
-                return juce::String (value, 1);
-            }
-            return juce::String (static_cast<int> (value));
-        };
+        return [] (float value, int) { return getPrecisionAdjustedValueString (value); };
     }
     if (param == VParameter::ratio)
     {
