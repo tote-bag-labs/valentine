@@ -26,7 +26,7 @@ enum class VParameter {
     makeupGain,
     dryWet,
     bypass,
-    outputClip,
+    outputClipEnable,
     TOTAL_NUM_PARAMETERS
 };
 
@@ -99,7 +99,7 @@ inline const std::array<juce::String, numParams>& FFCompParameterID()
         "Makeup",
         "Mix",
         "Bypass",
-        "OutputClip",
+        "OutputClipEnable",
     };
 
     return parameterIDs;

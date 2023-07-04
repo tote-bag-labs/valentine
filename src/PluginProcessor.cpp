@@ -130,7 +130,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     {
         const auto paramType = static_cast<VParameter> (i);
 
-        if (paramType == VParameter::bypass || paramType == VParameter::outputClip)
+        if (paramType == VParameter::bypass || paramType == VParameter::outputClipEnable)
         {
             const bool defaultValue = FFCompParameterDefaults[i] > 0.5f;
 
@@ -541,7 +541,7 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
     {
         bypassOn.set (newValue > 0.5f);
     }
-    else if (parameter == "OutputClip")
+    else if (parameter == "OutputClipEnable")
     {
         clipOn.set (newValue > 0.5f);
         latencyChanged.set (true);
