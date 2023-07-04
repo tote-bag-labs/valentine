@@ -38,7 +38,7 @@ CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
     , outputSlider (FFCompParameterID()[getParameterIndex (VParameter::makeupGain)],
                     processor.treeState)
     , outputClipButton (
-          "Clip",
+          FFCompParameterLabel()[static_cast<size_t> (VParameter::outputClipEnable)],
           FFCompParameterID()[static_cast<size_t> (VParameter::outputClipEnable)],
           processor.treeState)
 {
