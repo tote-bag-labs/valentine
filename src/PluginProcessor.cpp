@@ -130,7 +130,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     {
         const auto paramType = static_cast<VParameter> (i);
 
-        if (paramType == VParameter::bypass || paramType == VParameter::outputClipEnable)
+        if (paramType == VParameter::bypass || paramType == VParameter::outputClipEnable
+            || paramType == VParameter::crushEnable)
         {
             const bool defaultValue = FFCompParameterDefaults[i] > 0.5f;
 
@@ -481,10 +482,6 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
                                          FFCompParameterMax[bitCrushIndex],
                                          kMaxBits,
                                          kMinBits));
-        if (newValue >= 1.0001f)
-            crushOn.set (true);
-        else
-            crushOn.set (false);
     }
     else if (parameter == "Saturate")
     {
@@ -545,6 +542,10 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
     {
         clipOn.set (newValue > 0.5f);
         latencyChanged.set (true);
+    }
+    else if (parameter == "CrushEnable")
+    {
+        crushOn.set (newValue > 0.5f);
     }
 }
 
