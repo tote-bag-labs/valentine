@@ -208,14 +208,15 @@ void CenterPanel::resized()
 
     auto topRightRowBounds = topRightRowBorderBounds.reduced (borderMargin);
 
+    // Clip button
     const auto clipButtonWidth = juce::roundToInt (topRightRowBounds.getWidth() * .5f);
     auto clipButtonBounds =
-        topRightRowBounds.removeFromBottom (juce::roundToInt (clipButtonWidth * .1f))
+        topRightRowBounds.removeFromBottom (juce::roundToInt (clipButtonWidth * .09f))
             .removeFromLeft (clipButtonWidth)
             .reduced (juce::roundToInt (clipButtonWidth * .35f), 0);
     outputClipButton.setBounds (clipButtonBounds);
 
-    topRightRowBounds.removeFromBottom (juce::roundToInt (roundedRowMargin * .5f));
+    topRightRowBounds.removeFromBottom (buttonSliderMargin);
 
     std::array<LabelSlider*, numRightColumns> topRightRowComponents = {&outputSlider,
                                                                        &mixSlider};
