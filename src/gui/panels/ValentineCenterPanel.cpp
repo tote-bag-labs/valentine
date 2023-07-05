@@ -135,7 +135,8 @@ void CenterPanel::resized()
     auto leftSideBounds = workingArea.removeFromLeft (paramWidth * numLeftColumns);
 
     // Top
-    topLeftRowBorderBounds = leftSideBounds.removeFromTop (paramWidth);
+    const auto topRowHeight = juce::roundToInt (paramWidth * 1.05f);
+    topLeftRowBorderBounds = leftSideBounds.removeFromTop (topRowHeight);
 
     auto topLeftRowBounds = topLeftRowBorderBounds.reduced (borderMargin);
 
@@ -204,7 +205,7 @@ void CenterPanel::resized()
     auto rightSideBounds = workingArea.removeFromLeft (paramWidth * numRightColumns);
 
     // Top right
-    topRightRowBorderBounds = rightSideBounds.removeFromTop (paramWidth);
+    topRightRowBorderBounds = rightSideBounds.removeFromTop (topRowHeight);
 
     auto topRightRowBounds = topRightRowBorderBounds.reduced (borderMargin);
 
