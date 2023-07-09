@@ -15,7 +15,7 @@
 
 //==============================================================================
 
-namespace
+namespace detail
 {
 inline constexpr float kNeg6dbGain = 0.5011872336f;
 inline constexpr int kOversampleFactor = 2;
@@ -27,7 +27,7 @@ inline constexpr double kDryWetRampLength = .10;
  *  the level of precision adjusted based on the value
  *  size.
  */
-juce::String getPrecisionAdjustedValueString (float value)
+inline juce::String getPrecisionAdjustedValueString (float value)
 {
     const auto absValue = std::abs (value);
 
@@ -42,7 +42,8 @@ juce::String getPrecisionAdjustedValueString (float value)
     return juce::String (juce::roundToInt (value));
 }
 
-std::function<juce::String (float, int)> makeStringFromValueFunction (VParameter param)
+inline std::function<juce::String (float, int)>
+    makeStringFromValueFunction (VParameter param)
 {
     if ((param == VParameter::attack) || (param == VParameter::release)
         || (param == VParameter::inputGain) || (param == VParameter::makeupGain))
@@ -66,7 +67,7 @@ std::function<juce::String (float, int)> makeStringFromValueFunction (VParameter
         return [] (float value, int) { return juce::String (juce::roundToInt (value)); };
     }
 }
-}
+} // namespace detail
 
 ValentineAudioProcessor::ValentineAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -148,7 +149,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                                                 FFCompParameterIncrement[i]);
             rangeToUse.setSkewForCentre (FFCompParamCenter[i]);
 
-            auto stringFromValue = makeStringFromValueFunction (paramType);
+            auto stringFromValue = detail::makeStringFromValueFunction (paramType);
 
             params.push_back (std::make_unique<juce::AudioParameterFloat> (
                 juce::ParameterID {FFCompParameterID()[i], ValentineParameterVersion},
@@ -231,7 +232,8 @@ void ValentineAudioProcessor::changeProgramName (int, const juce::String&)
 //==============================================================================
 void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    const auto oversampleMultiplier = static_cast<int> (pow (2, kOversampleFactor));
+    const auto oversampleMultiplier =
+        static_cast<int> (pow (2, detail::kOversampleFactor));
 
     processBuffer.setSize (2, samplesPerBlock);
     processBuffer.clear();
@@ -249,14 +251,14 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
     saturator->reset (sampleRate);
     boundedSaturator->reset (sampleRate);
-    simpleZOH->setParams (static_cast<float> (sampleRate / kDownSampleRate));
+    simpleZOH->setParams (static_cast<float> (sampleRate / detail::kDownSampleRate));
 
     updateLatencyCompensation (true);
 
-    dryWet.reset (sampleRate, kDryWetRampLength);
+    dryWet.reset (sampleRate, detail::kDryWetRampLength);
 
     const auto rmsWindow =
-        juce::roundToInt (kRmsTime * 0.001f * sampleRate / samplesPerBlock);
+        juce::roundToInt (detail::kRmsTime * 0.001f * sampleRate / samplesPerBlock);
     inputMeterSource.resize (getTotalNumInputChannels(), rmsWindow);
 
     grMeterSource.resize (1, rmsWindow);
@@ -605,11 +607,11 @@ void ValentineAudioProcessor::initializeDSP()
         std::make_unique<Saturation> (Saturation::Type::inverseHyperbolicSineInterp, .6f);
 
     boundedSaturator = std::make_unique<Saturation> (Saturation::Type::hyperbolicTangent);
-    boundedSaturator->setParams (kNeg6dbGain);
+    boundedSaturator->setParams (detail::kNeg6dbGain);
 
     oversampler =
         std::make_unique<Oversampling> (2,
-                                        kOversampleFactor,
+                                        detail::kOversampleFactor,
                                         Oversampling::filterHalfBandPolyphaseIIR);
     simpleZOH = std::make_unique<SimpleZOH>();
     bitCrush = std::make_unique<Bitcrusher>();
