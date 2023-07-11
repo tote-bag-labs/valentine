@@ -10,9 +10,10 @@
 
 #include "ParameterTextButton.h"
 
-ParameterTextButton::ParameterTextButton (const juce::String& buttonText,
-                                          const juce::String& parameterId,
-                                          juce::AudioProcessorValueTreeState& stateToControl)
+ParameterTextButton::ParameterTextButton (
+    const juce::String& buttonText,
+    const juce::String& parameterId,
+    juce::AudioProcessorValueTreeState& stateToControl)
     : buttonValue (stateToControl, parameterId, *this)
 {
     setButtonText (buttonText);
