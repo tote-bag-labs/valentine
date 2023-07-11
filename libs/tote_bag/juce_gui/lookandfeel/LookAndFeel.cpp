@@ -31,6 +31,10 @@ LookAndFeel::LookAndFeel()
     setColour (juce::Slider::textBoxOutlineColourId, vPinkDark);
     setColour (juce::Slider::rotarySliderOutlineColourId, vPinkDark);
     setColour (juce::Slider::rotarySliderFillColourId, juce::Colours::floralwhite);
+
+    // so we don't get background painting on drawable buttons
+    setColour (juce::DrawableButton::backgroundOnColourId,
+               juce::Colours::transparentWhite);
 }
 
 void LookAndFeel::drawSliderMeter (juce::Graphics& g,

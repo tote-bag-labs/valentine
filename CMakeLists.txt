@@ -94,11 +94,13 @@ set(SourceFiles
     libs/tote_bag/juce_gui/components/panels/PresetPanel.cpp
     libs/tote_bag/juce_gui/components/panels/VerticalMeterPanel.cpp
 
+    libs/tote_bag/juce_gui/components/widgets/DrawableParameterButton.h
     libs/tote_bag/juce_gui/components/widgets/FlatTextButton.h
     libs/tote_bag/juce_gui/components/widgets/FlatTextChooser.h
     libs/tote_bag/juce_gui/components/widgets/LabelSlider.h
     libs/tote_bag/juce_gui/components/widgets/ParameterSlider.h
     libs/tote_bag/juce_gui/components/widgets/ParameterTextButton.h
+    libs/tote_bag/juce_gui/components/widgets/DrawableParameterButton.cpp
     libs/tote_bag/juce_gui/components/widgets/FlatTextButton.cpp
     libs/tote_bag/juce_gui/components/widgets/FlatTextChooser.cpp
     libs/tote_bag/juce_gui/components/widgets/LabelSlider.cpp
@@ -136,6 +138,8 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${SourceFiles})
 set(AssetFiles
     src/gui/assets/fonts/Montserrat-Medium.ttf
     src/gui/assets/images/logo_218x40.svg
+    src/gui/assets/images/crush_off.svg
+    src/gui/assets/images/crush_on.svg
    )
 
 # Setup our binary data as a target

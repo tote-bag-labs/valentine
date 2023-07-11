@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include "tote_bag/juce_gui/components/widgets/DrawableParameterButton.h"
 #include "tote_bag/juce_gui/components/widgets/LabelSlider.h"
 #include "tote_bag/juce_gui/components/widgets/ParameterTextButton.h"
 #include "tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h"
@@ -47,6 +48,8 @@ private:
     LabelSlider outputSlider;
 
     ParameterTextButton outputClipButton;
+
+    tote_bag::DrawableParameterButton crushEnableButton;
 
     juce::Label versionLabel;
     std::unique_ptr<juce::Drawable> vLogo;
