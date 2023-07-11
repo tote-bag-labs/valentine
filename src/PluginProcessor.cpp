@@ -15,14 +15,59 @@
 
 //==============================================================================
 
-namespace
+namespace detail
 {
 inline constexpr float kNeg6dbGain = 0.5011872336f;
 inline constexpr int kOversampleFactor = 2;
 inline constexpr float kDownSampleRate = 27500.0f;
 inline constexpr float kRmsTime = 50.0f;
 inline constexpr double kDryWetRampLength = .10;
+
+/** Returns a juce::String for a given value, with
+ *  the level of precision adjusted based on the value
+ *  size.
+ */
+inline juce::String getPrecisionAdjustedValueString (float value)
+{
+    const auto absValue = std::abs (value);
+
+    if (absValue < 10.0f)
+    {
+        return juce::String (value, 2);
+    }
+    if (absValue < 100.0f)
+    {
+        return juce::String (value, 1);
+    }
+    return juce::String (juce::roundToInt (value));
 }
+
+inline std::function<juce::String (float, int)>
+    makeStringFromValueFunction (VParameter param)
+{
+    if ((param == VParameter::attack) || (param == VParameter::release)
+        || (param == VParameter::inputGain) || (param == VParameter::makeupGain))
+    {
+        return [] (float value, int) { return getPrecisionAdjustedValueString (value); };
+    }
+    if (param == VParameter::ratio)
+    {
+        return [] (float value, int) {
+            const auto absValue = std::abs (value);
+
+            if (absValue >= FFCompParameterMax[static_cast<size_t> (VParameter::ratio)])
+            {
+                return juce::String (juce::CharPointer_UTF8 ("∞"));
+            }
+            return getPrecisionAdjustedValueString (value);
+        };
+    }
+    else
+    {
+        return [] (float value, int) { return juce::String (juce::roundToInt (value)); };
+    }
+}
+} // namespace detail
 
 ValentineAudioProcessor::ValentineAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -86,7 +131,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     {
         const auto paramType = static_cast<VParameter> (i);
 
-        if (paramType == VParameter::bypass || paramType == VParameter::outputClip)
+        if (paramType == VParameter::bypass || paramType == VParameter::outputClipEnable
+            || paramType == VParameter::crushEnable)
         {
             const bool defaultValue = FFCompParameterDefaults[i] > 0.5f;
 
@@ -102,44 +148,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                                                 FFCompParameterMax[i],
                                                 FFCompParameterIncrement[i]);
             rangeToUse.setSkewForCentre (FFCompParamCenter[i]);
-            std::function<juce::String (float value, int maximumStringLength)>
-                stringFromValue = nullptr;
 
-            if ((paramType == VParameter::attack) || (paramType == VParameter::release)
-                || (paramType == VParameter::inputGain)
-                || (paramType == VParameter::makeupGain))
-            {
-                stringFromValue = [] (float value, int) {
-                    const auto absValue = std::abs (value);
+            auto stringFromValue = detail::makeStringFromValueFunction (paramType);
 
-                    if (absValue < 10.0f)
-                    {
-                        return juce::String (value, 2);
-                    }
-                    if (absValue < 100.0f)
-                    {
-                        return juce::String (value, 1);
-                    }
-                    return juce::String (static_cast<int> (value));
-                };
-            }
-            else if (paramType == VParameter::ratio)
-            {
-                stringFromValue = [] (float value, int) {
-                    const auto absValue = std::abs (value);
-
-                    if (absValue
-                        >= FFCompParameterMax[static_cast<size_t> (VParameter::ratio)])
-                    {
-                        return juce::String (juce::CharPointer_UTF8 ("∞"));
-                    }
-                    return juce::String (value, 2);
-                };
-            }
-            else
-            {
-                stringFromValue = [] (int value, int) { return juce::String (value); };
-            }
             params.push_back (std::make_unique<juce::AudioParameterFloat> (
                 juce::ParameterID {FFCompParameterID()[i], ValentineParameterVersion},
                 FFCompParameterLabel()[i],
@@ -147,7 +158,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                 FFCompParameterDefaults[i],
                 VParameterUnit()[i],
                 juce::AudioProcessorParameter::genericParameter,
-                stringFromValue,
+                std::move (stringFromValue),
                 nullptr));
         }
     }
@@ -221,7 +232,8 @@ void ValentineAudioProcessor::changeProgramName (int, const juce::String&)
 //==============================================================================
 void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    const auto oversampleMultiplier = static_cast<int> (pow (2, kOversampleFactor));
+    const auto oversampleMultiplier =
+        static_cast<int> (pow (2, detail::kOversampleFactor));
 
     processBuffer.setSize (2, samplesPerBlock);
     processBuffer.clear();
@@ -239,14 +251,14 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
     saturator->reset (sampleRate);
     boundedSaturator->reset (sampleRate);
-    simpleZOH->setParams (static_cast<float> (sampleRate / kDownSampleRate));
+    simpleZOH->setParams (static_cast<float> (sampleRate / detail::kDownSampleRate));
 
     updateLatencyCompensation (true);
 
-    dryWet.reset (sampleRate, kDryWetRampLength);
+    dryWet.reset (sampleRate, detail::kDryWetRampLength);
 
     const auto rmsWindow =
-        juce::roundToInt (kRmsTime * 0.001f * sampleRate / samplesPerBlock);
+        juce::roundToInt (detail::kRmsTime * 0.001f * sampleRate / samplesPerBlock);
     inputMeterSource.resize (getTotalNumInputChannels(), rmsWindow);
 
     grMeterSource.resize (1, rmsWindow);
@@ -472,10 +484,6 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
                                          FFCompParameterMax[bitCrushIndex],
                                          kMaxBits,
                                          kMinBits));
-        if (newValue >= 1.0001f)
-            crushOn.set (true);
-        else
-            crushOn.set (false);
     }
     else if (parameter == "Saturate")
     {
@@ -532,10 +540,14 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
     {
         bypassOn.set (newValue > 0.5f);
     }
-    else if (parameter == "OutputClip")
+    else if (parameter == "OutputClipEnable")
     {
         clipOn.set (newValue > 0.5f);
         latencyChanged.set (true);
+    }
+    else if (parameter == "CrushEnable")
+    {
+        crushOn.set (newValue > 0.5f);
     }
 }
 
@@ -595,11 +607,11 @@ void ValentineAudioProcessor::initializeDSP()
         std::make_unique<Saturation> (Saturation::Type::inverseHyperbolicSineInterp, .6f);
 
     boundedSaturator = std::make_unique<Saturation> (Saturation::Type::hyperbolicTangent);
-    boundedSaturator->setParams (kNeg6dbGain);
+    boundedSaturator->setParams (detail::kNeg6dbGain);
 
     oversampler =
         std::make_unique<Oversampling> (2,
-                                        kOversampleFactor,
+                                        detail::kOversampleFactor,
                                         Oversampling::filterHalfBandPolyphaseIIR);
     simpleZOH = std::make_unique<SimpleZOH>();
     bitCrush = std::make_unique<Bitcrusher>();

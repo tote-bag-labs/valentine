@@ -18,6 +18,7 @@ constexpr int ValentineParameterVersion = 1;
 
 enum class VParameter {
     bitCrush = 0,
+    crushEnable,
     inputGain,
     saturation,
     ratio,
@@ -26,7 +27,7 @@ enum class VParameter {
     makeupGain,
     dryWet,
     bypass,
-    outputClip,
+    outputClipEnable,
     TOTAL_NUM_PARAMETERS
 };
 
@@ -91,6 +92,7 @@ inline const std::array<juce::String, numParams>& FFCompParameterID()
 {
     static const std::array<juce::String, numParams> parameterIDs = {
         "Crush",
+        "CrushEnable",
         "Compress",
         "Saturate",
         "Ratio",
@@ -99,7 +101,7 @@ inline const std::array<juce::String, numParams>& FFCompParameterID()
         "Makeup",
         "Mix",
         "Bypass",
-        "OutputClip",
+        "OutputClipEnable",
     };
 
     return parameterIDs;
@@ -108,6 +110,7 @@ inline const std::array<juce::String, numParams>& FFCompParameterID()
 inline const std::array<juce::String, numParams>& FFCompParameterLabel()
 {
     static const std::array<juce::String, numParams> parameterLabels = {
+        "Crush",
         "Crush",
         "Compress",
         "Saturate",
@@ -127,6 +130,7 @@ inline const std::array<juce::String, numParams>& VParameterUnit()
 {
     static const std::array<juce::String, numParams> unitLabels = {
         "",
+        "",
         " dB",
         "",
         "",
@@ -143,6 +147,7 @@ inline const std::array<juce::String, numParams>& VParameterUnit()
 
 static constexpr std::array<float, numParams> FFCompParameterMin = {
     1.0f,
+    0.0f,
     -24.0f,
     1.0f,
     kRatioMin,
@@ -156,6 +161,7 @@ static constexpr std::array<float, numParams> FFCompParameterMin = {
 
 static constexpr std::array<float, numParams> FFCompParameterMax = {
     10.0f,
+    1.0f,
     48.0f,
     10.0f,
     kRatioParameterMax,
@@ -168,6 +174,7 @@ static constexpr std::array<float, numParams> FFCompParameterMax = {
 };
 
 static constexpr std::array<float, numParams> FFCompParameterDefaults = {
+    1.0f,
     0.0f,
     0.0f,
     0.0f,
@@ -182,6 +189,7 @@ static constexpr std::array<float, numParams> FFCompParameterDefaults = {
 
 static constexpr std::array<float, numParams> FFCompParameterIncrement = {
     0.00001f,
+    1.0f,
     0.00001f,
     0.00001f,
     0.00001f,
@@ -195,6 +203,7 @@ static constexpr std::array<float, numParams> FFCompParameterIncrement = {
 
 static constexpr std::array<float, numParams> FFCompParamCenter = {
     5.0f,
+    0.5f,
     23.0f,
     5.0f,
     6.0f,
@@ -208,6 +217,7 @@ static constexpr std::array<float, numParams> FFCompParamCenter = {
 
 static constexpr std::array<int, numParams> VParamPrecision = {
     2,
+    0,
     2,
     2,
     2,

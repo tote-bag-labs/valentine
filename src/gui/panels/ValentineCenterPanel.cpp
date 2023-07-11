@@ -20,6 +20,14 @@
 
 //==============================================================================
 
+namespace detail
+{
+// Get ratio of svg dimensions so we can correctly resize it.
+inline constexpr auto kCrushOnHeight = 108.1f;
+inline constexpr auto kCrushOnWidth = 201.84f;
+inline constexpr auto kCrushOnRatio = kCrushOnHeight / kCrushOnWidth;
+} // namespace detail
+
 CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
     : inputSlider (FFCompParameterID()[getParameterIndex (VParameter::inputGain)],
                    processor.treeState)
@@ -37,13 +45,25 @@ CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
                  processor.treeState)
     , outputSlider (FFCompParameterID()[getParameterIndex (VParameter::makeupGain)],
                     processor.treeState)
-    , outputClipButton ("Clip",
-                        FFCompParameterID()[static_cast<size_t> (VParameter::outputClip)],
-                        processor.treeState)
+    , outputClipButton (
+          FFCompParameterLabel()[static_cast<size_t> (VParameter::outputClipEnable)],
+          FFCompParameterID()[static_cast<size_t> (VParameter::outputClipEnable)],
+          processor.treeState)
+    // clang-format off
+    , crushEnableButton (
+          "On",
+          juce::Drawable::createFromImageData (BinaryData::crush_on_svg,
+                                               BinaryData::crush_on_svgSize).get(),
+          juce::Drawable::createFromImageData (BinaryData::crush_off_svg,
+                                               BinaryData ::crush_off_svgSize).get(),
+          FFCompParameterID()[static_cast<size_t> (VParameter::crushEnable)],
+          processor.treeState)
+// clang-format on
 {
     // Top left sliders
     addAndMakeVisible (inputSlider);
     addAndMakeVisible (crushSlider);
+    addAndMakeVisible (crushEnableButton);
     addAndMakeVisible (saturateSlider);
 
     // Bottom left sliders
@@ -99,6 +119,7 @@ void CenterPanel::resized()
 
     // Center slider rows vertically
     auto betweenRowMargin = paramWidth * .1f;
+    const auto roundedRowMargin = juce::roundToInt (betweenRowMargin);
 
     // 1.65 to reflect that the bottom half is .65 the height of the top row
     auto totalParamHeight = (paramWidth * 1.75f) + betweenRowMargin;
@@ -114,10 +135,35 @@ void CenterPanel::resized()
     auto leftSideBounds = workingArea.removeFromLeft (paramWidth * numLeftColumns);
 
     // Top
-    topLeftRowBorderBounds = leftSideBounds.removeFromTop (paramWidth);
+    const auto topRowHeight = juce::roundToInt (paramWidth * 1.05f);
+    topLeftRowBorderBounds = leftSideBounds.removeFromTop (topRowHeight);
 
     auto topLeftRowBounds = topLeftRowBorderBounds.reduced (borderMargin);
 
+    // Crush enable button
+    const auto sliderWidth = juce::roundToInt (topLeftRowBounds.getWidth() * .333f);
+
+    // This works for now but will be confusing if svgs of different sizes or
+    // differently sized buttons are desired. Not dealing with it now since
+    // this will all be rewritten in next UI iteraction. aka "Good Enough".
+    const auto topLeftButtonsWidth = juce::roundToInt (sliderWidth * .2f);
+    const auto topLeftButtonsHeight =
+        juce::roundToInt (topLeftButtonsWidth * detail::kCrushOnRatio);
+
+    // Buttons corresponding to top left sliders will be placed within these bounds
+    auto topLeftButtonRowBounds =
+        topLeftRowBounds.removeFromBottom (topLeftButtonsHeight);
+
+    const auto crushEnableButtonBounds =
+        topLeftButtonRowBounds.removeFromLeft (sliderWidth)
+            .withSizeKeepingCentre (topLeftButtonsWidth, topLeftButtonsHeight);
+
+    crushEnableButton.setBounds (crushEnableButtonBounds);
+
+    const auto buttonSliderMargin = juce::roundToInt (roundedRowMargin * .33f);
+    topLeftRowBounds.removeFromBottom (buttonSliderMargin);
+
+    // Now, the sliders
     std::array<LabelSlider*, numLeftColumns> topLeftRowComponents = {
         &crushSlider,
         &inputSlider,
@@ -130,7 +176,6 @@ void CenterPanel::resized()
             areaFunc (topLeftRowBounds, numLeftColumns, i));
     }
 
-    const auto roundedRowMargin = juce::roundToInt (betweenRowMargin);
     // Margin
     leftSideBounds.removeFromTop (roundedRowMargin);
 
@@ -160,18 +205,19 @@ void CenterPanel::resized()
     auto rightSideBounds = workingArea.removeFromLeft (paramWidth * numRightColumns);
 
     // Top right
-    topRightRowBorderBounds = rightSideBounds.removeFromTop (paramWidth);
+    topRightRowBorderBounds = rightSideBounds.removeFromTop (topRowHeight);
 
     auto topRightRowBounds = topRightRowBorderBounds.reduced (borderMargin);
 
+    // Clip button
     const auto clipButtonWidth = juce::roundToInt (topRightRowBounds.getWidth() * .5f);
     auto clipButtonBounds =
-        topRightRowBounds.removeFromBottom (juce::roundToInt (clipButtonWidth * .1f))
+        topRightRowBounds.removeFromBottom (juce::roundToInt (clipButtonWidth * .09f))
             .removeFromLeft (clipButtonWidth)
             .reduced (juce::roundToInt (clipButtonWidth * .35f), 0);
     outputClipButton.setBounds (clipButtonBounds);
 
-    topRightRowBounds.removeFromBottom (juce::roundToInt (roundedRowMargin * .5f));
+    topRightRowBounds.removeFromBottom (buttonSliderMargin);
 
     std::array<LabelSlider*, numRightColumns> topRightRowComponents = {&outputSlider,
                                                                        &mixSlider};

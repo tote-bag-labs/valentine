@@ -31,6 +31,10 @@ LookAndFeel::LookAndFeel()
     setColour (juce::Slider::textBoxOutlineColourId, vPinkDark);
     setColour (juce::Slider::rotarySliderOutlineColourId, vPinkDark);
     setColour (juce::Slider::rotarySliderFillColourId, juce::Colours::floralwhite);
+
+    // so we don't get background painting on drawable buttons
+    setColour (juce::DrawableButton::backgroundOnColourId,
+               juce::Colours::transparentWhite);
 }
 
 void LookAndFeel::drawSliderMeter (juce::Graphics& g,
@@ -93,13 +97,9 @@ void LookAndFeel::drawDrawableKnob (juce::Graphics& g,
 
     const auto halfDrawableWidth = drawableWidth / 2.0f;
 
-    sliderImage.setTransform (juce::AffineTransform::rotation (toAngle,
-                                                               halfDrawableWidth,
-                                                               halfDrawableWidth)
-                                  .scaled (realW,
-                                           realW,
-                                           halfDrawableWidth,
-                                           halfDrawableWidth));
+    sliderImage.setTransform (
+        juce::AffineTransform::rotation (toAngle, halfDrawableWidth, halfDrawableWidth)
+            .scaled (realW, realW, halfDrawableWidth, halfDrawableWidth));
 
     const auto cX = bounds.getCentreX() - halfDrawableWidth;
     const auto cY = bounds.getCentreY() - halfDrawableWidth;
@@ -137,7 +137,11 @@ void LookAndFeel::drawKnob (juce::Graphics& g,
 
     // Draw inner outline
     g.setColour (fillColour.darker (.15f));
-    g.drawEllipse (innerOutlineRx, innerOutlineRy, innerOutlineRw, innerOutlineRw, innerOutlineThickness);
+    g.drawEllipse (innerOutlineRx,
+                   innerOutlineRy,
+                   innerOutlineRw,
+                   innerOutlineRw,
+                   innerOutlineThickness);
 
     // Offset outer outline by its thickness
     auto outerOutlineRadius = radius - (outerOutlineThickness * .5f);
@@ -153,15 +157,22 @@ void LookAndFeel::drawKnob (juce::Graphics& g,
 
         auto shadow = juce::DropShadow (fillColour.darker(),
                                         innerOutlineThickness,
-                                        { xOffset, yOffset });
+                                        {xOffset, yOffset});
         juce::Path shadowPath;
-        shadowPath.addEllipse (outerOutlineRx, outerOutlineRy, outerOutlineRw, outerOutlineRw);
+        shadowPath.addEllipse (outerOutlineRx,
+                               outerOutlineRy,
+                               outerOutlineRw,
+                               outerOutlineRw);
         shadow.drawForPath (g, shadowPath);
     }
     else
     {
         g.setColour (fillColour.darker (.85f));
-        g.drawEllipse (outerOutlineRx, outerOutlineRy, outerOutlineRw, outerOutlineRw, outerOutlineThickness);
+        g.drawEllipse (outerOutlineRx,
+                       outerOutlineRy,
+                       outerOutlineRw,
+                       outerOutlineRw,
+                       outerOutlineThickness);
     }
 
     // Pointer
@@ -169,8 +180,19 @@ void LookAndFeel::drawKnob (juce::Graphics& g,
     auto pointerLength = radius * 0.33f;
     auto pointerThickness = pointerLength * .2f;
     auto cornerSize = pointerThickness * .35f;
-    p.addRoundedRectangle (-pointerThickness * 0.5f, -radius + innerOutlineThickness, pointerThickness, pointerLength, cornerSize, cornerSize, true, true, false, false);
-    p.applyTransform (juce::AffineTransform::rotation (toAngle).translated (bounds.getCentreX(), bounds.getCentreY()));
+    p.addRoundedRectangle (-pointerThickness * 0.5f,
+                           -radius + innerOutlineThickness,
+                           pointerThickness,
+                           pointerLength,
+                           cornerSize,
+                           cornerSize,
+                           true,
+                           true,
+                           false,
+                           false);
+    p.applyTransform (
+        juce::AffineTransform::rotation (toAngle).translated (bounds.getCentreX(),
+                                                              bounds.getCentreY()));
 
     auto pointerColour = findColour (ColourIds::pointerColourId);
     g.setColour (pointerColour);
@@ -191,9 +213,17 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
     auto radius = juce::jmin (bounds.getWidth(), bounds.getHeight()) / 2.0f;
     auto lineW = radius * 0.125f;
     auto arcRadius = radius - lineW * 0.5f;
-    const auto toAngle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
+    const auto toAngle =
+        rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 
-    drawSliderMeter (g, bounds, lineW, arcRadius, rotaryStartAngle, rotaryEndAngle, toAngle, slider);
+    drawSliderMeter (g,
+                     bounds,
+                     lineW,
+                     arcRadius,
+                     rotaryStartAngle,
+                     rotaryEndAngle,
+                     toAngle,
+                     slider);
 
     const auto knobRadius = arcRadius * .80f;
 
@@ -203,13 +233,13 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
 juce::Font LookAndFeel::getTextButtonFont (juce::TextButton&, int buttonHeight)
 {
     const auto fontHeight = juce::jmax (7.0f, buttonHeight * 0.8f);
-    return fontHolder.getFont("MontserratMedium_ttf").withHeight (fontHeight);
+    return fontHolder.getFont ("MontserratMedium_ttf").withHeight (fontHeight);
 }
 
 juce::Font LookAndFeel::getLabelFont (juce::Label& l)
 {
     const auto fontHeight = static_cast<float> (l.getHeight());
-    return fontHolder.getFont("MontserratMedium_ttf").withHeight (fontHeight);
+    return fontHolder.getFont ("MontserratMedium_ttf").withHeight (fontHeight);
 }
 
 void LookAndFeel::drawButtonBackground (juce::Graphics& g,
@@ -239,8 +269,10 @@ void LookAndFeel::drawFlatButtonBackground (juce::Graphics& g,
     auto r = juce::jmin (bounds.getWidth(), bounds.getHeight());
     auto cornerSize = r * .5f;
 
-    auto baseColour = backgroundColour.withMultipliedSaturation (button.hasKeyboardFocus (true) ? 1.3f : 0.9f)
-                          .withMultipliedAlpha (button.isEnabled() ? 1.0f : 0.5f);
+    auto baseColour =
+        backgroundColour
+            .withMultipliedSaturation (button.hasKeyboardFocus (true) ? 1.3f : 0.9f)
+            .withMultipliedAlpha (button.isEnabled() ? 1.0f : 0.5f);
 
     if (shouldDrawButtonAsDown || shouldDrawButtonAsHighlighted)
         baseColour = baseColour.contrasting (shouldDrawButtonAsDown ? 0.2f : 0.05f);
@@ -255,7 +287,16 @@ void LookAndFeel::drawFlatButtonBackground (juce::Graphics& g,
     if (flatOnLeft || flatOnRight || flatOnTop || flatOnBottom)
     {
         juce::Path path;
-        path.addRoundedRectangle (bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), cornerSize, cornerSize, !(flatOnLeft || flatOnTop), !(flatOnRight || flatOnTop), !(flatOnLeft || flatOnBottom), !(flatOnRight || flatOnBottom));
+        path.addRoundedRectangle (bounds.getX(),
+                                  bounds.getY(),
+                                  bounds.getWidth(),
+                                  bounds.getHeight(),
+                                  cornerSize,
+                                  cornerSize,
+                                  !(flatOnLeft || flatOnTop),
+                                  !(flatOnRight || flatOnTop),
+                                  !(flatOnLeft || flatOnBottom),
+                                  !(flatOnRight || flatOnBottom));
 
         g.fillPath (path);
     }
@@ -272,16 +313,19 @@ void LookAndFeel::drawButtonText (juce::Graphics& g,
 {
     auto font = getTextButtonFont (button, button.getHeight());
     g.setFont (font);
-    g.setColour (button.findColour (isButtonDown ? juce::TextButton::textColourOnId
-                                                 : juce::TextButton::textColourOffId)
+    g.setColour (button
+                     .findColour (isButtonDown ? juce::TextButton::textColourOnId
+                                               : juce::TextButton::textColourOffId)
                      .withMultipliedAlpha (button.isEnabled() ? 1.0f : 0.5f));
 
     auto yIndent = juce::jmin (4, button.proportionOfHeight (0.5f));
     auto cornerSize = juce::jmin (button.getHeight(), button.getWidth()) / 2;
 
     auto fontHeight = juce::roundToInt (font.getHeight() * 0.6f);
-    auto leftIndent = juce::jmin (fontHeight, 2 + cornerSize / (button.isConnectedOnLeft() ? 4 : 2));
-    auto rightIndent = juce::jmin (fontHeight, 2 + cornerSize / (button.isConnectedOnRight() ? 4 : 2));
+    auto leftIndent =
+        juce::jmin (fontHeight, 2 + cornerSize / (button.isConnectedOnLeft() ? 4 : 2));
+    auto rightIndent =
+        juce::jmin (fontHeight, 2 + cornerSize / (button.isConnectedOnRight() ? 4 : 2));
     auto textWidth = button.getWidth() - leftIndent - rightIndent;
 
     //auto edge = 4;
@@ -310,7 +354,7 @@ void LookAndFeel::drawComboBox (juce::Graphics& g,
     const auto boxBounds = box.getLocalBounds();
 
     const auto fontHeight = juce::jmax (7.0f, height * 0.6f);
-    g.setFont (fontHolder.getFont("MontserratMedium_ttf").withHeight (fontHeight));
+    g.setFont (fontHolder.getFont ("MontserratMedium_ttf").withHeight (fontHeight));
 
     g.setColour (box.findColour (juce::ComboBox::backgroundColourId));
 
@@ -343,7 +387,7 @@ void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
     g.setColour (myTextColour);
 
     auto fHeight = juce::jmax (7.0f, r.getHeight() * 0.6f);
-    g.setFont (fontHolder.getFont("MontserratMedium_ttf").withHeight (fHeight));
+    g.setFont (fontHolder.getFont ("MontserratMedium_ttf").withHeight (fHeight));
 
     r.setLeft (10);
     r.setY (1);
