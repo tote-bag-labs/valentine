@@ -140,6 +140,8 @@ set(AssetFiles
     src/gui/assets/images/logo_218x40.svg
     src/gui/assets/images/crush_off.svg
     src/gui/assets/images/crush_on.svg
+    src/gui/assets/images/clip_off.svg
+    src/gui/assets/images/clip_on.svg
    )
 
 # Setup our binary data as a target

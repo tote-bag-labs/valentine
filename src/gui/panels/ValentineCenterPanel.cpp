@@ -45,13 +45,18 @@ CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
                  processor.treeState)
     , outputSlider (FFCompParameterID()[getParameterIndex (VParameter::makeupGain)],
                     processor.treeState)
+    // clang-format off
     , outputClipButton (
           FFCompParameterLabel()[static_cast<size_t> (VParameter::outputClipEnable)],
+          juce::Drawable::createFromImageData (BinaryData::clip_on_svg,
+                                               BinaryData::clip_on_svgSize).get(),
+          juce::Drawable::createFromImageData (BinaryData::clip_off_svg,
+                                               BinaryData ::clip_off_svgSize).get(),
           FFCompParameterID()[static_cast<size_t> (VParameter::outputClipEnable)],
           processor.treeState)
-    // clang-format off
+
     , crushEnableButton (
-          "On",
+          FFCompParameterLabel()[static_cast<size_t> (VParameter::crushEnable)],
           juce::Drawable::createFromImageData (BinaryData::crush_on_svg,
                                                BinaryData::crush_on_svgSize).get(),
           juce::Drawable::createFromImageData (BinaryData::crush_off_svg,
@@ -210,11 +215,17 @@ void CenterPanel::resized()
     auto topRightRowBounds = topRightRowBorderBounds.reduced (borderMargin);
 
     // Clip button
-    const auto clipButtonWidth = juce::roundToInt (topRightRowBounds.getWidth() * .5f);
-    auto clipButtonBounds =
-        topRightRowBounds.removeFromBottom (juce::roundToInt (clipButtonWidth * .09f))
-            .removeFromLeft (clipButtonWidth)
-            .reduced (juce::roundToInt (clipButtonWidth * .35f), 0);
+    const auto topRightSliderWidth =
+        juce::roundToInt (topRightRowBounds.getWidth() * .5f);
+    const auto topRightButtonsWidth = juce::roundToInt (topRightSliderWidth * .2f);
+    const auto topRightButtonHeight =
+        juce::roundToInt (topRightButtonsWidth * detail::kButtonRatio);
+
+    auto topRightButtonBounds = topRightRowBounds.removeFromBottom (topRightButtonHeight);
+    const auto clipButtonBounds =
+        topRightButtonBounds.removeFromLeft (topRightSliderWidth)
+            .withSizeKeepingCentre (topRightButtonsWidth, topRightButtonHeight);
+
     outputClipButton.setBounds (clipButtonBounds);
 
     topRightRowBounds.removeFromBottom (buttonSliderMargin);

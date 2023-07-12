@@ -47,7 +47,7 @@ private:
     LabelSlider mixSlider;
     LabelSlider outputSlider;
 
-    ParameterTextButton outputClipButton;
+    tote_bag::DrawableParameterButton outputClipButton;
 
     tote_bag::DrawableParameterButton crushEnableButton;
 
