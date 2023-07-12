@@ -23,9 +23,9 @@
 namespace detail
 {
 // Get ratio of svg dimensions so we can correctly resize it.
-inline constexpr auto kCrushOnHeight = 108.1f;
-inline constexpr auto kCrushOnWidth = 201.84f;
-inline constexpr auto kCrushOnRatio = kCrushOnHeight / kCrushOnWidth;
+inline constexpr auto kButtonWidth = 108.1f;
+inline constexpr auto kButtonHeight = 201.84f;
+inline constexpr auto kButtonRatio = kButtonWidth / kButtonHeight;
 } // namespace detail
 
 CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
@@ -148,7 +148,7 @@ void CenterPanel::resized()
     // this will all be rewritten in next UI iteraction. aka "Good Enough".
     const auto topLeftButtonsWidth = juce::roundToInt (sliderWidth * .2f);
     const auto topLeftButtonsHeight =
-        juce::roundToInt (topLeftButtonsWidth * detail::kCrushOnRatio);
+        juce::roundToInt (topLeftButtonsWidth * detail::kButtonRatio);
 
     // Buttons corresponding to top left sliders will be placed within these bounds
     auto topLeftButtonRowBounds =
