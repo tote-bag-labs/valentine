@@ -16,7 +16,7 @@ DrawableParameterButton::DrawableParameterButton (
     setButtonText (buttonText);
     setClickingTogglesState (true);
     setImages (buttonOffImage,
-               buttonOnImage,
+               nullptr,
                nullptr,
                nullptr,
                buttonOnImage,
