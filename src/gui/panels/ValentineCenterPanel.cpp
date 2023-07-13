@@ -23,9 +23,9 @@
 namespace detail
 {
 // Get ratio of svg dimensions so we can correctly resize it.
-inline constexpr auto kCrushOnHeight = 108.1f;
-inline constexpr auto kCrushOnWidth = 201.84f;
-inline constexpr auto kCrushOnRatio = kCrushOnHeight / kCrushOnWidth;
+inline constexpr auto kButtonWidth = 108.1f;
+inline constexpr auto kButtonHeight = 201.84f;
+inline constexpr auto kButtonRatio = kButtonWidth / kButtonHeight;
 } // namespace detail
 
 CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
@@ -45,13 +45,18 @@ CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
                  processor.treeState)
     , outputSlider (FFCompParameterID()[getParameterIndex (VParameter::makeupGain)],
                     processor.treeState)
+    // clang-format off
     , outputClipButton (
           FFCompParameterLabel()[static_cast<size_t> (VParameter::outputClipEnable)],
+          juce::Drawable::createFromImageData (BinaryData::clip_on_svg,
+                                               BinaryData::clip_on_svgSize).get(),
+          juce::Drawable::createFromImageData (BinaryData::clip_off_svg,
+                                               BinaryData ::clip_off_svgSize).get(),
           FFCompParameterID()[static_cast<size_t> (VParameter::outputClipEnable)],
           processor.treeState)
-    // clang-format off
+
     , crushEnableButton (
-          "On",
+          FFCompParameterLabel()[static_cast<size_t> (VParameter::crushEnable)],
           juce::Drawable::createFromImageData (BinaryData::crush_on_svg,
                                                BinaryData::crush_on_svgSize).get(),
           juce::Drawable::createFromImageData (BinaryData::crush_off_svg,
@@ -148,7 +153,7 @@ void CenterPanel::resized()
     // this will all be rewritten in next UI iteraction. aka "Good Enough".
     const auto topLeftButtonsWidth = juce::roundToInt (sliderWidth * .2f);
     const auto topLeftButtonsHeight =
-        juce::roundToInt (topLeftButtonsWidth * detail::kCrushOnRatio);
+        juce::roundToInt (topLeftButtonsWidth * detail::kButtonRatio);
 
     // Buttons corresponding to top left sliders will be placed within these bounds
     auto topLeftButtonRowBounds =
@@ -210,11 +215,17 @@ void CenterPanel::resized()
     auto topRightRowBounds = topRightRowBorderBounds.reduced (borderMargin);
 
     // Clip button
-    const auto clipButtonWidth = juce::roundToInt (topRightRowBounds.getWidth() * .5f);
-    auto clipButtonBounds =
-        topRightRowBounds.removeFromBottom (juce::roundToInt (clipButtonWidth * .09f))
-            .removeFromLeft (clipButtonWidth)
-            .reduced (juce::roundToInt (clipButtonWidth * .35f), 0);
+    const auto topRightSliderWidth =
+        juce::roundToInt (topRightRowBounds.getWidth() * .5f);
+    const auto topRightButtonsWidth = juce::roundToInt (topRightSliderWidth * .2f);
+    const auto topRightButtonHeight =
+        juce::roundToInt (topRightButtonsWidth * detail::kButtonRatio);
+
+    auto topRightButtonBounds = topRightRowBounds.removeFromBottom (topRightButtonHeight);
+    const auto clipButtonBounds =
+        topRightButtonBounds.removeFromLeft (topRightSliderWidth)
+            .withSizeKeepingCentre (topRightButtonsWidth, topRightButtonHeight);
+
     outputClipButton.setBounds (clipButtonBounds);
 
     topRightRowBounds.removeFromBottom (buttonSliderMargin);
