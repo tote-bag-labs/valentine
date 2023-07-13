@@ -132,7 +132,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout
         const auto paramType = static_cast<VParameter> (i);
 
         if (paramType == VParameter::bypass || paramType == VParameter::outputClipEnable
-            || paramType == VParameter::crushEnable)
+            || paramType == VParameter::crushEnable
+            || paramType == VParameter::saturateEnable)
         {
             const bool defaultValue = FFCompParameterDefaults[i] > 0.5f;
 
