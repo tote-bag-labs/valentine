@@ -198,7 +198,7 @@ private:
     juce::Atomic<bool> clipOn {
         FFCompParameterDefaults[static_cast<size_t> (VParameter::outputClipEnable)]
         > 0.0f};
-    juce::Atomic<bool> clipOnState = false;
+    juce::Atomic<bool> clipOnState = clipOn;
 
     // This is used for, yes you guessed it, processing
     juce::AudioBuffer<float> processBuffer;
