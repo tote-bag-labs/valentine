@@ -363,7 +363,11 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         oversampler->processSamplesUp (processBlock);
 
     ffCompressor->process (highSampleRateBlock);
-    saturator->processBlock (highSampleRateBlock);
+
+    if (saturateOn.get())
+    {
+        saturator->processBlock (highSampleRateBlock);
+    }
 
     const auto clip = clipOn.get();
     if (clip)
@@ -550,6 +554,11 @@ void ValentineAudioProcessor::parameterChanged (const juce::String& parameter,
     {
         crushOn.set (newValue > 0.5f);
     }
+    else if (parameter == "SaturateEnable")
+    {
+        saturateOn.set (newValue > 0.5f);
+        latencyChanged.set (true);
+    }
 }
 
 //==============================================================================
@@ -631,13 +640,13 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 void ValentineAudioProcessor::updateLatencyCompensation (bool init)
 {
     // First order ADAA
-    const float saturatorLatency = 0.5f;
+    const float maximumSaturatorLatency = 0.5f;
     const float maximumClipperLatency = 0.5f;
 
     overSamplingLatency = oversampler->getLatencyInSamples();
 
     const auto maximumDelay =
-        overSamplingLatency + saturatorLatency + maximumClipperLatency;
+        overSamplingLatency + maximumSaturatorLatency + maximumClipperLatency;
     cleanBufferDelay = static_cast<int> (std::ceil (maximumDelay));
 
     const auto numOutputChannels = getTotalNumOutputChannels();
@@ -656,8 +665,10 @@ void ValentineAudioProcessor::updateLatencyCompensation (bool init)
     }
 
     const auto currentClipperLatency = clipOn.get() ? maximumClipperLatency : 0.0f;
+    const auto currentSaturatorLatency =
+        saturateOn.get() ? maximumSaturatorLatency : 0.0f;
     const auto currentDelay =
-        overSamplingLatency + saturatorLatency + currentClipperLatency;
+        overSamplingLatency + currentSaturatorLatency + currentClipperLatency;
     const auto processBufferDelay = cleanBufferDelay - currentDelay;
 
     for (size_t channel = 0; channel < static_cast<size_t> (numOutputChannels); ++channel)

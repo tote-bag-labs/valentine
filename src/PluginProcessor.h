@@ -199,6 +199,8 @@ private:
         FFCompParameterDefaults[static_cast<size_t> (VParameter::outputClipEnable)]
         > 0.0f};
     juce::Atomic<bool> clipOnState = clipOn;
+    juce::Atomic<bool> saturateOn = FFCompParameterDefaults[static_cast<size_t> (VParameter::saturateEnable)]
+        > 0.5f;
 
     // This is used for, yes you guessed it, processing
     juce::AudioBuffer<float> processBuffer;
