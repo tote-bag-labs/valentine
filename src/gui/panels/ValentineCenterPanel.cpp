@@ -63,6 +63,15 @@ CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
                                                BinaryData::off_button_svgSize).get(),
           FFCompParameterID()[static_cast<size_t> (VParameter::crushEnable)],
           processor.treeState)
+
+    , saturateEnableButton (
+          FFCompParameterLabel()[static_cast<size_t> (VParameter::saturateEnable)],
+          juce::Drawable::createFromImageData (BinaryData::on_button_svg,
+                                               BinaryData::on_button_svgSize).get(),
+          juce::Drawable::createFromImageData (BinaryData::off_button_svg,
+                                               BinaryData ::off_button_svgSize).get(),
+          FFCompParameterID()[static_cast<size_t> (VParameter::saturateEnable)],
+          processor.treeState)
 // clang-format on
 {
     // Top left sliders
@@ -70,6 +79,7 @@ CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
     addAndMakeVisible (crushSlider);
     addAndMakeVisible (crushEnableButton);
     addAndMakeVisible (saturateSlider);
+    addAndMakeVisible (saturateEnableButton);
 
     // Bottom left sliders
     addAndMakeVisible (ratioSlider);
@@ -164,6 +174,11 @@ void CenterPanel::resized()
             .withSizeKeepingCentre (topLeftButtonsWidth, topLeftButtonsHeight);
 
     crushEnableButton.setBounds (crushEnableButtonBounds);
+
+    const auto saturateEnableButtonBounds =
+        topLeftButtonRowBounds.removeFromRight (sliderWidth)
+            .withSizeKeepingCentre (topLeftButtonsWidth, topLeftButtonsHeight);
+    saturateEnableButton.setBounds (saturateEnableButtonBounds);
 
     const auto buttonSliderMargin = juce::roundToInt (roundedRowMargin * .33f);
     topLeftRowBounds.removeFromBottom (buttonSliderMargin);
