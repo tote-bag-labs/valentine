@@ -373,10 +373,10 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     if (clip)
     {
         // Clear the buffers if clip just got turned back on
-        if (!clipOnState.get())
+        if (!clipOnState)
         {
             boundedSaturator->clearBuffers();
-            clipOnState.set (clip);
+            clipOnState = clip;
         }
         boundedSaturator->processBlock (highSampleRateBlock);
     }

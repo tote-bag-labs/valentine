@@ -198,7 +198,7 @@ private:
     juce::Atomic<bool> clipOn {
         FFCompParameterDefaults[static_cast<size_t> (VParameter::outputClipEnable)]
         > 0.0f};
-    juce::Atomic<bool> clipOnState = clipOn;
+    bool clipOnState = clipOn.get();
     juce::Atomic<bool> saturateOn = FFCompParameterDefaults[static_cast<size_t> (VParameter::saturateEnable)]
         > 0.5f;
 
