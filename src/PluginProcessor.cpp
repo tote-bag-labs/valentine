@@ -369,14 +369,13 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         saturator->processBlock (highSampleRateBlock);
     }
 
-    const auto clip = clipOn.get();
-    if (clip)
+    if (clipOn.get())
     {
         // Clear the buffers if clip just got turned back on
         if (!clipOnState)
         {
             boundedSaturator->clearBuffers();
-            clipOnState = clip;
+            clipOnState = true;
         }
         boundedSaturator->processBlock (highSampleRateBlock);
     }
