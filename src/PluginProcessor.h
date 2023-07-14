@@ -201,6 +201,7 @@ private:
     bool clipOnState = clipOn.get();
     juce::Atomic<bool> saturateOn = FFCompParameterDefaults[static_cast<size_t> (VParameter::saturateEnable)]
         > 0.5f;
+    bool saturateOnState = saturateOn.get();
 
     // This is used for, yes you guessed it, processing
     juce::AudioBuffer<float> processBuffer;

@@ -366,6 +366,12 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     if (saturateOn.get())
     {
+        // Clear the buffers if saturate just got turned back on
+        if(!saturateOnState)
+        {
+            saturator->clearBuffers();
+            saturateOnState = true;
+        }
         saturator->processBlock (highSampleRateBlock);
     }
 
