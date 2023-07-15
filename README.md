@@ -32,14 +32,15 @@ to get your desired result. Here it is:
 
 Parameters
 ----------
-- **Crush**: increases the amount of bit crushing. Downsamples the signal to 27.5kHz for any setting greater than 0%.
+- **Crush**: increases the amount of bit crushing. Downsamples the signal to 27.5kHz. Activated using the "On" button underneath Crush slider.
 - **Compress**: sets the gain before compresison. Use this to increase the amount of compression and distortion affecting the signal.
+- **Saturate**: sets the amount of gain applied to signal before Valentine's waveshaper. Gain is compensated to prevent huge volume boost
+when you just want more dirt. Activates using the "On" button underneath Saturate slider.
 - **Ratio**: sets the compression ratio. "Infinity" is more like 1000:1. Increasing this also increases the threshold and decreases the knee.
 - **Attack**: sets compression attack time.
 - **Release**: sets compression release time.
-- **Saturate**: sets the amount of gain applied to signal before Valentine's waveshaper. This gain is compensated to prevent a huge volume boost
-when you just want more dirt. Note: at `0%` signal is actually attenuated before the waveshaper, allowing for a cleaner sound when needed.
 - **Output**: sets the wet signal's output gain before mix.
+- **Clip**: Activates output clipping.
 - **Mix**:  increases the amount of wet signal in the processor's output.
 - **Bypass**: bypasses all processing.
 
