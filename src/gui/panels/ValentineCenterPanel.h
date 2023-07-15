@@ -51,6 +51,8 @@ private:
 
     tote_bag::DrawableParameterButton crushEnableButton;
 
+    tote_bag::DrawableParameterButton saturateEnableButton;
+
     juce::Label versionLabel;
     std::unique_ptr<juce::Drawable> vLogo;
 
