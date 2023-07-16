@@ -1,7 +1,6 @@
-# 3.21 is bundled in VSCode 2022
-# https://docs.microsoft.com/en-us/visualstudio/releases/2022/release-notes
-# 3.21 is also bundled in CLion as of 2021.3
-cmake_minimum_required(VERSION 3.21)
+# 3.24.1 is bundled in Visual Studio 2022 v17.4
+# 3.24.1 is also bundled in CLion as of 2023
+cmake_minimum_required(VERSION 3.24.1)
 
 # Change this to the name of your plugin
 # This cannot have spaces (but PRODUCT_NAME can)
