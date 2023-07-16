@@ -1,7 +1,6 @@
-# 3.21 is bundled in VSCode 2022
-# https://docs.microsoft.com/en-us/visualstudio/releases/2022/release-notes
-# 3.21 is also bundled in CLion as of 2021.3
-cmake_minimum_required(VERSION 3.21)
+# 3.24.1 is bundled in Visual Studio 2022 v17.4
+# 3.24.1 is also bundled in CLion as of 2023
+cmake_minimum_required(VERSION 3.24.1)
 
 # Change this to the name of your plugin
 # This cannot have spaces (but PRODUCT_NAME can)
@@ -10,6 +9,10 @@ set(PROJECT_NAME "Valentine")
 # Set the plugin formats you'll be building here.
 # Valid formats: AAX Unity VST AU AUv3 Standalone
 set(FORMATS AU VST3 Standalone)
+
+# This must be set before the project() call
+# see: https://cmake.org/cmake/help/latest/variable/CMAKE_OSX_DEPLOYMENT_TARGET.html
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Support macOS down to High Sierra")
 
 # Reads in VERSION file and sticks in it CURRENT_VERSION variable
 # Be sure the file has no newlines
@@ -20,11 +23,6 @@ project(${PROJECT_NAME} VERSION ${CURRENT_VERSION})
 
 # By default we don't want Xcode schemes to be made for modules, etc
 set(CMAKE_XCODE_GENERATE_SCHEME OFF)
-
-# Enable to build universal binaries on macOS, increasing build time
-# This only affects local builds, GitHub actions always builds Universals
-# set(CMAKE_OSX_ARCHITECTURES arm64 x86_64)
-set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Support macOS down to High Sierra")
 
 # Adds all the module sources so they appear correctly in the IDE
 # Must be set before JUCE is added as a sub-dir (or any targets are made)
@@ -190,8 +188,6 @@ target_compile_definitions("${PROJECT_NAME}"
     JUCE_MODAL_LOOPS_PERMITTED=1
     )
 
-
-
 target_include_directories("${PROJECT_NAME}"
                             PRIVATE
                            "${CMAKE_CURRENT_SOURCE_DIR}/src"
@@ -226,7 +222,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/catchorg/Catch2.git
     GIT_PROGRESS TRUE
     GIT_SHALLOW TRUE
-    GIT_TAG v3.1.0)
+    GIT_TAG v3.3.2)
 FetchContent_MakeAvailable(Catch2) # find_package equivalent
 
 # Setup the test executable, again C++ 20 please
@@ -239,7 +235,13 @@ target_include_directories(Tests
                           "${CMAKE_CURRENT_SOURCE_DIR}/src"
                           "${CMAKE_CURRENT_SOURCE_DIR}/libs")
 
-target_link_libraries(Tests PRIVATE Catch2::Catch2WithMain "${PROJECT_NAME}" ${JUCE_DEPENDENCIES})
+target_link_libraries(Tests PRIVATE Catch2::Catch2WithMain "${PROJECT_NAME}")
+
+# We can't link again to the shared juce target without ODR violations
+# However, we can steal its include dirs and compile definitions to use in tests!
+# https://forum.juce.com/t/windows-linker-issue-on-develop/55524/2
+target_compile_definitions(Tests PRIVATE $<TARGET_PROPERTY:${PROJECT_NAME},COMPILE_DEFINITIONS>)
+target_include_directories(Tests PRIVATE $<TARGET_PROPERTY:${PROJECT_NAME},INCLUDE_DIRECTORIES>)
 
 # Make an Xcode Scheme for the test executable so we can run tests in the IDE
 set_target_properties(Tests PROPERTIES XCODE_GENERATE_SCHEME ON)
