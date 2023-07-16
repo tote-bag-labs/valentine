@@ -10,6 +10,10 @@ set(PROJECT_NAME "Valentine")
 # Valid formats: AAX Unity VST AU AUv3 Standalone
 set(FORMATS AU VST3 Standalone)
 
+# This must be set before the project() call
+# see: https://cmake.org/cmake/help/latest/variable/CMAKE_OSX_DEPLOYMENT_TARGET.html
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Support macOS down to High Sierra")
+
 # Reads in VERSION file and sticks in it CURRENT_VERSION variable
 # Be sure the file has no newlines
 file(STRINGS VERSION CURRENT_VERSION)
@@ -19,8 +23,6 @@ project(${PROJECT_NAME} VERSION ${CURRENT_VERSION})
 
 # By default we don't want Xcode schemes to be made for modules, etc
 set(CMAKE_XCODE_GENERATE_SCHEME OFF)
-
-set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Support macOS down to High Sierra")
 
 # Adds all the module sources so they appear correctly in the IDE
 # Must be set before JUCE is added as a sub-dir (or any targets are made)
