@@ -20,9 +20,6 @@ project(${PROJECT_NAME} VERSION ${CURRENT_VERSION})
 # By default we don't want Xcode schemes to be made for modules, etc
 set(CMAKE_XCODE_GENERATE_SCHEME OFF)
 
-# Enable to build universal binaries on macOS, increasing build time
-# This only affects local builds, GitHub actions always builds Universals
-# set(CMAKE_OSX_ARCHITECTURES arm64 x86_64)
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Support macOS down to High Sierra")
 
 # Adds all the module sources so they appear correctly in the IDE
