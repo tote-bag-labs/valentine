@@ -237,7 +237,13 @@ target_include_directories(Tests
                           "${CMAKE_CURRENT_SOURCE_DIR}/src"
                           "${CMAKE_CURRENT_SOURCE_DIR}/libs")
 
-target_link_libraries(Tests PRIVATE Catch2::Catch2WithMain "${PROJECT_NAME}" ${JUCE_DEPENDENCIES})
+target_link_libraries(Tests PRIVATE Catch2::Catch2WithMain "${PROJECT_NAME}")
+
+# We can't link again to the shared juce target without ODR violations
+# However, we can steal its include dirs and compile definitions to use in tests!
+# https://forum.juce.com/t/windows-linker-issue-on-develop/55524/2
+target_compile_definitions(Tests PRIVATE $<TARGET_PROPERTY:${PROJECT_NAME},COMPILE_DEFINITIONS>)
+target_include_directories(Tests PRIVATE $<TARGET_PROPERTY:${PROJECT_NAME},INCLUDE_DIRECTORIES>)
 
 # Make an Xcode Scheme for the test executable so we can run tests in the IDE
 set_target_properties(Tests PROPERTIES XCODE_GENERATE_SCHEME ON)
