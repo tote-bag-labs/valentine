@@ -55,6 +55,19 @@ void SimpleZOH::processBlock (juce::AudioBuffer<float>& inAudio,
     }
 }
 
+void SimpleZOH::processChannel (float* buffer, size_t samplesPerBlock)
+{
+    auto intDownSampleCoeff = static_cast<int> (downsampleCoeff);
+    auto frac = downsampleCoeff - intDownSampleCoeff;
+
+    for (int sample = 0; sample < samplesPerBlock; ++sample)
+    {
+        auto y1 = getZOHSample (buffer, sample, intDownSampleCoeff);
+        auto y2 = getZOHSample (buffer, sample, intDownSampleCoeff + 1);
+        buffer[sample] = tote_bag::audio_helpers::linearInterp (y1, y2, frac);
+    }
+}
+
 inline float
     SimpleZOH::getZOHSample (const float* channelData, int sampleIndex, int dsCoef)
 {

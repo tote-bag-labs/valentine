@@ -30,6 +30,7 @@ public:
     void processBlock (juce::AudioBuffer<float>& inAudio,
                        int samplesPerBlock,
                        int numChannels);
+    void processChannel (float* buffer, size_t samplesPerBlock);
     float getZOHSample (const float* channelData, int sampleIndex, int dsCoef);
 
 private:

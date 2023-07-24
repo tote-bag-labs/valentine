@@ -243,7 +243,9 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
         FFCompParameterID()[getParameterIndex (VParameter::attack)]));
     ffCompressor->setRelease (*treeState.getRawParameterValue (
         FFCompParameterID()[getParameterIndex (VParameter::release)]));
-    ffCompressor->setSampleRate (sampleRate * oversampleMultiplier);
+
+    const auto processingSampleRate = sampleRate * oversampleMultiplier;
+    ffCompressor->setSampleRate (processingSampleRate);
     ffCompressor->reset (samplesPerBlock * oversampleMultiplier);
     ffCompressor->setOversampleMultiplier (oversampleMultiplier);
 
@@ -252,7 +254,8 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
     saturator->reset (sampleRate);
     boundedSaturator->reset (sampleRate);
-    simpleZOH->setParams (static_cast<float> (sampleRate / detail::kDownSampleRate));
+    simpleZOH->setParams (
+        static_cast<float> (processingSampleRate / detail::kDownSampleRate));
 
     updateLatencyCompensation (true);
 
@@ -362,12 +365,26 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     juce::dsp::AudioBlock<float> highSampleRateBlock =
         oversampler->processSamplesUp (processBlock);
 
+    if (crushOn.get())
+    {
+        for (size_t channel = 0; channel < highSampleRateBlock.getNumChannels();
+             ++channel)
+        {
+            simpleZOH->processChannel (highSampleRateBlock.getChannelPointer (channel),
+                                       highSampleRateBlock.getNumSamples());
+        }
+
+        // simpleZOH->processBlock (processBuffer,
+        //                          currentSamplesPerBlock,
+        //                          totalNumOutputChannels);
+    }
+
     ffCompressor->process (highSampleRateBlock);
 
     if (saturateOn.get())
     {
         // Clear the buffers if saturate just got turned back on
-        if(!saturateOnState)
+        if (!saturateOnState)
         {
             saturator->clearBuffers();
             saturateOnState = true;
