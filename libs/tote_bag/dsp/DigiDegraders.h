@@ -21,16 +21,19 @@
 class SimpleZOH
 {
 public:
-    SimpleZOH() {}
+    SimpleZOH()
+    {
+    }
 
     void setResampleOffset (double inHostSr);
     void setParams (float inDownsampleCoeff);
-    void processBlock (juce::AudioBuffer<float>& inAudio, int samplesPerBlock, int numChannels);
+    void processBlock (juce::AudioBuffer<float>& inAudio,
+                       int samplesPerBlock,
+                       int numChannels);
     float getZOHSample (const float* channelData, int sampleIndex, int dsCoef);
 
 private:
-    float resampleOffset { -1 },
-        downsampleCoeff { 1.0f };
+    float resampleOffset {-1}, downsampleCoeff {1.0f};
 
     juce::Atomic<double> currentHostSampleRate;
 
@@ -42,10 +45,14 @@ private:
 class Bitcrusher
 {
 public:
-    Bitcrusher() {}
+    Bitcrusher()
+    {
+    }
 
     void setParams (float inBitDepth);
-    void processBlock (juce::AudioBuffer<float>& inAudio, int samplesPerBlock, int numChannels);
+    void processBlock (juce::AudioBuffer<float>& inAudio,
+                       int samplesPerBlock,
+                       int numChannels);
 
     /** Returns a bitcrushed sample—with a twist.
      *
@@ -67,7 +74,7 @@ public:
     float asymmetricBitcrush (float inputSample, float bits);
 
 private:
-    juce::Atomic<float> bitDepth { 16.0f };
+    juce::Atomic<float> bitDepth {16.0f};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Bitcrusher)
 };
