@@ -35,7 +35,9 @@ void SimpleZOH::setParams (float inDownsampleCoeff)
     downsampleCoeff = inDownsampleCoeff;
 }
 
-void SimpleZOH::processBlock (juce::AudioBuffer<float>& inAudio, int samplesPerBlock, int numChannels)
+void SimpleZOH::processBlock (juce::AudioBuffer<float>& inAudio,
+                              int samplesPerBlock,
+                              int numChannels)
 {
     auto intDownSampleCoeff = static_cast<int> (downsampleCoeff);
     auto frac = downsampleCoeff - intDownSampleCoeff;
@@ -53,14 +55,16 @@ void SimpleZOH::processBlock (juce::AudioBuffer<float>& inAudio, int samplesPerB
     }
 }
 
-inline float SimpleZOH::getZOHSample (const float* channelData, int sampleIndex, int dsCoef)
+inline float
+    SimpleZOH::getZOHSample (const float* channelData, int sampleIndex, int dsCoef)
 {
     if (dsCoef <= 1)
         return channelData[sampleIndex];
 
     auto remainder = sampleIndex % dsCoef;
 
-    return remainder == 0 ? channelData[sampleIndex] : channelData[sampleIndex - remainder];
+    return remainder == 0 ? channelData[sampleIndex]
+                          : channelData[sampleIndex - remainder];
 }
 
 //=====================================================================================
@@ -68,12 +72,14 @@ inline float SimpleZOH::getZOHSample (const float* channelData, int sampleIndex,
 void Bitcrusher::setParams (float inBitDepth)
 {
     // An bit depth of 0 will cause a divide by zero error
-    assert(inBitDepth > 0);
+    assert (inBitDepth > 0);
 
     bitDepth.set (inBitDepth);
 }
 
-void Bitcrusher::processBlock (juce::AudioBuffer<float>& inAudio, int samplesPerBlock, int numChannels)
+void Bitcrusher::processBlock (juce::AudioBuffer<float>& inAudio,
+                               int samplesPerBlock,
+                               int numChannels)
 {
     const auto bits = bitDepth.get();
 
@@ -84,7 +90,7 @@ void Bitcrusher::processBlock (juce::AudioBuffer<float>& inAudio, int samplesPer
         for (int sample = 0; sample < samplesPerBlock; ++sample)
         {
             const float inputSample = channelData[sample];
-            channelData[sample] = asymmetricBitcrush(inputSample, bits);
+            channelData[sample] = asymmetricBitcrush (inputSample, bits);
         }
     }
 }
