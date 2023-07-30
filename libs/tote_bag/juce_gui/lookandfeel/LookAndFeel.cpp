@@ -239,7 +239,7 @@ juce::Font LookAndFeel::getTextButtonFont (juce::TextButton&, int buttonHeight)
 juce::Font LookAndFeel::getLabelFont (juce::Label& l)
 {
     const auto fontHeight = static_cast<float> (l.getHeight());
-    return fontHolder.getFont ("MontserratMedium_ttf").withHeight (fontHeight);
+    return fontHolder.getFont ("RobotoMedium_ttf").withHeight (fontHeight);
 }
 
 void LookAndFeel::drawButtonBackground (juce::Graphics& g,
