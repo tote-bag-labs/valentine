@@ -25,7 +25,8 @@ class AudioProcessorValueTreeState;
 class LabelSlider : public juce::Component
 {
 public:
-    LabelSlider (const juce::String& parameterId,
+    LabelSlider (const juce::String& labelText,
+                 const juce::String& parameterId,
                  juce::AudioProcessorValueTreeState& stateToControl);
 
     ~LabelSlider() override;
