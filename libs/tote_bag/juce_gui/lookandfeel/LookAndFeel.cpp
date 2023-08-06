@@ -233,7 +233,7 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
 juce::Font LookAndFeel::getTextButtonFont (juce::TextButton&, int buttonHeight)
 {
     const auto fontHeight = juce::jmax (7.0f, buttonHeight * 0.8f);
-    return fontHolder.getFont ("MontserratMedium_ttf").withHeight (fontHeight);
+    return fontHolder.getFont ("RobotoMedium_ttf").withHeight (fontHeight);
 }
 
 juce::Font LookAndFeel::getLabelFont (juce::Label& l)
@@ -359,7 +359,7 @@ void LookAndFeel::drawComboBox (juce::Graphics& g,
     const auto boxBounds = box.getLocalBounds();
 
     const auto fontHeight = juce::jmax (7.0f, height * 0.6f);
-    g.setFont (fontHolder.getFont ("MontserratMedium_ttf").withHeight (fontHeight));
+    g.setFont (fontHolder.getFont ("RobotoMedium_ttf").withHeight (fontHeight));
 
     g.setColour (box.findColour (juce::ComboBox::backgroundColourId));
 
@@ -392,7 +392,7 @@ void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
     g.setColour (myTextColour);
 
     auto fHeight = juce::jmax (7.0f, r.getHeight() * 0.6f);
-    g.setFont (fontHolder.getFont ("MontserratMedium_ttf").withHeight (fHeight));
+    g.setFont (fontHolder.getFont ("RobotoMedium_ttf").withHeight (fHeight));
 
     r.setLeft (10);
     r.setY (1);

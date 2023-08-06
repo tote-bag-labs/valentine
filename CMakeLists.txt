@@ -134,7 +134,6 @@ set_target_properties("${PROJECT_NAME}" PROPERTIES FOLDER "")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${SourceFiles})
 
 set(AssetFiles
-    src/gui/assets/fonts/Montserrat-Medium.ttf
     src/gui/assets/fonts/Roboto-Medium.ttf
     src/gui/assets/fonts/RobotoMono-Medium.ttf
     src/gui/assets/images/logo_218x40.svg
