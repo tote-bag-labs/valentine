@@ -26,24 +26,42 @@ namespace detail
 inline constexpr auto kButtonWidth = 108.1f;
 inline constexpr auto kButtonHeight = 201.84f;
 inline constexpr auto kButtonRatio = kButtonWidth / kButtonHeight;
+
+inline const juce::String kInputSliderText = "COMPRESS";
+inline const juce::String kCrushSliderText = "CRUSH";
+inline const juce::String kSaturateSliderText = "SATURATE";
+inline const juce::String kRatioSliderText = "RATIO";
+inline const juce::String kAttackSliderText = "ATTACK";
+inline const juce::String kReleaseSliderText = "RELEASE";
+inline const juce::String kMixSliderText = "MIX";
+inline const juce::String kOutputSliderText = "OUTPUT";
+
 } // namespace detail
 
 CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
-    : inputSlider (FFCompParameterID()[getParameterIndex (VParameter::inputGain)],
+    : inputSlider (detail::kInputSliderText,
+                   FFCompParameterID()[getParameterIndex (VParameter::inputGain)],
                    processor.treeState)
-    , crushSlider (FFCompParameterID()[getParameterIndex (VParameter::bitCrush)],
+    , crushSlider (detail::kCrushSliderText,
+                   FFCompParameterID()[getParameterIndex (VParameter::bitCrush)],
                    processor.treeState)
-    , saturateSlider (FFCompParameterID()[getParameterIndex (VParameter::saturation)],
+    , saturateSlider (detail::kSaturateSliderText,
+                      FFCompParameterID()[getParameterIndex (VParameter::saturation)],
                       processor.treeState)
-    , ratioSlider (FFCompParameterID()[getParameterIndex (VParameter::ratio)],
+    , ratioSlider (detail::kRatioSliderText,
+                   FFCompParameterID()[getParameterIndex (VParameter::ratio)],
                    processor.treeState)
-    , attackSlider (FFCompParameterID()[getParameterIndex (VParameter::attack)],
+    , attackSlider (detail::kAttackSliderText,
+                    FFCompParameterID()[getParameterIndex (VParameter::attack)],
                     processor.treeState)
-    , releaseSlider (FFCompParameterID()[getParameterIndex (VParameter::release)],
+    , releaseSlider (detail::kReleaseSliderText,
+                     FFCompParameterID()[getParameterIndex (VParameter::release)],
                      processor.treeState)
-    , mixSlider (FFCompParameterID()[getParameterIndex (VParameter::dryWet)],
+    , mixSlider (detail::kMixSliderText,
+                 FFCompParameterID()[getParameterIndex (VParameter::dryWet)],
                  processor.treeState)
-    , outputSlider (FFCompParameterID()[getParameterIndex (VParameter::makeupGain)],
+    , outputSlider (detail::kOutputSliderText,
+                    FFCompParameterID()[getParameterIndex (VParameter::makeupGain)],
                     processor.treeState)
     // clang-format off
     , outputClipButton (

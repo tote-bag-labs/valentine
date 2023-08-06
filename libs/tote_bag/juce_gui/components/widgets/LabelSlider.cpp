@@ -14,11 +14,12 @@
 
 //==============================================================================
 
-LabelSlider::LabelSlider (const juce::String& parameterId,
+LabelSlider::LabelSlider (const juce::String& labelText,
+                          const juce::String& parameterId,
                           juce::AudioProcessorValueTreeState& stateToControl)
     : slider (parameterId, stateToControl)
 {
-    label.setText (stateToControl.getParameter (parameterId)->name, juce::dontSendNotification);
+    label.setText (labelText, juce::dontSendNotification);
     label.setColour (juce::Label::textColourId, juce::Colours::black);
     label.setJustificationType (juce::Justification::centredTop);
 
