@@ -239,6 +239,11 @@ juce::Font LookAndFeel::getTextButtonFont (juce::TextButton&, int buttonHeight)
 juce::Font LookAndFeel::getLabelFont (juce::Label& l)
 {
     const auto fontHeight = static_cast<float> (l.getHeight());
+    // Slider value box font
+    if (dynamic_cast<juce::Slider*> (l.getParentComponent()))
+    {
+        return fontHolder.getFont ("RobotoMonoMedium_ttf").withHeight (fontHeight);
+    }
     return fontHolder.getFont ("RobotoMedium_ttf").withHeight (fontHeight);
 }
 
