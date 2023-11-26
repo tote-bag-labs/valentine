@@ -5,15 +5,13 @@
 namespace tote_bag
 {
 DrawableParameterButton::DrawableParameterButton (
-    const juce::String& buttonText,
     const juce::Drawable* buttonOnImage,
     const juce::Drawable* buttonOffImage,
     const juce::String& parameterId,
     juce::AudioProcessorValueTreeState& stateToControl)
-    : juce::DrawableButton (buttonText, ButtonStyle::ImageStretched)
+    : juce::DrawableButton (parameterId, ButtonStyle::ImageStretched)
     , buttonValue (stateToControl, parameterId, *this)
 {
-    setButtonText (buttonText);
     setClickingTogglesState (true);
     setImages (buttonOffImage,
                nullptr,

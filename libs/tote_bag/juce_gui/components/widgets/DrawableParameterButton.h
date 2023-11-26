@@ -10,8 +10,7 @@ namespace tote_bag
 class DrawableParameterButton : public juce::DrawableButton
 {
 public:
-    DrawableParameterButton (const juce::String& buttonText,
-                             const juce::Drawable* buttonOnImage,
+    DrawableParameterButton (const juce::Drawable* buttonOnImage,
                              const juce::Drawable* buttonOffImage,
                              const juce::String& parameterId,
                              juce::AudioProcessorValueTreeState& stateToControl);
