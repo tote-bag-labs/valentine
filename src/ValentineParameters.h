@@ -125,26 +125,6 @@ inline const juce::String& parameterID (const VParameter parameter)
 } // namespace valentine
 } // namespace tote_bag
 
-inline const std::array<juce::String, numParams>& FFCompParameterID()
-{
-    static const std::array<juce::String, numParams> parameterIDs = {
-        "Crush",
-        "CrushEnable",
-        "Compress",
-        "Saturate",
-        "SaturateEnable",
-        "Ratio",
-        "AttackTime",
-        "ReleaseTime",
-        "Makeup",
-        "Mix",
-        "Bypass",
-        "OutputClipEnable",
-    };
-
-    return parameterIDs;
-}
-
 inline const std::array<juce::String, numParams>& FFCompParameterLabel()
 {
     static const std::array<juce::String, numParams> parameterLabels = {

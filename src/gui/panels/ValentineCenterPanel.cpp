@@ -1,125 +1,75 @@
-/*
-  ==============================================================================
-
-    CenterPanel.cpp
-    Created: 24 Jul 2022 7:14:26pm
-    Author:  Jose Diaz
-
-  ==============================================================================
-*/
+// 2023 Tote Bag Labs
 
 #include "ValentineCenterPanel.h"
 #include "BinaryData.h"
 #include "PluginProcessor.h"
-#include "ValentineParameters.h"
 
-#include "tote_bag/juce_gui/lookandfeel/LookAndFeel.h"
+#include "ValentineParameters.h"
+#include "tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h"
 #include "tote_bag/juce_gui/utilities/GraphicsUtilities.h"
 
-#include <juce_gui_basics/juce_gui_basics.h>
-
-//==============================================================================
-
+namespace tote_bag
+{
+namespace valentine
+{
 namespace detail
 {
-// Get ratio of svg dimensions so we can correctly resize it.
-inline constexpr auto kButtonWidth = 108.1f;
-inline constexpr auto kButtonHeight = 201.84f;
-inline constexpr auto kButtonRatio = kButtonWidth / kButtonHeight;
-
-inline const juce::String kInputSliderText = "COMPRESS";
 inline const juce::String kCrushSliderText = "CRUSH";
+inline const juce::String kCompressSliderText = "COMPRESS";
 inline const juce::String kSaturateSliderText = "SATURATE";
 inline const juce::String kRatioSliderText = "RATIO";
 inline const juce::String kAttackSliderText = "ATTACK";
 inline const juce::String kReleaseSliderText = "RELEASE";
-inline const juce::String kMixSliderText = "MIX";
 inline const juce::String kOutputSliderText = "OUTPUT";
-
+inline const juce::String kMixSliderText = "MIX";
 } // namespace detail
 
 CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
-    : inputSlider (detail::kInputSliderText,
-                   FFCompParameterID()[getParameterIndex (VParameter::inputGain)],
-                   processor.treeState)
+    : borderLineThickness (0.0f)
+    , borderCornerSize (0.0f)
+    , crushEnableButton (parameterID (VParameter::crushEnable), processor.treeState)
     , crushSlider (detail::kCrushSliderText,
-                   FFCompParameterID()[getParameterIndex (VParameter::bitCrush)],
+                   parameterID (VParameter::bitCrush),
                    processor.treeState)
-    , saturateSlider (detail::kSaturateSliderText,
-                      FFCompParameterID()[getParameterIndex (VParameter::saturation)],
+    , compressSlider (detail::kCompressSliderText,
+                      parameterID (VParameter::inputGain),
                       processor.treeState)
+    , saturateEnableButton (parameterID (VParameter::saturateEnable), processor.treeState)
+    , saturateSlider (detail::kSaturateSliderText,
+                      parameterID (VParameter::saturation),
+                      processor.treeState)
+    , valentineTblLogo (
+          juce::Drawable::createFromImageData (BinaryData::val_totebag_logo_svg,
+                                               BinaryData::val_totebag_logo_svgSize))
     , ratioSlider (detail::kRatioSliderText,
-                   FFCompParameterID()[getParameterIndex (VParameter::ratio)],
+                   parameterID (VParameter::ratio),
                    processor.treeState)
     , attackSlider (detail::kAttackSliderText,
-                    FFCompParameterID()[getParameterIndex (VParameter::attack)],
+                    parameterID (VParameter::attack),
                     processor.treeState)
     , releaseSlider (detail::kReleaseSliderText,
-                     FFCompParameterID()[getParameterIndex (VParameter::release)],
+                     parameterID (VParameter::release),
                      processor.treeState)
-    , mixSlider (detail::kMixSliderText,
-                 FFCompParameterID()[getParameterIndex (VParameter::dryWet)],
-                 processor.treeState)
+    , clipEnableButton (parameterID (VParameter::outputClipEnable), processor.treeState)
     , outputSlider (detail::kOutputSliderText,
-                    FFCompParameterID()[getParameterIndex (VParameter::makeupGain)],
+                    parameterID (VParameter::makeupGain),
                     processor.treeState)
-    // clang-format off
-    , outputClipButton (
-          FFCompParameterLabel()[static_cast<size_t> (VParameter::outputClipEnable)],
-          juce::Drawable::createFromImageData (BinaryData::clip_on_svg,
-                                               BinaryData::clip_on_svgSize).get(),
-          juce::Drawable::createFromImageData (BinaryData::clip_off_svg,
-                                               BinaryData ::clip_off_svgSize).get(),
-          FFCompParameterID()[static_cast<size_t> (VParameter::outputClipEnable)],
-          processor.treeState)
-
-    , crushEnableButton (
-          FFCompParameterLabel()[static_cast<size_t> (VParameter::crushEnable)],
-          juce::Drawable::createFromImageData (BinaryData::on_button_svg,
-                                               BinaryData::on_button_svgSize).get(),
-          juce::Drawable::createFromImageData (BinaryData::off_button_svg,
-                                               BinaryData::off_button_svgSize).get(),
-          FFCompParameterID()[static_cast<size_t> (VParameter::crushEnable)],
-          processor.treeState)
-
-    , saturateEnableButton (
-          FFCompParameterLabel()[static_cast<size_t> (VParameter::saturateEnable)],
-          juce::Drawable::createFromImageData (BinaryData::on_button_svg,
-                                               BinaryData::on_button_svgSize).get(),
-          juce::Drawable::createFromImageData (BinaryData::off_button_svg,
-                                               BinaryData ::off_button_svgSize).get(),
-          FFCompParameterID()[static_cast<size_t> (VParameter::saturateEnable)],
-          processor.treeState)
-// clang-format on
+    , mixSlider (detail::kMixSliderText,
+                 parameterID (VParameter::dryWet),
+                 processor.treeState)
 {
-    // Top left sliders
-    addAndMakeVisible (inputSlider);
-    addAndMakeVisible (crushSlider);
     addAndMakeVisible (crushEnableButton);
-    addAndMakeVisible (saturateSlider);
+    addAndMakeVisible (crushSlider);
+    addAndMakeVisible (compressSlider);
     addAndMakeVisible (saturateEnableButton);
-
-    // Bottom left sliders
+    addAndMakeVisible (saturateSlider);
+    addAndMakeVisible (valentineTblLogo.get());
     addAndMakeVisible (ratioSlider);
     addAndMakeVisible (attackSlider);
     addAndMakeVisible (releaseSlider);
-
-    // Top right sliders
-    addAndMakeVisible (mixSlider);
-    addAndMakeVisible (outputClipButton);
+    addAndMakeVisible (clipEnableButton);
     addAndMakeVisible (outputSlider);
-
-    // Logo
-    vLogo = juce::Drawable::createFromImageData (BinaryData::logo_218x40_svg,
-                                                 BinaryData::logo_218x40_svgSize);
-    addAndMakeVisible (vLogo.get());
-
-    // Version label
-    versionLabel.setText (JucePlugin_VersionString, juce::dontSendNotification);
-    versionLabel.setColour (juce::Label::ColourIds::textColourId,
-                            tote_bag::colours::valentinePinkDark);
-    versionLabel.setJustificationType (juce::Justification::centredTop);
-    addAndMakeVisible (versionLabel);
+    addAndMakeVisible (mixSlider);
 }
 
 CenterPanel::~CenterPanel()
@@ -128,167 +78,135 @@ CenterPanel::~CenterPanel()
 
 void CenterPanel::paint (juce::Graphics& g)
 {
-    using namespace tote_bag::colours;
+    g.setColour (juce::Colours::black);
 
-    gui_utils::drawRoundedRect (g, topLeftRowBorderBounds.toFloat(), valentinePinkDark);
-    gui_utils::drawRoundedRect (g,
-                                bottomLeftRowBorderBounds.toFloat(),
-                                valentinePinkDark);
-    gui_utils::drawRoundedRect (g, topRightRowBorderBounds.toFloat(), valentinePinkDark);
+    g.drawRoundedRectangle (topRowBorder.toFloat(),
+                            borderCornerSize,
+                            borderLineThickness);
+
+    g.drawRoundedRectangle (bottomRowBorder.toFloat(),
+                            borderCornerSize,
+                            borderLineThickness);
+
+    g.fillRect (bottomRowDivider);
 }
 
 void CenterPanel::resized()
 {
-    auto workingArea = getLocalBounds();
+    auto localBounds = getLocalBounds();
+    const auto margin = localBounds.getHeight() * .0375f;
+    localBounds.reduce (juce::roundToInt (margin * 1.6f),
+                        juce::roundToInt (margin * 1.3f));
 
-    auto areaFunc = [] (juce::Rectangle<int>& area,
-                        size_t numSliders,
-                        size_t sliderCount) -> juce::Rectangle<int> {
-        int amountToRemove =
-            juce::roundToInt (static_cast<float> (area.getWidth())
-                              / static_cast<float> (numSliders - sliderCount));
-        return area.removeFromLeft (amountToRemove);
-    };
+    const auto topRowHeight = localBounds.getHeight() * .50f;
 
-    const auto paramWidth = juce::roundToInt (workingArea.getWidth() / 5.0f);
+    topRowBorder = localBounds.removeFromTop (juce::roundToInt (topRowHeight));
 
-    // Center slider rows vertically
-    auto betweenRowMargin = paramWidth * .1f;
-    const auto roundedRowMargin = juce::roundToInt (betweenRowMargin);
+    const auto topRowBorderHeight = topRowBorder.getHeight();
+    borderLineThickness = topRowBorderHeight * .01f;
+    borderCornerSize = topRowBorderHeight * .060f;
 
-    // 1.65 to reflect that the bottom half is .65 the height of the top row
-    auto totalParamHeight = (paramWidth * 1.75f) + betweenRowMargin;
-    auto verticalAlignmentSpacer =
-        juce::roundToInt ((workingArea.getHeight() - totalParamHeight) * .5f);
-    workingArea.removeFromTop (verticalAlignmentSpacer);
-    workingArea.removeFromBottom (verticalAlignmentSpacer);
+    auto topRowComponents = topRowBorder.reduced (juce::roundToInt (margin));
 
-    const auto borderMargin = static_cast<int> (paramWidth * .05f);
+    auto topRowSliders = topRowComponents.removeFromLeft (
+        juce::roundToInt (topRowComponents.getWidth() * .65f));
+    const auto topRowButtonWidth = juce::roundToInt (topRowSliders.getWidth() * .033f);
+    const auto adjustedTopRowComponentsWidth =
+        topRowSliders.getWidth() - (topRowButtonWidth * 2.0f);
+    const auto topRowSliderWidth =
+        juce::roundToInt (adjustedTopRowComponentsWidth / 3.0f);
 
-    // Left side
-    const auto numLeftColumns = 3;
-    auto leftSideBounds = workingArea.removeFromLeft (paramWidth * numLeftColumns);
+    const auto topRowButtonSpacer =
+        juce::roundToInt ((topRowSliders.getHeight() - topRowButtonWidth) * .5f);
 
-    // Top
-    const auto topRowHeight = juce::roundToInt (paramWidth * 1.05f);
-    topLeftRowBorderBounds = leftSideBounds.removeFromTop (topRowHeight);
+    // See below note about horizontal LabelSlider dimensions and button placement.
+    const auto topRowButtonNudge = juce::roundToInt (topRowButtonWidth / 1.5f);
 
-    auto topLeftRowBounds = topLeftRowBorderBounds.reduced (borderMargin);
-
-    // Crush enable button
-    const auto sliderWidth = juce::roundToInt (topLeftRowBounds.getWidth() * .333f);
-
-    // This works for now but will be confusing if svgs of different sizes or
-    // differently sized buttons are desired. Not dealing with it now since
-    // this will all be rewritten in next UI iteraction. aka "Good Enough".
-    const auto topLeftButtonsWidth = juce::roundToInt (sliderWidth * .2f);
-    const auto topLeftButtonsHeight =
-        juce::roundToInt (topLeftButtonsWidth * detail::kButtonRatio);
-
-    // Buttons corresponding to top left sliders will be placed within these bounds
-    auto topLeftButtonRowBounds =
-        topLeftRowBounds.removeFromBottom (topLeftButtonsHeight);
-
+    const auto initialCrushButtonX = topRowSliders.getX();
     const auto crushEnableButtonBounds =
-        topLeftButtonRowBounds.removeFromLeft (sliderWidth)
-            .withSizeKeepingCentre (topLeftButtonsWidth, topLeftButtonsHeight);
+        topRowSliders.removeFromLeft (topRowButtonWidth)
+            .reduced (0, topRowButtonSpacer)
+            .withX (initialCrushButtonX + topRowButtonNudge);
 
     crushEnableButton.setBounds (crushEnableButtonBounds);
+    crushSlider.setBounds (
+        topRowSliders.removeFromLeft (topRowSliderWidth).reduced (topRowButtonNudge, 0));
+    compressSlider.setBounds (topRowSliders.removeFromLeft (topRowSliderWidth));
 
+    const auto initialSaturateButtonX = topRowSliders.getX();
     const auto saturateEnableButtonBounds =
-        topLeftButtonRowBounds.removeFromRight (sliderWidth)
-            .withSizeKeepingCentre (topLeftButtonsWidth, topLeftButtonsHeight);
+        topRowSliders.removeFromLeft (topRowButtonWidth)
+            .reduced (0, topRowButtonSpacer)
+            .withX (initialSaturateButtonX + topRowButtonNudge);
+
     saturateEnableButton.setBounds (saturateEnableButtonBounds);
+    saturateSlider.setBounds (
+        topRowSliders.removeFromLeft (topRowSliderWidth).reduced (topRowButtonNudge, 0));
 
-    const auto buttonSliderMargin = juce::roundToInt (roundedRowMargin * .33f);
-    topLeftRowBounds.removeFromBottom (buttonSliderMargin);
+    const auto logoHeight = topRowComponents.getHeight() * .25f;
+    const auto logoWidth = topRowComponents.getWidth() * .75f;
 
-    // Now, the sliders
-    std::array<LabelSlider*, numLeftColumns> topLeftRowComponents = {
-        &crushSlider,
-        &inputSlider,
-        &saturateSlider,
-    };
+    const auto logoVerticalSpacer = (topRowComponents.getHeight() - logoHeight) / 2.0f;
+    topRowComponents.removeFromTop (juce::roundToInt (logoVerticalSpacer));
 
-    for (size_t i = 0; i < numLeftColumns; ++i)
-    {
-        topLeftRowComponents[i]->setBounds (
-            areaFunc (topLeftRowBounds, numLeftColumns, i));
-    }
+    const auto logoHorizontalSpacer = (topRowComponents.getWidth() - logoWidth) / 2.0f;
 
-    // Margin
-    leftSideBounds.removeFromTop (roundedRowMargin);
+    // logoHorizontalSpacer is the amount we hypothetically should remove from left
+    // in order to have the log centred. However, the spacing is fudged here to account
+    // for the fact that our sliders don't take up all of the horizontal space given
+    // to them.
+    const auto horizontalKludgeQuotient = .8f;
+    topRowComponents.removeFromLeft (
+        juce::roundToInt (logoHorizontalSpacer * horizontalKludgeQuotient));
 
-    // Bottom
-    auto bottomRowParamHeight = juce::roundToInt (paramWidth * .75f);
-    const auto smallborderMargin = juce::roundToInt (bottomRowParamHeight * .05f);
-    bottomLeftRowBorderBounds = leftSideBounds.removeFromTop (bottomRowParamHeight);
+    const auto valentineLogoBounds =
+        topRowComponents.removeFromLeft (juce::roundToInt (logoWidth))
+            .removeFromTop (juce::roundToInt (logoHeight));
 
-    auto bottomLeftRowBounds = bottomLeftRowBorderBounds.reduced (smallborderMargin);
+    valentineTblLogo->setTransformToFit (
+        valentineLogoBounds.toFloat(),
+        juce::RectanglePlacement (juce::RectanglePlacement::centred
+                                  | juce::RectanglePlacement::fillDestination));
 
-    std::array<Component*, numLeftColumns> bottomLeftRowComponents = {
-        &ratioSlider,
-        &attackSlider,
-        &releaseSlider,
-    };
+    localBounds.removeFromTop (juce::roundToInt (margin * 2));
+    bottomRowBorder = localBounds;
 
-    for (size_t i = 0; i < numLeftColumns; ++i)
-    {
-        bottomLeftRowComponents[i]->setBounds (
-            areaFunc (bottomLeftRowBounds, numLeftColumns, i));
-    }
+    auto bottomRowComponents = bottomRowBorder.reduced (juce::roundToInt (margin));
 
-    // Vertical margin
-    workingArea.removeFromLeft (roundedRowMargin);
+    const auto bottomRowButtonWidth =
+        juce::roundToInt (bottomRowComponents.getWidth() / 60.0f);
+    const auto adjustedBottomRowComponentsWidth =
+        bottomRowComponents.getWidth() - bottomRowButtonWidth;
+    const auto bottomRowSliderWidth =
+        juce::roundToInt (adjustedBottomRowComponentsWidth / 6.0f);
 
-    const auto numRightColumns = 2;
-    auto rightSideBounds = workingArea.removeFromLeft (paramWidth * numRightColumns);
+    ratioSlider.setBounds (bottomRowComponents.removeFromLeft (bottomRowSliderWidth));
+    attackSlider.setBounds (bottomRowComponents.removeFromLeft (bottomRowSliderWidth));
+    releaseSlider.setBounds (bottomRowComponents.removeFromLeft (bottomRowSliderWidth));
 
-    // Top right
-    topRightRowBorderBounds = rightSideBounds.removeFromTop (topRowHeight);
+    const auto dividerBounds = bottomRowComponents.removeFromLeft (bottomRowSliderWidth);
 
-    auto topRightRowBounds = topRightRowBorderBounds.reduced (borderMargin);
+    bottomRowDivider =
+        juce::Rectangle<int> (juce::roundToInt (dividerBounds.getCentreX()),
+                              dividerBounds.getY(),
+                              juce::roundToInt (borderLineThickness),
+                              dividerBounds.getHeight());
 
-    // Clip button
-    const auto topRightSliderWidth =
-        juce::roundToInt (topRightRowBounds.getWidth() * .5f);
-    const auto topRightButtonsWidth = juce::roundToInt (topRightSliderWidth * .2f);
-    const auto topRightButtonHeight =
-        juce::roundToInt (topRightButtonsWidth * detail::kButtonRatio);
+    const auto bottomRowButtonSpacer =
+        juce::roundToInt ((bottomRowComponents.getHeight() - bottomRowButtonWidth) * .5f);
 
-    auto topRightButtonBounds = topRightRowBounds.removeFromBottom (topRightButtonHeight);
+    const auto bottomRowButtonNudge = juce::roundToInt (bottomRowButtonWidth / 1.5f);
+
+    const auto clipButtonInitialX = bottomRowComponents.getX();
     const auto clipButtonBounds =
-        topRightButtonBounds.removeFromLeft (topRightSliderWidth)
-            .withSizeKeepingCentre (topRightButtonsWidth, topRightButtonHeight);
+        bottomRowComponents.removeFromLeft (bottomRowButtonWidth)
+            .reduced (0, bottomRowButtonSpacer)
+            .withX (clipButtonInitialX + bottomRowButtonNudge);
 
-    outputClipButton.setBounds (clipButtonBounds);
-
-    topRightRowBounds.removeFromBottom (buttonSliderMargin);
-
-    std::array<LabelSlider*, numRightColumns> topRightRowComponents = {&outputSlider,
-                                                                       &mixSlider};
-
-    for (size_t i = 0; i < numRightColumns; ++i)
-    {
-        topRightRowComponents[i]->setBounds (
-            areaFunc (topRightRowBounds, numRightColumns, i));
-    }
-
-    // Margin
-    rightSideBounds.removeFromTop (roundedRowMargin);
-
-    // Bottom right
-    auto logoHeight = juce::roundToInt (paramWidth * .5f);
-    auto versionHeight = juce::roundToInt (logoHeight * .25);
-
-    auto logoBounds = rightSideBounds.removeFromTop (logoHeight)
-                          .removeFromLeft (paramWidth * numRightColumns)
-                          .reduced (borderMargin);
-    auto versionBounds = logoBounds.removeFromBottom (versionHeight);
-
-    vLogo->setTransformToFit (
-        logoBounds.toFloat(),
-        juce::RectanglePlacement (juce::RectanglePlacement::xMid
-                                  | juce::RectanglePlacement::yTop));
-    versionLabel.setBounds (versionBounds);
+    clipEnableButton.setBounds (clipButtonBounds);
+    outputSlider.setBounds (bottomRowComponents.removeFromLeft (bottomRowSliderWidth)
+                                .reduced (bottomRowButtonNudge, 0));
+    mixSlider.setBounds (bottomRowComponents.removeFromLeft (bottomRowSliderWidth));
 }
+} // namespace tote_bag
+} // namespace valentine

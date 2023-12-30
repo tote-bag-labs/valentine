@@ -33,7 +33,7 @@ LookAndFeel::LookAndFeel()
 
     // slider text box colours
     setColour (juce::Slider::textBoxTextColourId, juce::Colours::black);
-    setColour (juce::Slider::textBoxOutlineColourId, valentinePinkDark);
+    setColour (juce::Slider::textBoxOutlineColourId, valentinePink);
     setColour (juce::Slider::rotarySliderOutlineColourId, valentinePinkDark);
     setColour (juce::Slider::rotarySliderFillColourId, juce::Colours::floralwhite);
 
