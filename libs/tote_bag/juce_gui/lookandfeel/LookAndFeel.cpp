@@ -178,10 +178,10 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
                                     const float rotaryEndAngle,
                                     juce::Slider& slider)
 {
-    auto bounds = juce::Rectangle<int> (x, y, width, height).toFloat().reduced (10);
+    auto bounds = juce::Rectangle<int> (x, y, width, height).toFloat();
     auto radius = juce::jmin (bounds.getWidth(), bounds.getHeight()) / 2.0f;
     auto lineW = radius * 0.125f;
-    auto arcRadius = radius - lineW * 0.5f;
+    auto arcRadius = radius - lineW;
     const auto toAngle =
         rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 
@@ -400,7 +400,7 @@ juce::Slider::SliderLayout LookAndFeel::getSliderLayout (juce::Slider& slider)
 
     auto localBounds = slider.getLocalBounds();
 
-    auto sDiameter = juce::jmin (localBounds.getWidth(), localBounds.getHeight()) - 4.0f;
+    auto sDiameter = juce::jmin (localBounds.getWidth(), localBounds.getHeight());
     auto textBoxWidth = juce::roundToInt (sDiameter * .66f);
     auto textBoxHeight = juce::roundToInt (sDiameter * .17f);
 
