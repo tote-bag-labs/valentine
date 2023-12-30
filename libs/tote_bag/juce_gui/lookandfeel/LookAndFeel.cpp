@@ -12,6 +12,7 @@
 #include "LookAndFeelConstants.h"
 
 #include "tote_bag/juce_gui/components/widgets/FlatTextButton.h"
+#include "tote_bag/juce_gui/components/widgets/tbl_ToggleButton.h"
 
 namespace tote_bag
 {
@@ -31,6 +32,15 @@ LookAndFeel::LookAndFeel()
     setColour (juce::Slider::textBoxOutlineColourId, valentinePinkDark);
     setColour (juce::Slider::rotarySliderOutlineColourId, valentinePinkDark);
     setColour (juce::Slider::rotarySliderFillColourId, juce::Colours::floralwhite);
+
+    // A transparent-ish grey
+    setColour (ToggleButton::defaultFillColourId, juce::Colour (0x33393838));
+
+    // A bright, not totally solid green
+    setColour (ToggleButton::activeFillColourId, juce::Colour (0xc749ff1b));
+
+    // A solid grey
+    setColour (ToggleButton::strokeColourId, juce::Colour (0xff7f7f7f));
 
     // so we don't get background painting on drawable buttons
     setColour (juce::DrawableButton::backgroundOnColourId,
@@ -398,6 +408,29 @@ void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
     r.setLeft (10);
     r.setY (1);
     g.drawFittedText (text, r, juce::Justification::left, 1);
+}
+
+void LookAndFeel::drawToggleButton (juce::Graphics& g,
+                                    juce::ToggleButton& button,
+                                    bool,
+                                    bool)
+{
+    auto bounds = button.getLocalBounds();
+    const auto margin = juce::roundToInt (bounds.getHeight() * .1f);
+    bounds.reduce (margin, margin);
+
+    const auto buttonIsActive = button.getToggleState();
+    const auto fillColour = buttonIsActive
+                                ? findColour (ToggleButton::activeFillColourId)
+                                : findColour (ToggleButton::defaultFillColourId);
+
+    g.setColour (fillColour);
+    g.fillEllipse (bounds.toFloat());
+
+    const auto outlineThickness = bounds.getHeight() * .10f;
+
+    g.setColour (findColour (ToggleButton::strokeColourId));
+    g.drawEllipse (bounds.toFloat(), outlineThickness);
 }
 
 juce::Slider::SliderLayout LookAndFeel::getSliderLayout (juce::Slider& slider)

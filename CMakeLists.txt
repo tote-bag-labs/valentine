@@ -98,12 +98,14 @@ set(SourceFiles
     libs/tote_bag/juce_gui/components/widgets/LabelSlider.h
     libs/tote_bag/juce_gui/components/widgets/ParameterSlider.h
     libs/tote_bag/juce_gui/components/widgets/ParameterTextButton.h
+    libs/tote_bag/juce_gui/components/widgets/tbl_ToggleButton.h
     libs/tote_bag/juce_gui/components/widgets/DrawableParameterButton.cpp
     libs/tote_bag/juce_gui/components/widgets/FlatTextButton.cpp
     libs/tote_bag/juce_gui/components/widgets/FlatTextChooser.cpp
     libs/tote_bag/juce_gui/components/widgets/LabelSlider.cpp
     libs/tote_bag/juce_gui/components/widgets/ParameterSlider.cpp
     libs/tote_bag/juce_gui/components/widgets/ParameterTextButton.cpp
+    libs/tote_bag/juce_gui/components/widgets/tbl_ToggleButton.cpp
 
     libs/tote_bag/juce_gui/lookandfeel/LookAndFeel.h
     libs/tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h

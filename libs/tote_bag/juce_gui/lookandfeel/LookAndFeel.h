@@ -108,6 +108,11 @@ public:
                             const juce::Drawable*,
                             const juce::Colour*) override;
 
+    void drawToggleButton (juce::Graphics& g,
+                           juce::ToggleButton& button,
+                           bool,
+                           bool) override;
+
     juce::Slider::SliderLayout getSliderLayout (juce::Slider& slider) override;
 
     enum ColourIds { knobColourId = 0x1001800, pointerColourId = 0x1001801 };
