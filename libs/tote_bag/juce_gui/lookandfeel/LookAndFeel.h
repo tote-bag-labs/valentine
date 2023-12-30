@@ -115,7 +115,11 @@ public:
 
     juce::Slider::SliderLayout getSliderLayout (juce::Slider& slider) override;
 
-    enum ColourIds { knobColourId = 0x1001800, pointerColourId = 0x1001801 };
+    enum ColourIds
+    {
+        knobColourId = 0x1001800,
+        pointerColourId = 0x1001801
+    };
 
 private:
     FontHolder fontHolder;
