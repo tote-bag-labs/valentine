@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "ValentineTopRowPanel.h"
 #include "tote_bag/juce_gui/components/widgets/LabelSlider.h"
 #include "tote_bag/juce_gui/components/widgets/tbl_ToggleButton.h"
 
@@ -29,13 +30,7 @@ private:
     float borderLineThickness;
     float borderCornerSize;
 
-    ToggleButton crushEnableButton;
-    LabelSlider crushSlider;
-    LabelSlider compressSlider;
-    ToggleButton saturateEnableButton;
-    LabelSlider saturateSlider;
-
-    std::unique_ptr<juce::Drawable> valentineTblLogo;
+    TopRowPanel topRow;
 
     LabelSlider ratioSlider;
     LabelSlider attackSlider;

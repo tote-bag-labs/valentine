@@ -72,8 +72,10 @@ set(SourceFiles
     
     src/gui/panels/ValentineCenterPanel.h
     src/gui/panels/ValentineMainPanel.h
+    src/gui/panels/ValentineTopRowPanel.h
     src/gui/panels/ValentineCenterPanel.cpp
     src/gui/panels/ValentineMainPanel.cpp
+    src/gui/panels/ValentineTopRowPanel.cpp
 
     libs/tote_bag/dsp/AudioHelpers.h
     libs/tote_bag/dsp/CircularBuffer.h
