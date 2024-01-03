@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "ValentineBottomRowPanel.h"
 #include "ValentineTopRowPanel.h"
 #include "tote_bag/juce_gui/components/widgets/LabelSlider.h"
 #include "tote_bag/juce_gui/components/widgets/tbl_ToggleButton.h"
@@ -26,19 +27,11 @@ public:
 private:
     juce::Rectangle<int> topRowBorder;
     juce::Rectangle<int> bottomRowBorder;
-    juce::Rectangle<int> bottomRowDivider;
     float borderLineThickness;
     float borderCornerSize;
 
     TopRowPanel topRow;
-
-    LabelSlider ratioSlider;
-    LabelSlider attackSlider;
-    LabelSlider releaseSlider;
-
-    ToggleButton clipEnableButton;
-    LabelSlider outputSlider;
-    LabelSlider mixSlider;
+    BottomRowPanel bottomRow;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CenterPanel)
 };

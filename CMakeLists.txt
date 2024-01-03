@@ -70,9 +70,11 @@ set(SourceFiles
     src/PluginEditor.cpp
     src/PluginProcessor.cpp
     
+    src/gui/panels/ValentineBottomRowPanel.h
     src/gui/panels/ValentineCenterPanel.h
     src/gui/panels/ValentineMainPanel.h
     src/gui/panels/ValentineTopRowPanel.h
+    src/gui/panels/ValentineBottomRowPanel.cpp
     src/gui/panels/ValentineCenterPanel.cpp
     src/gui/panels/ValentineMainPanel.cpp
     src/gui/panels/ValentineTopRowPanel.cpp
