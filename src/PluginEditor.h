@@ -35,8 +35,7 @@ private:
 
     VMainPanel mainPanel;
 
-    // in figma ~ 5053 x 1741. ratio = 2.9 ish width to height
-    static constexpr float ratio = 2.5f;
+    static constexpr float ratio = 16.0f / 9.0f;
     static constexpr int minimumWidth = 700;
     static constexpr int startingWidth = 1000;
     static constexpr int maximumWidth = 2000;
