@@ -16,7 +16,7 @@ namespace tote_bag
 {
 namespace colours
 {
-const juce::Colour valentinePink (0xffffc4ee);
+const juce::Colour valentinePink (0xfff6c7eb);
 const juce::Colour valentinePinkDark (0xffe0a2d5);
 const juce::Colour grassGreen (0xff43a028);
 const juce::Colour avocadoGreen (0xff83a028);
