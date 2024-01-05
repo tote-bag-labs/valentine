@@ -48,13 +48,6 @@ public:
                            const float toAngle,
                            const juce::Rectangle<float> bounds);
 
-    void drawKnob (juce::Graphics& g,
-                   const float radius,
-                   const float toAngle,
-                   const juce::Rectangle<float> bounds,
-                   juce::Slider&,
-                   const bool withDropShadow);
-
     void drawRotarySlider (juce::Graphics& g,
                            int x,
                            int y,
@@ -122,6 +115,13 @@ public:
     };
 
 private:
+    void drawKnob (juce::Graphics& g,
+                   const float radius,
+                   const float toAngle,
+                   const juce::Rectangle<float> bounds,
+                   juce::Slider&,
+                   const bool withDropShadow);
+
     FontHolder fontHolder;
 
 #include "MeterLookAndFeelMethods.h"
