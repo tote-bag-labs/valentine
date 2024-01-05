@@ -115,12 +115,12 @@ public:
     };
 
 private:
-    void drawKnob (juce::Graphics& g,
-                   const float radius,
-                   const float toAngle,
-                   const juce::Rectangle<float> bounds,
-                   juce::Slider&,
-                   const bool withDropShadow);
+    void drawRotarySliderBase (juce::Graphics& g,
+                               const float radius,
+                               const float toAngle,
+                               const juce::Rectangle<float> bounds,
+                               juce::Slider&,
+                               const bool withDropShadow);
 
     FontHolder fontHolder;
 

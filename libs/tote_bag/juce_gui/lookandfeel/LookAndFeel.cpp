@@ -120,12 +120,12 @@ void LookAndFeel::drawDrawableKnob (juce::Graphics& g,
     sliderImage.drawAt (g, cX, cY, 1.0f);
 }
 
-void LookAndFeel::drawKnob (juce::Graphics& g,
-                            const float radius,
-                            const float toAngle,
-                            const juce::Rectangle<float> bounds,
-                            juce::Slider&,
-                            const bool withDropShadow)
+void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
+                                        const float radius,
+                                        const float toAngle,
+                                        const juce::Rectangle<float> bounds,
+                                        juce::Slider&,
+                                        const bool withDropShadow)
 {
     const auto centreX = bounds.getCentreX();
     const auto centreY = bounds.getCentreY();
@@ -241,7 +241,7 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
 
     const auto knobRadius = arcRadius * .80f;
 
-    drawKnob (g, knobRadius, toAngle, bounds, slider, true);
+    drawRotarySliderBase (g, knobRadius, toAngle, bounds, slider, true);
 }
 
 juce::Font LookAndFeel::getTextButtonFont (juce::TextButton&, int buttonHeight)
