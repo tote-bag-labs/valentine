@@ -130,23 +130,21 @@ void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
 {
     const auto centreX = bounds.getCentreX();
     const auto centreY = bounds.getCentreY();
+    const auto rx = centreX - radius;
+    const auto ry = centreY - radius;
+    const auto rw = radius * 2.0f;
 
-    auto rx = centreX - radius;
-    auto ry = centreY - radius;
-    auto rw = radius * 2.0f;
-
-    // Fill main knob area
-    auto fillColour = findColour (juce::Slider::backgroundColourId);
-    g.setColour (fillColour);
+    g.setColour (findColour (juce::Slider::backgroundColourId));
     g.fillEllipse (rx, ry, rw, rw);
 
-    // Pointer
     juce::Path p;
-    auto pointerLength = radius * 0.33f;
-    auto pointerThickness = pointerLength * .2f;
+    const auto pointerLength = radius * 0.33f;
+    const auto pointerThickness = pointerLength * .2f;
+    const auto pointerX = -pointerThickness * 0.5f;
     const auto pointerY = juce::roundToInt (juce::jmax ((rw * .05f), 1.0f)) - radius;
-    auto cornerSize = pointerThickness * .35f;
-    p.addRoundedRectangle (-pointerThickness * 0.5f,
+    const auto cornerSize = pointerThickness * .35f;
+
+    p.addRoundedRectangle (pointerX,
                            pointerY,
                            pointerThickness,
                            pointerLength,
@@ -160,8 +158,7 @@ void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
         juce::AffineTransform::rotation (toAngle).translated (bounds.getCentreX(),
                                                               bounds.getCentreY()));
 
-    auto pointerColour = findColour (juce::Slider::thumbColourId);
-    g.setColour (pointerColour);
+    g.setColour (findColour (juce::Slider::thumbColourId));
     g.fillPath (p);
 }
 
