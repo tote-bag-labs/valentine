@@ -119,8 +119,7 @@ private:
                                const float radius,
                                const float toAngle,
                                const juce::Rectangle<float> bounds,
-                               juce::Slider&,
-                               const bool withDropShadow);
+                               juce::Slider&);
 
     FontHolder fontHolder;
 

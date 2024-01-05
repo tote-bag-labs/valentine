@@ -126,8 +126,7 @@ void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
                                         const float radius,
                                         const float toAngle,
                                         const juce::Rectangle<float> bounds,
-                                        juce::Slider&,
-                                        const bool withDropShadow)
+                                        juce::Slider&)
 {
     const auto centreX = bounds.getCentreX();
     const auto centreY = bounds.getCentreY();
@@ -141,63 +140,14 @@ void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
     g.setColour (fillColour);
     g.fillEllipse (rx, ry, rw, rw);
 
-    // Get thicknesses for outline rings...
-    const auto innerOutlineThickness = juce::roundToInt (juce::jmax ((rw * .05f), 1.0f));
-    const auto outerOutlineThickness = innerOutlineThickness * .15f;
-
-    // Offset inner outline by its thickness
-    auto innerOutlineRadius = radius - (innerOutlineThickness * .5f);
-    auto innerOutlineRx = centreX - innerOutlineRadius;
-    auto innerOutlineRy = centreY - innerOutlineRadius;
-    auto innerOutlineRw = innerOutlineRadius * 2.0f;
-
-    // Draw inner outline
-    g.setColour (fillColour.darker (.15f));
-    g.drawEllipse (innerOutlineRx,
-                   innerOutlineRy,
-                   innerOutlineRw,
-                   innerOutlineRw,
-                   innerOutlineThickness);
-
-    // Offset outer outline by its thickness
-    auto outerOutlineRadius = radius - (outerOutlineThickness * .5f);
-    auto outerOutlineRx = centreX - outerOutlineRadius;
-    auto outerOutlineRy = centreY - outerOutlineRadius;
-    auto outerOutlineRw = outerOutlineRadius * 2.0f;
-
-    // Draw outer outline
-    if (withDropShadow)
-    {
-        auto xOffset = juce::jmin (juce::roundToInt (innerOutlineThickness * .25), 1);
-        auto yOffset = juce::jmin (juce::roundToInt (innerOutlineThickness * .5), 1);
-
-        auto shadow = juce::DropShadow (fillColour.darker(),
-                                        innerOutlineThickness,
-                                        {xOffset, yOffset});
-        juce::Path shadowPath;
-        shadowPath.addEllipse (outerOutlineRx,
-                               outerOutlineRy,
-                               outerOutlineRw,
-                               outerOutlineRw);
-        shadow.drawForPath (g, shadowPath);
-    }
-    else
-    {
-        g.setColour (fillColour.darker (.85f));
-        g.drawEllipse (outerOutlineRx,
-                       outerOutlineRy,
-                       outerOutlineRw,
-                       outerOutlineRw,
-                       outerOutlineThickness);
-    }
-
     // Pointer
     juce::Path p;
     auto pointerLength = radius * 0.33f;
     auto pointerThickness = pointerLength * .2f;
+    const auto pointerY = juce::roundToInt (juce::jmax ((rw * .05f), 1.0f)) - radius;
     auto cornerSize = pointerThickness * .35f;
     p.addRoundedRectangle (-pointerThickness * 0.5f,
-                           -radius + innerOutlineThickness,
+                           pointerY,
                            pointerThickness,
                            pointerLength,
                            cornerSize,
@@ -243,7 +193,7 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
 
     const auto knobRadius = arcRadius * .80f;
 
-    drawRotarySliderBase (g, knobRadius, toAngle, bounds, slider, true);
+    drawRotarySliderBase (g, knobRadius, toAngle, bounds, slider);
 }
 
 juce::Font LookAndFeel::getTextButtonFont (juce::TextButton&, int buttonHeight)
