@@ -32,6 +32,8 @@ LookAndFeel::LookAndFeel()
     setColour (ColourIds::pointerColourId, juce::Colours::black);
 
     // slider text box colours
+    setColour (juce::Slider::backgroundColourId, juce::Colour (0xff2f2f2f));
+    setColour (juce::Slider::thumbColourId, juce::Colour (0xffe7e7e7));
     setColour (juce::Slider::textBoxTextColourId, juce::Colours::black);
     setColour (juce::Slider::textBoxOutlineColourId, valentinePink);
     setColour (juce::Slider::rotarySliderOutlineColourId, valentinePinkDark);
@@ -135,7 +137,7 @@ void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
     auto rw = radius * 2.0f;
 
     // Fill main knob area
-    auto fillColour = findColour (ColourIds::knobColourId);
+    auto fillColour = findColour (juce::Slider::backgroundColourId);
     g.setColour (fillColour);
     g.fillEllipse (rx, ry, rw, rw);
 
@@ -208,7 +210,7 @@ void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
         juce::AffineTransform::rotation (toAngle).translated (bounds.getCentreX(),
                                                               bounds.getCentreY()));
 
-    auto pointerColour = findColour (ColourIds::pointerColourId);
+    auto pointerColour = findColour (juce::Slider::thumbColourId);
     g.setColour (pointerColour);
     g.fillPath (p);
 }
