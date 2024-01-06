@@ -25,15 +25,6 @@ class LookAndFeel : public juce::LookAndFeel_V4,
 public:
     LookAndFeel();
 
-    void drawSliderMeter (juce::Graphics& g,
-                          const juce::Rectangle<float> bounds,
-                          float lineWidth,
-                          float arcRadius,
-                          float rotaryStartAngle,
-                          float rotaryEndAngle,
-                          float toAngle,
-                          juce::Slider& slider);
-
     /** Draws a drawable knob. Originally used for the knobs in Valentine, this is been refactored
         to not rely on member variables. This, along with the fact that this function isn't called
         anywhere, effectively orphans it. This is intentional: the way that the drawable was defined
@@ -115,6 +106,15 @@ public:
     };
 
 private:
+    void drawSliderMeter (juce::Graphics& g,
+                          const juce::Rectangle<float> bounds,
+                          float lineWidth,
+                          float arcRadius,
+                          float rotaryStartAngle,
+                          float rotaryEndAngle,
+                          float toAngle,
+                          juce::Slider& slider);
+
     void drawRotarySliderBase (juce::Graphics& g,
                                const float radius,
                                const float toAngle,
