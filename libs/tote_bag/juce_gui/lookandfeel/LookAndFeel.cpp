@@ -139,7 +139,7 @@ void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
 
     juce::Path p;
     const auto pointerLength = radius * 0.33f;
-    const auto pointerThickness = pointerLength * .2f;
+    const auto pointerThickness = radius * .066f;
     const auto pointerX = -pointerThickness * 0.5f;
     const auto pointerY = juce::roundToInt (juce::jmax ((rw * .05f), 1.0f)) - radius;
     const auto cornerSize = pointerThickness * .35f;
