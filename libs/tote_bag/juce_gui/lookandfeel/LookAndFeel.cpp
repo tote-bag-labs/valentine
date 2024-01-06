@@ -138,17 +138,17 @@ void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
     g.fillEllipse (rx, ry, rw, rw);
 
     juce::Path p;
-    const auto pointerLength = radius * 0.33f;
-    const auto pointerThickness = radius * .066f;
+    const auto pointerLength = radius * 0.41f;
+    const auto pointerThickness = radius * .085f;
     const auto pointerX = -pointerThickness * 0.5f;
     const auto initialPointerY = -radius;
 
     // Increasing this value will cause the pointer to be drawn closer
     // to the center of the slider.
-    const auto sliderEdgeOffset = juce::roundToInt (juce::jmax ((radius * .1f), 1.0f));
+    const auto sliderEdgeOffset = juce::roundToInt (juce::jmax ((radius * .12f), 1.0f));
     const auto pointerY = initialPointerY + sliderEdgeOffset;
 
-    const auto cornerSize = pointerThickness * .35f;
+    const auto cornerSize = pointerThickness * .5f;
 
     p.addRoundedRectangle (pointerX,
                            pointerY,
@@ -158,8 +158,8 @@ void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
                            cornerSize,
                            true,
                            true,
-                           false,
-                           false);
+                           true,
+                           true);
     p.applyTransform (
         juce::AffineTransform::rotation (toAngle).translated (bounds.getCentreX(),
                                                               bounds.getCentreY()));
