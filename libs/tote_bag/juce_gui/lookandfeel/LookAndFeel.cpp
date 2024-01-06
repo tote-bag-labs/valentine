@@ -74,14 +74,14 @@ void LookAndFeel::drawDrawableKnob (juce::Graphics& g,
     sliderImage.drawAt (g, cX, cY, 1.0f);
 }
 
-void LookAndFeel::drawSliderMeter (juce::Graphics& g,
-                                   const juce::Rectangle<float> bounds,
-                                   const float lineWidth,
-                                   const float radius,
-                                   const float startAngle,
-                                   float endAngle,
-                                   const float toAngle,
-                                   juce::Slider& slider)
+void LookAndFeel::drawRotarySliderMeter (juce::Graphics& g,
+                                         const juce::Rectangle<float> bounds,
+                                         const float lineWidth,
+                                         const float radius,
+                                         const float startAngle,
+                                         float endAngle,
+                                         const float toAngle,
+                                         juce::Slider& slider)
 {
     auto outline = slider.findColour (juce::Slider::rotarySliderOutlineColourId);
     auto fill = slider.findColour (juce::Slider::rotarySliderFillColourId);
@@ -185,14 +185,14 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
     const auto toAngle =
         rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 
-    drawSliderMeter (g,
-                     bounds,
-                     lineW,
-                     arcRadius,
-                     rotaryStartAngle,
-                     rotaryEndAngle,
-                     toAngle,
-                     slider);
+    drawRotarySliderMeter (g,
+                           bounds,
+                           lineW,
+                           arcRadius,
+                           rotaryStartAngle,
+                           rotaryEndAngle,
+                           toAngle,
+                           slider);
 
     const auto knobRadius = arcRadius * .80f;
 

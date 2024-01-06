@@ -106,14 +106,14 @@ public:
     };
 
 private:
-    void drawSliderMeter (juce::Graphics& g,
-                          const juce::Rectangle<float> bounds,
-                          float lineWidth,
-                          float arcRadius,
-                          float rotaryStartAngle,
-                          float rotaryEndAngle,
-                          float toAngle,
-                          juce::Slider& slider);
+    void drawRotarySliderMeter (juce::Graphics& g,
+                                const juce::Rectangle<float> bounds,
+                                float lineWidth,
+                                float arcRadius,
+                                float rotaryStartAngle,
+                                float rotaryEndAngle,
+                                float toAngle,
+                                juce::Slider& slider);
 
     void drawRotarySliderBase (juce::Graphics& g,
                                const float radius,
