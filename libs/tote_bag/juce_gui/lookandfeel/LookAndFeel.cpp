@@ -53,6 +53,27 @@ LookAndFeel::LookAndFeel()
                juce::Colours::transparentWhite);
 }
 
+void LookAndFeel::drawDrawableKnob (juce::Graphics& g,
+                                    const float radius,
+                                    const float drawableWidth,
+                                    juce::Drawable& sliderImage,
+                                    const float toAngle,
+                                    const juce::Rectangle<float> bounds)
+{
+    const auto rw = radius * 2.0f;
+    const auto realW = rw / drawableWidth;
+
+    const auto halfDrawableWidth = drawableWidth / 2.0f;
+
+    sliderImage.setTransform (
+        juce::AffineTransform::rotation (toAngle, halfDrawableWidth, halfDrawableWidth)
+            .scaled (realW, realW, halfDrawableWidth, halfDrawableWidth));
+
+    const auto cX = bounds.getCentreX() - halfDrawableWidth;
+    const auto cY = bounds.getCentreY() - halfDrawableWidth;
+    sliderImage.drawAt (g, cX, cY, 1.0f);
+}
+
 void LookAndFeel::drawSliderMeter (juce::Graphics& g,
                                    const juce::Rectangle<float> bounds,
                                    const float lineWidth,
@@ -99,27 +120,6 @@ void LookAndFeel::drawSliderMeter (juce::Graphics& g,
                                             juce::PathStrokeType::curved,
                                             juce::PathStrokeType::butt));
     }
-}
-
-void LookAndFeel::drawDrawableKnob (juce::Graphics& g,
-                                    const float radius,
-                                    const float drawableWidth,
-                                    juce::Drawable& sliderImage,
-                                    const float toAngle,
-                                    const juce::Rectangle<float> bounds)
-{
-    const auto rw = radius * 2.0f;
-    const auto realW = rw / drawableWidth;
-
-    const auto halfDrawableWidth = drawableWidth / 2.0f;
-
-    sliderImage.setTransform (
-        juce::AffineTransform::rotation (toAngle, halfDrawableWidth, halfDrawableWidth)
-            .scaled (realW, realW, halfDrawableWidth, halfDrawableWidth));
-
-    const auto cX = bounds.getCentreX() - halfDrawableWidth;
-    const auto cY = bounds.getCentreY() - halfDrawableWidth;
-    sliderImage.drawAt (g, cX, cY, 1.0f);
 }
 
 void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
