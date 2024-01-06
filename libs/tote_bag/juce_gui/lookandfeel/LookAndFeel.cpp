@@ -141,7 +141,13 @@ void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
     const auto pointerLength = radius * 0.33f;
     const auto pointerThickness = radius * .066f;
     const auto pointerX = -pointerThickness * 0.5f;
-    const auto pointerY = juce::roundToInt (juce::jmax ((rw * .05f), 1.0f)) - radius;
+    const auto initialPointerY = -radius;
+
+    // Increasing this value will cause the pointer to be drawn closer
+    // to the center of the slider.
+    const auto sliderEdgeOffset = juce::roundToInt (juce::jmax ((rw * .05f), 1.0f));
+    const auto pointerY = initialPointerY + sliderEdgeOffset;
+
     const auto cornerSize = pointerThickness * .35f;
 
     p.addRoundedRectangle (pointerX,
