@@ -145,7 +145,7 @@ void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
 
     // Increasing this value will cause the pointer to be drawn closer
     // to the center of the slider.
-    const auto sliderEdgeOffset = juce::roundToInt (juce::jmax ((rw * .05f), 1.0f));
+    const auto sliderEdgeOffset = juce::roundToInt (juce::jmax ((radius * .1f), 1.0f));
     const auto pointerY = initialPointerY + sliderEdgeOffset;
 
     const auto cornerSize = pointerThickness * .35f;
