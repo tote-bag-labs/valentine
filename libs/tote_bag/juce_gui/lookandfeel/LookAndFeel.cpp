@@ -100,7 +100,7 @@ void LookAndFeel::drawRotarySliderMeter (juce::Graphics& g,
     g.strokePath (backgroundArc,
                   juce::PathStrokeType (lineWidth,
                                         juce::PathStrokeType::curved,
-                                        juce::PathStrokeType::butt));
+                                        juce::PathStrokeType::rounded));
 
     if (slider.isEnabled())
     {
@@ -118,7 +118,7 @@ void LookAndFeel::drawRotarySliderMeter (juce::Graphics& g,
         g.strokePath (valueArc,
                       juce::PathStrokeType (lineWidth,
                                             juce::PathStrokeType::curved,
-                                            juce::PathStrokeType::butt));
+                                            juce::PathStrokeType::rounded));
     }
 }
 
@@ -180,7 +180,7 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
 {
     auto bounds = juce::Rectangle<int> (x, y, width, height).toFloat();
     auto radius = juce::jmin (bounds.getWidth(), bounds.getHeight()) / 2.0f;
-    auto lineW = radius * 0.125f;
+    auto lineW = radius * 0.090f;
     auto arcRadius = radius - lineW;
     const auto toAngle =
         rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
@@ -194,7 +194,7 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
                            toAngle,
                            slider);
 
-    const auto knobRadius = arcRadius * .80f;
+    const auto knobRadius = arcRadius * .87f;
 
     drawRotarySliderBase (g, knobRadius, toAngle, bounds, slider);
 }
