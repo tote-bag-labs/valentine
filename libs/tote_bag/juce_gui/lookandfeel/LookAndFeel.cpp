@@ -213,7 +213,9 @@ juce::Font LookAndFeel::getLabelFont (juce::Label& l)
     {
         return fontHolder.getFont ("RobotoMonoMedium_ttf").withHeight (fontHeight);
     }
-    return fontHolder.getFont ("RobotoMedium_ttf").withHeight (fontHeight);
+    return fontHolder.getFont ("RobotoMedium_ttf")
+        .withHeight (fontHeight)
+        .withExtraKerningFactor (.05f);
 }
 
 void LookAndFeel::drawButtonBackground (juce::Graphics& g,
