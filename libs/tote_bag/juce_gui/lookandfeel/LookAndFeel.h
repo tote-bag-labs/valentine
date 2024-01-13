@@ -13,6 +13,7 @@
 #include "tote_bag/juce_gui/utilities/tbl_font.h"
 
 #include <ff_meters/ff_meters.h>
+#include <juce_gui_basics/juce_gui_basics.h>
 
 namespace tote_bag
 {
