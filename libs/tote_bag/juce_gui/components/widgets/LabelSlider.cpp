@@ -35,10 +35,10 @@ void LabelSlider::resized()
 {
     auto sliderArea = getLocalBounds();
 
-    const auto labelHeight = juce::roundToInt (sliderArea.getHeight() * .120);
+    const auto labelHeight = juce::roundToInt (sliderArea.getHeight() * .1);
     label.setBounds (sliderArea.removeFromTop (labelHeight));
 
-    const auto margin = juce::roundToInt (sliderArea.getHeight() * .03f);
+    const auto margin = juce::roundToInt (sliderArea.getHeight() * .07f);
     sliderArea.removeFromTop (margin);
 
     slider.setBounds (sliderArea);
