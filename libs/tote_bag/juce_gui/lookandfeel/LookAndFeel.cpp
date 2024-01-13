@@ -404,7 +404,7 @@ juce::Slider::SliderLayout LookAndFeel::getSliderLayout (juce::Slider& slider)
 
     auto sDiameter = juce::jmin (localBounds.getWidth(), localBounds.getHeight());
     auto textBoxWidth = juce::roundToInt (sDiameter * .66f);
-    auto textBoxHeight = juce::roundToInt (sDiameter * .17f);
+    auto textBoxHeight = juce::roundToInt (sDiameter * .15);
 
     juce::Slider::SliderLayout layout;
 
