@@ -40,7 +40,7 @@ LookAndFeel::LookAndFeel()
     setColour (juce::Slider::rotarySliderFillColourId, juce::Colours::floralwhite);
 
     // A transparent-ish grey
-    setColour (ToggleButton::defaultFillColourId, juce::Colour (0x33393838));
+    setColour (ToggleButton::defaultFillColourId, colours::transparentGrey);
 
     // A bright, not totally solid green
     setColour (ToggleButton::activeFillColourId, juce::Colour (0xc749ff1b));

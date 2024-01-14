@@ -57,7 +57,7 @@ BottomRowPanel::~BottomRowPanel()
 
 void BottomRowPanel::paint (juce::Graphics& g)
 {
-    g.setColour (juce::Colours::black);
+    g.setColour (colours::transparentGrey);
 
     g.fillRect (divider);
 }
@@ -76,8 +76,10 @@ void BottomRowPanel::resized()
 
     const auto dividerCentreX = bounds.getX() + juce::roundToInt (sliderWidth / 2.0f);
     const auto dividerThickness = juce::roundToInt (bounds.getHeight() * .015f);
+    const auto dividerTrimAmount = juce::roundToInt (bounds.getHeight() * .08f);
 
     divider = bounds.removeFromLeft (sliderWidth)
+                  .reduced (0, dividerTrimAmount)
                   .withX (dividerCentreX)
                   .withWidth (dividerThickness);
 
