@@ -74,13 +74,12 @@ void BottomRowPanel::resized()
     attackSlider.setBounds (bounds.removeFromLeft (sliderWidth));
     releaseSlider.setBounds (bounds.removeFromLeft (sliderWidth));
 
-    const auto dividerBounds = bounds.removeFromLeft (sliderWidth);
+    const auto dividerCentreX = bounds.getX() + juce::roundToInt (sliderWidth / 2.0f);
+    const auto dividerThickness = juce::roundToInt (bounds.getHeight() * .015f);
 
-    const auto dividerThickness = dividerBounds.getHeight() * .015f;
-    divider = juce::Rectangle<int> (juce::roundToInt (dividerBounds.getCentreX()),
-                                    dividerBounds.getY(),
-                                    juce::roundToInt (dividerThickness),
-                                    dividerBounds.getHeight());
+    divider = bounds.removeFromLeft (sliderWidth)
+                  .withX (dividerCentreX)
+                  .withWidth (dividerThickness);
 
     const auto buttonSpacer =
         juce::roundToInt ((bounds.getHeight() - clipButtonWidth) * .5f);
