@@ -64,8 +64,7 @@ void TopRowPanel::resized()
         juce::roundToInt ((sliders.getHeight() - buttonWidth) * .5f);
 
     // See below note about horizontal LabelSlider dimensions and button placement.
-    const auto buttonNudge = juce::roundToInt (buttonWidth / 1.5f);
-
+    const auto buttonNudge = juce::roundToInt (buttonWidth / 5.0f);
     const auto initialCrushButtonX = sliders.getX();
     const auto crushEnableButtonBounds = sliders.removeFromLeft (buttonWidth)
                                              .reduced (0, buttonSpacer)

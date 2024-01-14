@@ -86,7 +86,7 @@ void BottomRowPanel::resized()
     const auto buttonSpacer =
         juce::roundToInt ((bounds.getHeight() - clipButtonWidth) * .5f);
 
-    const auto buttonNudge = juce::roundToInt (clipButtonWidth / 1.5f);
+    const auto buttonNudge = juce::roundToInt (clipButtonWidth / 8.0f);
 
     const auto clipButtonInitialX = bounds.getX();
     const auto clipButtonBounds = bounds.removeFromLeft (clipButtonWidth)
