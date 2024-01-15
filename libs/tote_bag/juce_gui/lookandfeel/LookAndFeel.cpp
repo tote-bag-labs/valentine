@@ -28,8 +28,8 @@ LookAndFeel::LookAndFeel()
 
     // slider text box colours
     setColour (juce::Slider::textBoxTextColourId, juce::Colours::black);
-    setColour (juce::Slider::textBoxOutlineColourId, vPinkDark);
-    setColour (juce::Slider::rotarySliderOutlineColourId, vPinkDark);
+    setColour (juce::Slider::textBoxOutlineColourId, valentinePinkDark);
+    setColour (juce::Slider::rotarySliderOutlineColourId, valentinePinkDark);
     setColour (juce::Slider::rotarySliderFillColourId, juce::Colours::floralwhite);
 
     // so we don't get background painting on drawable buttons
@@ -384,11 +384,12 @@ void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
 
     juce::Rectangle<int> r (area);
 
-    juce::Colour fillColour = isHighlighted ? vColour_5 : vColour_4;
+    juce::Colour fillColour =
+        isHighlighted ? transparentMediumGrey : slightlyTransparentBlack;
     g.setColour (fillColour);
     g.fillRect (r.getX(), r.getY(), r.getWidth(), r.getHeight() - 1);
 
-    juce::Colour myTextColour = isTicked ? vColour_7 : vColour_1;
+    juce::Colour myTextColour = isTicked ? lightGrey : mediumGrey;
     g.setColour (myTextColour);
 
     auto fHeight = juce::jmax (7.0f, r.getHeight() * 0.6f);

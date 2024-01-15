@@ -44,10 +44,10 @@ void VerticalMeterPanel::lookAndFeelChanged()
 
     auto& lookAndFeel = getLookAndFeel();
 
-    lookAndFeel.setColour (FFAU::LevelMeter::lmBackgroundColour, vPink);
-    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientLowColour, (vGreen1));
-    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientMidColour, vGreen2);
-    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterMaxOverColour, vRed);
+    lookAndFeel.setColour (FFAU::LevelMeter::lmBackgroundColour, valentinePink);
+    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientLowColour, (grassGreen));
+    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientMidColour, avocadoGreen);
+    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterMaxOverColour, racecarRed);
 
     levelMeter.setLookAndFeel (&lookAndFeel);
 
