@@ -27,7 +27,8 @@ VerticalMeterPanel::VerticalMeterPanel (ReductionMeterPlacement reductionMeterPl
 
     if (grMeterSource)
     {
-        gainReductionMeter = std::make_unique<FFAU::LevelMeter> (FFAU::LevelMeter::MeterFlags::Reduction);
+        gainReductionMeter =
+            std::make_unique<FFAU::LevelMeter> (FFAU::LevelMeter::MeterFlags::Reduction);
         gainReductionMeter->setMeterSource (grMeterSource);
         addAndMakeVisible (gainReductionMeter.get());
     }
@@ -67,7 +68,9 @@ void VerticalMeterPanel::resized()
     // get gr and meters width
     const auto grMeterWidth = juce::roundToInt (areaWidth * .25f);
 
-    const auto grMeterBounds = (grMeterPlacement & ReductionMeterPlacement::Left) ? area.removeFromLeft (grMeterWidth) : area.removeFromRight (grMeterWidth);
+    const auto grMeterBounds = (grMeterPlacement & ReductionMeterPlacement::Left)
+                                   ? area.removeFromLeft (grMeterWidth)
+                                   : area.removeFromRight (grMeterWidth);
 
     if (gainReductionMeter.get())
     {
