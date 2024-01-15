@@ -21,9 +21,9 @@ const juce::Colour valentinePinkDark (0xffe0a2d5);
 const juce::Colour grassGreen (0xff43a028);
 const juce::Colour avocadoGreen (0xff83a028);
 const juce::Colour racecarRed (0xffef202a);
-const juce::Colour lightGrey = juce::Colour (125, 125, 125);
-const juce::Colour transparentMediumGrey = juce::Colour (105, 105, 105).withAlpha (0.3f);
-const juce::Colour mediumGrey = juce::Colour (105, 105, 105);
-const juce::Colour slightlyTransparentBlack = juce::Colour (0, 0, 0).withAlpha (0.6f);
+const juce::Colour lightGrey (0xff7d7d7d);
+const juce::Colour transparentMediumGrey (0x4D696969);
+const juce::Colour mediumGrey (0xff696969);
+const juce::Colour slightlyTransparentBlack (0x99000000);
 } // colours
 } // tote_bag
