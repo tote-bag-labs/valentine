@@ -18,7 +18,7 @@ namespace tote_bag
 
 LookAndFeel::LookAndFeel()
 {
-    using namespace tote_bag::laf_constants;
+    using namespace tote_bag::colours;
 
     setupDefaultMeterColours();
 
@@ -380,7 +380,7 @@ void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
                                      const juce::Drawable*,
                                      const juce::Colour*)
 {
-    using namespace laf_constants;
+    using namespace colours;
 
     juce::Rectangle<int> r (area);
 

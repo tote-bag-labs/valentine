@@ -40,7 +40,7 @@ VMainPanel::~VMainPanel()
 
 void VMainPanel::paint (juce::Graphics& g)
 {
-    g.fillAll (tote_bag::laf_constants::valentinePink);
+    g.fillAll (tote_bag::colours::valentinePink);
 }
 
 void VMainPanel::resized()

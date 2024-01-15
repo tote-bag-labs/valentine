@@ -20,7 +20,7 @@ VerticalMeterPanel::VerticalMeterPanel (ReductionMeterPlacement reductionMeterPl
                                         foleys::LevelMeterSource* grMeterSource)
     : grMeterPlacement (reductionMeterPlacement)
 {
-    using namespace tote_bag::laf_constants;
+    using namespace tote_bag::colours;
 
     levelMeter.setMeterSource (levelMeterSource);
     addAndMakeVisible (levelMeter);
@@ -40,7 +40,7 @@ VerticalMeterPanel::~VerticalMeterPanel()
 
 void VerticalMeterPanel::lookAndFeelChanged()
 {
-    using namespace tote_bag::laf_constants;
+    using namespace tote_bag::colours;
 
     auto& lookAndFeel = getLookAndFeel();
 

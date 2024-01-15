@@ -14,7 +14,7 @@
 
 namespace tote_bag
 {
-namespace laf_constants
+namespace colours
 {
 const juce::Colour valentinePink (0xffffc4ee);
 const juce::Colour valentinePinkDark (0xffe0a2d5);
@@ -26,5 +26,5 @@ const juce::Colour mediumGrey = juce::Colour (105, 105, 105);
 const juce::Colour slightlyTransparentBlack = juce::Colour (0, 0, 0).withAlpha (0.6f);
 const juce::Colour transparentMediumGrey = juce::Colour (105, 105, 105).withAlpha (0.3f);
 const juce::Colour lightGrey = juce::Colour (125, 125, 125);
-} // laf_constants
+} // colours
 } // tote_bag
