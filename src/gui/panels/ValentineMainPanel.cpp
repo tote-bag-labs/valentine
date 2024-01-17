@@ -19,8 +19,7 @@ VMainPanel::VMainPanel (ValentineAudioProcessor& processor)
                    FFCompParameterLabel()[getParameterIndex (VParameter::bypass)],
                    FFCompParameterID()[getParameterIndex (VParameter::bypass)],
                    processor.treeState)
-    , inputMeterPanel (ReductionMeterPlacement::Right,
-                       &processor.getInputMeterSource())
+    , inputMeterPanel (ReductionMeterPlacement::Right, &processor.getInputMeterSource())
     , outputMeterPanel (ReductionMeterPlacement::Left,
                         &processor.getOutputMeterSource(),
                         &processor.getGrMeterSource())
@@ -41,14 +40,15 @@ VMainPanel::~VMainPanel()
 
 void VMainPanel::paint (juce::Graphics& g)
 {
-    g.fillAll (tote_bag::laf_constants::vPink);
+    g.fillAll (tote_bag::colours::valentinePink);
 }
 
 void VMainPanel::resized()
 {
     auto panelBounds = getLocalBounds();
 
-    const auto presetBounds = panelBounds.removeFromTop (juce::roundToInt (panelBounds.getHeight() * .075f));
+    const auto presetBounds =
+        panelBounds.removeFromTop (juce::roundToInt (panelBounds.getHeight() * .075f));
     presetPanel.setBounds (presetBounds);
 
     const auto resizerMargin = juce::roundToInt (panelBounds.getHeight() * .03f);

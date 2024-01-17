@@ -20,14 +20,15 @@ VerticalMeterPanel::VerticalMeterPanel (ReductionMeterPlacement reductionMeterPl
                                         foleys::LevelMeterSource* grMeterSource)
     : grMeterPlacement (reductionMeterPlacement)
 {
-    using namespace tote_bag::laf_constants;
+    using namespace tote_bag::colours;
 
     levelMeter.setMeterSource (levelMeterSource);
     addAndMakeVisible (levelMeter);
 
     if (grMeterSource)
     {
-        gainReductionMeter = std::make_unique<FFAU::LevelMeter> (FFAU::LevelMeter::MeterFlags::Reduction);
+        gainReductionMeter =
+            std::make_unique<FFAU::LevelMeter> (FFAU::LevelMeter::MeterFlags::Reduction);
         gainReductionMeter->setMeterSource (grMeterSource);
         addAndMakeVisible (gainReductionMeter.get());
     }
@@ -39,14 +40,14 @@ VerticalMeterPanel::~VerticalMeterPanel()
 
 void VerticalMeterPanel::lookAndFeelChanged()
 {
-    using namespace tote_bag::laf_constants;
+    using namespace tote_bag::colours;
 
     auto& lookAndFeel = getLookAndFeel();
 
-    lookAndFeel.setColour (FFAU::LevelMeter::lmBackgroundColour, vPink);
-    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientLowColour, (vGreen1));
-    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientMidColour, vGreen2);
-    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterMaxOverColour, vRed);
+    lookAndFeel.setColour (FFAU::LevelMeter::lmBackgroundColour, valentinePink);
+    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientLowColour, (grassGreen));
+    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterGradientMidColour, avocadoGreen);
+    lookAndFeel.setColour (FFAU::LevelMeter::lmMeterMaxOverColour, racecarRed);
 
     levelMeter.setLookAndFeel (&lookAndFeel);
 
@@ -67,7 +68,9 @@ void VerticalMeterPanel::resized()
     // get gr and meters width
     const auto grMeterWidth = juce::roundToInt (areaWidth * .25f);
 
-    const auto grMeterBounds = (grMeterPlacement & ReductionMeterPlacement::Left) ? area.removeFromLeft (grMeterWidth) : area.removeFromRight (grMeterWidth);
+    const auto grMeterBounds = (grMeterPlacement & ReductionMeterPlacement::Left)
+                                   ? area.removeFromLeft (grMeterWidth)
+                                   : area.removeFromRight (grMeterWidth);
 
     if (gainReductionMeter.get())
     {

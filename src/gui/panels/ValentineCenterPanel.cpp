@@ -117,7 +117,7 @@ CenterPanel::CenterPanel (ValentineAudioProcessor& processor)
     // Version label
     versionLabel.setText (JucePlugin_VersionString, juce::dontSendNotification);
     versionLabel.setColour (juce::Label::ColourIds::textColourId,
-                            tote_bag::laf_constants::vPinkDark);
+                            tote_bag::colours::valentinePinkDark);
     versionLabel.setJustificationType (juce::Justification::centredTop);
     addAndMakeVisible (versionLabel);
 }
@@ -128,11 +128,13 @@ CenterPanel::~CenterPanel()
 
 void CenterPanel::paint (juce::Graphics& g)
 {
-    using namespace tote_bag::laf_constants;
+    using namespace tote_bag::colours;
 
-    gui_utils::drawRoundedRect (g, topLeftRowBorderBounds.toFloat(), vPinkDark);
-    gui_utils::drawRoundedRect (g, bottomLeftRowBorderBounds.toFloat(), vPinkDark);
-    gui_utils::drawRoundedRect (g, topRightRowBorderBounds.toFloat(), vPinkDark);
+    gui_utils::drawRoundedRect (g, topLeftRowBorderBounds.toFloat(), valentinePinkDark);
+    gui_utils::drawRoundedRect (g,
+                                bottomLeftRowBorderBounds.toFloat(),
+                                valentinePinkDark);
+    gui_utils::drawRoundedRect (g, topRightRowBorderBounds.toFloat(), valentinePinkDark);
 }
 
 void CenterPanel::resized()
