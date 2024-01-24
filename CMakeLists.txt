@@ -189,6 +189,7 @@ target_compile_definitions("${PROJECT_NAME}"
     JUCE_DISPLAY_SPLASH_SCREEN=0
     JUCE_REPORT_APP_USAGE=0
     JUCE_MODAL_LOOPS_PERMITTED=1
+    JUCE_ENABLE_LIVE_CONSTANT_EDITOR=0
     )
 
 target_include_directories("${PROJECT_NAME}"
