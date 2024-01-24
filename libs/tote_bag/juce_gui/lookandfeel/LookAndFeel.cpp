@@ -14,6 +14,10 @@
 #include "tote_bag/juce_gui/components/widgets/FlatTextButton.h"
 #include "tote_bag/juce_gui/components/widgets/tbl_ToggleButton.h"
 
+#if JUCE_ENABLE_LIVE_CONSTANT_EDITOR
+    #include <juce_gui_extra/juce_gui_extra.h>
+#endif // JUCE_ENABLE_LIVE_CONSTANT_EDITOR
+
 namespace tote_bag
 {
 
