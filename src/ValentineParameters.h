@@ -16,7 +16,8 @@
 
 constexpr int ValentineParameterVersion = 1;
 
-enum VParameter {
+enum VParameter
+{
     bitCrush = 0,
     crushEnable,
     inputGain,
