@@ -13,6 +13,7 @@
 #include "tote_bag/juce_gui/utilities/tbl_font.h"
 
 #include <ff_meters/ff_meters.h>
+#include <juce_gui_basics/juce_gui_basics.h>
 
 namespace tote_bag
 {
@@ -24,15 +25,6 @@ class LookAndFeel : public juce::LookAndFeel_V4,
 {
 public:
     LookAndFeel();
-
-    void drawSliderMeter (juce::Graphics& g,
-                          const juce::Rectangle<float> bounds,
-                          float lineWidth,
-                          float arcRadius,
-                          float rotaryStartAngle,
-                          float rotaryEndAngle,
-                          float toAngle,
-                          juce::Slider& slider);
 
     /** Draws a drawable knob. Originally used for the knobs in Valentine, this is been refactored
         to not rely on member variables. This, along with the fact that this function isn't called
@@ -47,13 +39,6 @@ public:
                            juce::Drawable& sliderImage,
                            const float toAngle,
                            const juce::Rectangle<float> bounds);
-
-    void drawKnob (juce::Graphics& g,
-                   const float radius,
-                   const float toAngle,
-                   const juce::Rectangle<float> bounds,
-                   juce::Slider&,
-                   const bool withDropShadow);
 
     void drawRotarySlider (juce::Graphics& g,
                            int x,
@@ -108,11 +93,35 @@ public:
                             const juce::Drawable*,
                             const juce::Colour*) override;
 
+    void drawToggleButton (juce::Graphics& g,
+                           juce::ToggleButton& button,
+                           bool,
+                           bool) override;
+
     juce::Slider::SliderLayout getSliderLayout (juce::Slider& slider) override;
 
-    enum ColourIds { knobColourId = 0x1001800, pointerColourId = 0x1001801 };
+    enum ColourIds
+    {
+        knobColourId = 0x1001800,
+        pointerColourId = 0x1001801
+    };
 
 private:
+    void drawRotarySliderMeter (juce::Graphics& g,
+                                const juce::Rectangle<float> bounds,
+                                float lineWidth,
+                                float arcRadius,
+                                float rotaryStartAngle,
+                                float rotaryEndAngle,
+                                float toAngle,
+                                juce::Slider& slider);
+
+    void drawRotarySliderBase (juce::Graphics& g,
+                               const float radius,
+                               const float toAngle,
+                               const juce::Rectangle<float> bounds,
+                               juce::Slider&);
+
     FontHolder fontHolder;
 
 #include "MeterLookAndFeelMethods.h"

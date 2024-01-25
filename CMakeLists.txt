@@ -70,10 +70,14 @@ set(SourceFiles
     src/PluginEditor.cpp
     src/PluginProcessor.cpp
     
+    src/gui/panels/ValentineBottomRowPanel.h
     src/gui/panels/ValentineCenterPanel.h
     src/gui/panels/ValentineMainPanel.h
+    src/gui/panels/ValentineTopRowPanel.h
+    src/gui/panels/ValentineBottomRowPanel.cpp
     src/gui/panels/ValentineCenterPanel.cpp
     src/gui/panels/ValentineMainPanel.cpp
+    src/gui/panels/ValentineTopRowPanel.cpp
 
     libs/tote_bag/dsp/AudioHelpers.h
     libs/tote_bag/dsp/CircularBuffer.h
@@ -98,12 +102,14 @@ set(SourceFiles
     libs/tote_bag/juce_gui/components/widgets/LabelSlider.h
     libs/tote_bag/juce_gui/components/widgets/ParameterSlider.h
     libs/tote_bag/juce_gui/components/widgets/ParameterTextButton.h
+    libs/tote_bag/juce_gui/components/widgets/tbl_ToggleButton.h
     libs/tote_bag/juce_gui/components/widgets/DrawableParameterButton.cpp
     libs/tote_bag/juce_gui/components/widgets/FlatTextButton.cpp
     libs/tote_bag/juce_gui/components/widgets/FlatTextChooser.cpp
     libs/tote_bag/juce_gui/components/widgets/LabelSlider.cpp
     libs/tote_bag/juce_gui/components/widgets/ParameterSlider.cpp
     libs/tote_bag/juce_gui/components/widgets/ParameterTextButton.cpp
+    libs/tote_bag/juce_gui/components/widgets/tbl_ToggleButton.cpp
 
     libs/tote_bag/juce_gui/lookandfeel/LookAndFeel.h
     libs/tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h
@@ -134,13 +140,9 @@ set_target_properties("${PROJECT_NAME}" PROPERTIES FOLDER "")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${SourceFiles})
 
 set(AssetFiles
-    src/gui/assets/fonts/Roboto-Medium.ttf
-    src/gui/assets/fonts/RobotoMono-Medium.ttf
-    src/gui/assets/images/logo_218x40.svg
-    src/gui/assets/images/off_button.svg
-    src/gui/assets/images/on_button.svg
-    src/gui/assets/images/clip_off.svg
-    src/gui/assets/images/clip_on.svg
+    src/gui/assets/fonts/Roboto-Regular.ttf
+    src/gui/assets/fonts/RobotoMono-Regular.ttf
+    src/gui/assets/logos/val_totebag_logo.svg
    )
 
 # Setup our binary data as a target
@@ -187,6 +189,7 @@ target_compile_definitions("${PROJECT_NAME}"
     JUCE_DISPLAY_SPLASH_SCREEN=0
     JUCE_REPORT_APP_USAGE=0
     JUCE_MODAL_LOOPS_PERMITTED=1
+    JUCE_ENABLE_LIVE_CONSTANT_EDITOR=0
     )
 
 target_include_directories("${PROJECT_NAME}"

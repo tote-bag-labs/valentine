@@ -16,7 +16,8 @@
 
 constexpr int ValentineParameterVersion = 1;
 
-enum class VParameter {
+enum VParameter
+{
     bitCrush = 0,
     crushEnable,
     inputGain,
@@ -89,7 +90,11 @@ inline constexpr std::array<float, kNumRatioControlPoints> kThresholdControlPoin
 
 static constexpr auto numParams = static_cast<int> (VParameter::TOTAL_NUM_PARAMETERS);
 
-inline const std::array<juce::String, numParams>& FFCompParameterID()
+namespace tote_bag
+{
+namespace valentine
+{
+inline const std::array<juce::String, numParams>& parameterIDs()
 {
     static const std::array<juce::String, numParams> parameterIDs = {
         "Crush",
@@ -108,6 +113,18 @@ inline const std::array<juce::String, numParams>& FFCompParameterID()
 
     return parameterIDs;
 }
+
+inline const juce::String& parameterID (const size_t index)
+{
+    return parameterIDs()[index];
+}
+
+inline const juce::String& parameterID (const VParameter parameter)
+{
+    return parameterID (static_cast<size_t> (parameter));
+}
+} // namespace valentine
+} // namespace tote_bag
 
 inline const std::array<juce::String, numParams>& FFCompParameterLabel()
 {

@@ -17,7 +17,7 @@
 VMainPanel::VMainPanel (ValentineAudioProcessor& processor)
     : presetPanel (processor.getPresetManager(),
                    FFCompParameterLabel()[getParameterIndex (VParameter::bypass)],
-                   FFCompParameterID()[getParameterIndex (VParameter::bypass)],
+                   tote_bag::valentine::parameterID (VParameter::bypass),
                    processor.treeState)
     , inputMeterPanel (ReductionMeterPlacement::Right, &processor.getInputMeterSource())
     , outputMeterPanel (ReductionMeterPlacement::Left,

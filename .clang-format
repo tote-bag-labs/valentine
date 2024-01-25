@@ -27,6 +27,7 @@ BreakBeforeBraces: Custom
 BraceWrapping: # Allman except for lambdas
   AfterClass: true
   AfterCaseLabel: true
+  AfterEnum: true
   AfterFunction: true
   AfterNamespace: true
   AfterStruct: true

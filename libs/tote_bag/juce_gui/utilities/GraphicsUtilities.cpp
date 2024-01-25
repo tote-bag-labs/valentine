@@ -22,14 +22,13 @@ void drawRoundedRect (juce::Graphics& g,
 
     auto h = croppedBounds.getHeight();
     auto lineThickness = h * .025f;
-    auto cornerSize = h * .25f;
+    auto cornerSize = h * .075f;
 
     g.setColour (colour.darker());
 
     g.drawRoundedRectangle (croppedBounds, cornerSize, lineThickness);
 
     g.setColour (colour);
-
     juce::Path p;
     p.addRoundedRectangle (croppedBounds, cornerSize);
     g.fillPath (p);

@@ -37,5 +37,5 @@ private:
     PresetPanel presetPanel;
     VerticalMeterPanel inputMeterPanel;
     VerticalMeterPanel outputMeterPanel;
-    CenterPanel centerPanel;
+    tote_bag::valentine::CenterPanel centerPanel;
 };

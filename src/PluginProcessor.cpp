@@ -88,7 +88,7 @@ ValentineAudioProcessor::ValentineAudioProcessor()
     initializeDSP();
 
     // sign up parameter listeners
-    for (auto param : FFCompParameterID())
+    for (auto param : tote_bag::valentine::parameterIDs())
     {
         treeState.addParameterListener (param, this);
     }
@@ -114,7 +114,7 @@ ValentineAudioProcessor::ValentineAudioProcessor()
 
 ValentineAudioProcessor::~ValentineAudioProcessor()
 {
-    for (auto param : FFCompParameterID())
+    for (auto param : tote_bag::valentine::parameterIDs())
     {
         treeState.removeParameterListener (param, this);
     }
@@ -125,6 +125,8 @@ ValentineAudioProcessor::~ValentineAudioProcessor()
 juce::AudioProcessorValueTreeState::ParameterLayout
     ValentineAudioProcessor::createParameterLayout()
 {
+    using namespace tote_bag;
+
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
     for (size_t i = 0; i < numParams; ++i)
@@ -138,7 +140,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             const bool defaultValue = FFCompParameterDefaults[i] > 0.5f;
 
             params.push_back (std::make_unique<juce::AudioParameterBool> (
-                juce::ParameterID {FFCompParameterID()[i], ValentineParameterVersion},
+                juce::ParameterID {valentine::parameterID (i), ValentineParameterVersion},
                 FFCompParameterLabel()[i],
                 defaultValue));
         }
@@ -153,7 +155,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             auto stringFromValue = detail::makeStringFromValueFunction (paramType);
 
             params.push_back (std::make_unique<juce::AudioParameterFloat> (
-                juce::ParameterID {FFCompParameterID()[i], ValentineParameterVersion},
+                juce::ParameterID {valentine::parameterID (i), ValentineParameterVersion},
                 FFCompParameterLabel()[i],
                 rangeToUse,
                 FFCompParameterDefaults[i],
@@ -233,16 +235,18 @@ void ValentineAudioProcessor::changeProgramName (int, const juce::String&)
 //==============================================================================
 void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    using namespace tote_bag;
+
     const auto oversampleMultiplier =
         static_cast<int> (pow (2, detail::kOversampleFactor));
 
     processBuffer.setSize (2, samplesPerBlock);
     processBuffer.clear();
 
-    ffCompressor->setAttack (*treeState.getRawParameterValue (
-        FFCompParameterID()[getParameterIndex (VParameter::attack)]));
-    ffCompressor->setRelease (*treeState.getRawParameterValue (
-        FFCompParameterID()[getParameterIndex (VParameter::release)]));
+    ffCompressor->setAttack (
+        *treeState.getRawParameterValue (valentine::parameterID (VParameter::attack)));
+    ffCompressor->setRelease (
+        *treeState.getRawParameterValue (valentine::parameterID (VParameter::release)));
     ffCompressor->setSampleRate (sampleRate * oversampleMultiplier);
     ffCompressor->reset (samplesPerBlock * oversampleMultiplier);
     ffCompressor->setOversampleMultiplier (oversampleMultiplier);
@@ -367,7 +371,7 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     if (saturateOn.get())
     {
         // Clear the buffers if saturate just got turned back on
-        if(!saturateOnState)
+        if (!saturateOnState)
         {
             saturator->clearBuffers();
             saturateOnState = true;

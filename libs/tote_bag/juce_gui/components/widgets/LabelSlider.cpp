@@ -33,13 +33,13 @@ LabelSlider::~LabelSlider()
 
 void LabelSlider::resized()
 {
-    const auto mainArea = getLocalBounds();
-    const auto margin = juce::roundToInt (mainArea.getHeight() * .01f);
-    auto sliderArea = mainArea.reduced (margin);
+    auto sliderArea = getLocalBounds();
 
-    const auto labelHeight = juce::roundToInt (sliderArea.getHeight() * .140);
-    const auto labelArea = sliderArea.removeFromTop (labelHeight);
+    const auto labelHeight = juce::roundToInt (sliderArea.getHeight() * .1);
+    label.setBounds (sliderArea.removeFromTop (labelHeight));
+
+    const auto margin = juce::roundToInt (sliderArea.getHeight() * .07f);
+    sliderArea.removeFromTop (margin);
 
     slider.setBounds (sliderArea);
-    label.setBounds (labelArea);
 }

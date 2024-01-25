@@ -12,6 +12,11 @@
 #include "LookAndFeelConstants.h"
 
 #include "tote_bag/juce_gui/components/widgets/FlatTextButton.h"
+#include "tote_bag/juce_gui/components/widgets/tbl_ToggleButton.h"
+
+#if JUCE_ENABLE_LIVE_CONSTANT_EDITOR
+    #include <juce_gui_extra/juce_gui_extra.h>
+#endif // JUCE_ENABLE_LIVE_CONSTANT_EDITOR
 
 namespace tote_bag
 {
@@ -27,62 +32,25 @@ LookAndFeel::LookAndFeel()
     setColour (ColourIds::pointerColourId, juce::Colours::black);
 
     // slider text box colours
+    setColour (juce::Slider::backgroundColourId, juce::Colour (0xff2f2f2f));
+    setColour (juce::Slider::thumbColourId, juce::Colour (0xffe7e7e7));
     setColour (juce::Slider::textBoxTextColourId, juce::Colours::black);
-    setColour (juce::Slider::textBoxOutlineColourId, valentinePinkDark);
+    setColour (juce::Slider::textBoxOutlineColourId, valentinePink);
     setColour (juce::Slider::rotarySliderOutlineColourId, valentinePinkDark);
     setColour (juce::Slider::rotarySliderFillColourId, juce::Colours::floralwhite);
+
+    // A transparent-ish grey
+    setColour (ToggleButton::defaultFillColourId, colours::transparentGrey);
+
+    // A bright, not totally solid green
+    setColour (ToggleButton::activeFillColourId, juce::Colour (0xc749ff1b));
+
+    // A solid grey
+    setColour (ToggleButton::strokeColourId, juce::Colour (0xff7f7f7f));
 
     // so we don't get background painting on drawable buttons
     setColour (juce::DrawableButton::backgroundOnColourId,
                juce::Colours::transparentWhite);
-}
-
-void LookAndFeel::drawSliderMeter (juce::Graphics& g,
-                                   const juce::Rectangle<float> bounds,
-                                   const float lineWidth,
-                                   const float radius,
-                                   const float startAngle,
-                                   float endAngle,
-                                   const float toAngle,
-                                   juce::Slider& slider)
-{
-    auto outline = slider.findColour (juce::Slider::rotarySliderOutlineColourId);
-    auto fill = slider.findColour (juce::Slider::rotarySliderFillColourId);
-
-    juce::Path backgroundArc;
-    backgroundArc.addCentredArc (bounds.getCentreX(),
-                                 bounds.getCentreY(),
-                                 radius,
-                                 radius,
-                                 0.0f,
-                                 startAngle,
-                                 endAngle,
-                                 true);
-
-    g.setColour (outline);
-    g.strokePath (backgroundArc,
-                  juce::PathStrokeType (lineWidth,
-                                        juce::PathStrokeType::curved,
-                                        juce::PathStrokeType::butt));
-
-    if (slider.isEnabled())
-    {
-        juce::Path valueArc;
-        valueArc.addCentredArc (bounds.getCentreX(),
-                                bounds.getCentreY(),
-                                radius,
-                                radius,
-                                0.0f,
-                                startAngle,
-                                toAngle,
-                                true);
-
-        g.setColour (fill);
-        g.strokePath (valueArc,
-                      juce::PathStrokeType (lineWidth,
-                                            juce::PathStrokeType::curved,
-                                            juce::PathStrokeType::butt));
-    }
 }
 
 void LookAndFeel::drawDrawableKnob (juce::Graphics& g,
@@ -106,96 +74,97 @@ void LookAndFeel::drawDrawableKnob (juce::Graphics& g,
     sliderImage.drawAt (g, cX, cY, 1.0f);
 }
 
-void LookAndFeel::drawKnob (juce::Graphics& g,
-                            const float radius,
-                            const float toAngle,
-                            const juce::Rectangle<float> bounds,
-                            juce::Slider&,
-                            const bool withDropShadow)
+void LookAndFeel::drawRotarySliderMeter (juce::Graphics& g,
+                                         const juce::Rectangle<float> bounds,
+                                         const float lineWidth,
+                                         const float radius,
+                                         const float startAngle,
+                                         float endAngle,
+                                         const float toAngle,
+                                         juce::Slider& slider)
+{
+    auto outline = slider.findColour (juce::Slider::rotarySliderOutlineColourId);
+    auto fill = slider.findColour (juce::Slider::rotarySliderFillColourId);
+
+    juce::Path backgroundArc;
+    backgroundArc.addCentredArc (bounds.getCentreX(),
+                                 bounds.getCentreY(),
+                                 radius,
+                                 radius,
+                                 0.0f,
+                                 startAngle,
+                                 endAngle,
+                                 true);
+
+    g.setColour (outline);
+    g.strokePath (backgroundArc,
+                  juce::PathStrokeType (lineWidth,
+                                        juce::PathStrokeType::curved,
+                                        juce::PathStrokeType::rounded));
+
+    if (slider.isEnabled())
+    {
+        juce::Path valueArc;
+        valueArc.addCentredArc (bounds.getCentreX(),
+                                bounds.getCentreY(),
+                                radius,
+                                radius,
+                                0.0f,
+                                startAngle,
+                                toAngle,
+                                true);
+
+        g.setColour (fill);
+        g.strokePath (valueArc,
+                      juce::PathStrokeType (lineWidth,
+                                            juce::PathStrokeType::curved,
+                                            juce::PathStrokeType::rounded));
+    }
+}
+
+void LookAndFeel::drawRotarySliderBase (juce::Graphics& g,
+                                        const float radius,
+                                        const float toAngle,
+                                        const juce::Rectangle<float> bounds,
+                                        juce::Slider&)
 {
     const auto centreX = bounds.getCentreX();
     const auto centreY = bounds.getCentreY();
+    const auto rx = centreX - radius;
+    const auto ry = centreY - radius;
+    const auto rw = radius * 2.0f;
 
-    auto rx = centreX - radius;
-    auto ry = centreY - radius;
-    auto rw = radius * 2.0f;
-
-    // Fill main knob area
-    auto fillColour = findColour (ColourIds::knobColourId);
-    g.setColour (fillColour);
+    g.setColour (findColour (juce::Slider::backgroundColourId));
     g.fillEllipse (rx, ry, rw, rw);
 
-    // Get thicknesses for outline rings...
-    const auto innerOutlineThickness = juce::roundToInt (juce::jmax ((rw * .05f), 1.0f));
-    const auto outerOutlineThickness = innerOutlineThickness * .15f;
-
-    // Offset inner outline by its thickness
-    auto innerOutlineRadius = radius - (innerOutlineThickness * .5f);
-    auto innerOutlineRx = centreX - innerOutlineRadius;
-    auto innerOutlineRy = centreY - innerOutlineRadius;
-    auto innerOutlineRw = innerOutlineRadius * 2.0f;
-
-    // Draw inner outline
-    g.setColour (fillColour.darker (.15f));
-    g.drawEllipse (innerOutlineRx,
-                   innerOutlineRy,
-                   innerOutlineRw,
-                   innerOutlineRw,
-                   innerOutlineThickness);
-
-    // Offset outer outline by its thickness
-    auto outerOutlineRadius = radius - (outerOutlineThickness * .5f);
-    auto outerOutlineRx = centreX - outerOutlineRadius;
-    auto outerOutlineRy = centreY - outerOutlineRadius;
-    auto outerOutlineRw = outerOutlineRadius * 2.0f;
-
-    // Draw outer outline
-    if (withDropShadow)
-    {
-        auto xOffset = juce::jmin (juce::roundToInt (innerOutlineThickness * .25), 1);
-        auto yOffset = juce::jmin (juce::roundToInt (innerOutlineThickness * .5), 1);
-
-        auto shadow = juce::DropShadow (fillColour.darker(),
-                                        innerOutlineThickness,
-                                        {xOffset, yOffset});
-        juce::Path shadowPath;
-        shadowPath.addEllipse (outerOutlineRx,
-                               outerOutlineRy,
-                               outerOutlineRw,
-                               outerOutlineRw);
-        shadow.drawForPath (g, shadowPath);
-    }
-    else
-    {
-        g.setColour (fillColour.darker (.85f));
-        g.drawEllipse (outerOutlineRx,
-                       outerOutlineRy,
-                       outerOutlineRw,
-                       outerOutlineRw,
-                       outerOutlineThickness);
-    }
-
-    // Pointer
     juce::Path p;
-    auto pointerLength = radius * 0.33f;
-    auto pointerThickness = pointerLength * .2f;
-    auto cornerSize = pointerThickness * .35f;
-    p.addRoundedRectangle (-pointerThickness * 0.5f,
-                           -radius + innerOutlineThickness,
+    const auto pointerLength = radius * 0.41f;
+    const auto pointerThickness = radius * .085f;
+    const auto pointerX = -pointerThickness * 0.5f;
+    const auto initialPointerY = -radius;
+
+    // Increasing this value will cause the pointer to be drawn closer
+    // to the center of the slider.
+    const auto sliderEdgeOffset = juce::roundToInt (juce::jmax ((radius * .12f), 1.0f));
+    const auto pointerY = initialPointerY + sliderEdgeOffset;
+
+    const auto cornerSize = pointerThickness * .5f;
+
+    p.addRoundedRectangle (pointerX,
+                           pointerY,
                            pointerThickness,
                            pointerLength,
                            cornerSize,
                            cornerSize,
                            true,
                            true,
-                           false,
-                           false);
+                           true,
+                           true);
     p.applyTransform (
         juce::AffineTransform::rotation (toAngle).translated (bounds.getCentreX(),
                                                               bounds.getCentreY()));
 
-    auto pointerColour = findColour (ColourIds::pointerColourId);
-    g.setColour (pointerColour);
+    g.setColour (findColour (juce::Slider::thumbColourId));
     g.fillPath (p);
 }
 
@@ -209,31 +178,31 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
                                     const float rotaryEndAngle,
                                     juce::Slider& slider)
 {
-    auto bounds = juce::Rectangle<int> (x, y, width, height).toFloat().reduced (10);
+    auto bounds = juce::Rectangle<int> (x, y, width, height).toFloat();
     auto radius = juce::jmin (bounds.getWidth(), bounds.getHeight()) / 2.0f;
-    auto lineW = radius * 0.125f;
-    auto arcRadius = radius - lineW * 0.5f;
+    auto lineW = radius * 0.090f;
+    auto arcRadius = radius - lineW;
     const auto toAngle =
         rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 
-    drawSliderMeter (g,
-                     bounds,
-                     lineW,
-                     arcRadius,
-                     rotaryStartAngle,
-                     rotaryEndAngle,
-                     toAngle,
-                     slider);
+    drawRotarySliderMeter (g,
+                           bounds,
+                           lineW,
+                           arcRadius,
+                           rotaryStartAngle,
+                           rotaryEndAngle,
+                           toAngle,
+                           slider);
 
-    const auto knobRadius = arcRadius * .80f;
+    const auto knobRadius = arcRadius * .87f;
 
-    drawKnob (g, knobRadius, toAngle, bounds, slider, true);
+    drawRotarySliderBase (g, knobRadius, toAngle, bounds, slider);
 }
 
 juce::Font LookAndFeel::getTextButtonFont (juce::TextButton&, int buttonHeight)
 {
     const auto fontHeight = juce::jmax (7.0f, buttonHeight * 0.8f);
-    return fontHolder.getFont ("RobotoMedium_ttf").withHeight (fontHeight);
+    return fontHolder.getFont ("RobotoMonoRegular_ttf").withHeight (fontHeight);
 }
 
 juce::Font LookAndFeel::getLabelFont (juce::Label& l)
@@ -242,9 +211,11 @@ juce::Font LookAndFeel::getLabelFont (juce::Label& l)
     // Slider value box font
     if (dynamic_cast<juce::Slider*> (l.getParentComponent()))
     {
-        return fontHolder.getFont ("RobotoMonoMedium_ttf").withHeight (fontHeight);
+        return fontHolder.getFont ("RobotoMonoRegular_ttf").withHeight (fontHeight);
     }
-    return fontHolder.getFont ("RobotoMedium_ttf").withHeight (fontHeight);
+    return fontHolder.getFont ("RobotoRegular_ttf")
+        .withHeight (fontHeight)
+        .withExtraKerningFactor (.05f);
 }
 
 void LookAndFeel::drawButtonBackground (juce::Graphics& g,
@@ -359,7 +330,7 @@ void LookAndFeel::drawComboBox (juce::Graphics& g,
     const auto boxBounds = box.getLocalBounds();
 
     const auto fontHeight = juce::jmax (7.0f, height * 0.6f);
-    g.setFont (fontHolder.getFont ("RobotoMedium_ttf").withHeight (fontHeight));
+    g.setFont (fontHolder.getFont ("RobotoRegular_ttf").withHeight (fontHeight));
 
     g.setColour (box.findColour (juce::ComboBox::backgroundColourId));
 
@@ -393,11 +364,34 @@ void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
     g.setColour (myTextColour);
 
     auto fHeight = juce::jmax (7.0f, r.getHeight() * 0.6f);
-    g.setFont (fontHolder.getFont ("RobotoMedium_ttf").withHeight (fHeight));
+    g.setFont (fontHolder.getFont ("RobotoRegular_ttf").withHeight (fHeight));
 
     r.setLeft (10);
     r.setY (1);
     g.drawFittedText (text, r, juce::Justification::left, 1);
+}
+
+void LookAndFeel::drawToggleButton (juce::Graphics& g,
+                                    juce::ToggleButton& button,
+                                    bool,
+                                    bool)
+{
+    auto bounds = button.getLocalBounds();
+    const auto margin = juce::roundToInt (bounds.getHeight() * .1f);
+    bounds.reduce (margin, margin);
+
+    const auto buttonIsActive = button.getToggleState();
+    const auto fillColour = buttonIsActive
+                                ? findColour (ToggleButton::activeFillColourId)
+                                : findColour (ToggleButton::defaultFillColourId);
+
+    g.setColour (fillColour);
+    g.fillEllipse (bounds.toFloat());
+
+    const auto outlineThickness = bounds.getHeight() * .10f;
+
+    g.setColour (findColour (ToggleButton::strokeColourId));
+    g.drawEllipse (bounds.toFloat(), outlineThickness);
 }
 
 juce::Slider::SliderLayout LookAndFeel::getSliderLayout (juce::Slider& slider)
@@ -408,9 +402,9 @@ juce::Slider::SliderLayout LookAndFeel::getSliderLayout (juce::Slider& slider)
 
     auto localBounds = slider.getLocalBounds();
 
-    auto sDiameter = juce::jmin (localBounds.getWidth(), localBounds.getHeight()) - 4.0f;
+    auto sDiameter = juce::jmin (localBounds.getWidth(), localBounds.getHeight());
     auto textBoxWidth = juce::roundToInt (sDiameter * .66f);
-    auto textBoxHeight = juce::roundToInt (sDiameter * .17f);
+    auto textBoxHeight = juce::roundToInt (sDiameter * .15);
 
     juce::Slider::SliderLayout layout;
 
