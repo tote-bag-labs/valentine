@@ -14,6 +14,10 @@
 
 #include "tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h"
 
+#if JUCE_ENABLE_LIVE_CONSTANT_EDITOR
+    #include <juce_gui_extra/juce_gui_extra.h>
+#endif // JUCE_ENABLE_LIVE_CONSTANT_EDITOR
+
 VMainPanel::VMainPanel (ValentineAudioProcessor& processor)
     : presetPanel (processor.getPresetManager(),
                    FFCompParameterLabel()[getParameterIndex (VParameter::bypass)],
