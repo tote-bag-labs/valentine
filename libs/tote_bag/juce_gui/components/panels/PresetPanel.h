@@ -31,14 +31,27 @@ public:
     void resized() override;
 
 private:
+    void setupValentineInfoButton();
+
+    void setupBypassButton();
+
+    void setupSaveAndLoadButtons();
+
+    void setupPresetIncrementButtons();
+
+    void setupPresetDisplay();
+
     void handlePresetDisplaySelection();
 
-    void updatePresetComboBox();
+    void updatePresetDisplay();
 
+    juce::Rectangle<int> outerBorder;
+
+    juce::DrawableButton mInfoButton;
     juce::TextButton mSavePresetButton;
     juce::TextButton mLoadPresetButton;
-    juce::TextButton mPreviousPreset;
-    juce::TextButton mNextPreset;
+    juce::DrawableButton mPreviousPreset;
+    juce::DrawableButton mNextPreset;
     ParameterTextButton mBypassButton;
 
     juce::ComboBox mPresetDisplay;

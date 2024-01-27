@@ -58,7 +58,7 @@ public:
                                juce::Button& button,
                                const juce::Colour& backgroundColour,
                                bool,
-                               bool) override;
+                               bool shouldDrawButtonAsDown) override;
 
     void drawFlatButtonBackground (juce::Graphics& g,
                                    tote_bag::FlatTextButton& button,
@@ -70,6 +70,10 @@ public:
                          juce::TextButton& button,
                          bool,
                          bool isButtonDown) override;
+
+    juce::Font getComboBoxFont (juce::ComboBox& box) override;
+
+    void positionComboBoxText (juce::ComboBox& box, juce::Label& label) override;
 
     void drawComboBox (juce::Graphics& g,
                        int,

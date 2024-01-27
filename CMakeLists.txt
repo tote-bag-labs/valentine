@@ -143,6 +143,9 @@ set(AssetFiles
     src/gui/assets/fonts/Roboto-Regular.ttf
     src/gui/assets/fonts/RobotoMono-Regular.ttf
     src/gui/assets/logos/val_totebag_logo.svg
+    libs/tote_bag/assets/left_arrow.svg
+    libs/tote_bag/assets/right_arrow.svg
+    libs/tote_bag/assets/totie_pink.svg
    )
 
 # Setup our binary data as a target
