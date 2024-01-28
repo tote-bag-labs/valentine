@@ -93,6 +93,26 @@ void ToteBagPresetManager::loadPreset (int index)
     loadPreset (presetToLoad);
 }
 
+void ToteBagPresetManager::loadNextPreset()
+{
+    auto newPresetIndex = mCurrentPresetIndex + 1;
+    if (newPresetIndex > presetList.size() - 1)
+    {
+        newPresetIndex = 0;
+    }
+    loadPreset (newPresetIndex);
+}
+
+void ToteBagPresetManager::loadPreviousPreset()
+{
+    auto newPresetIndex = mCurrentPresetIndex - 1;
+    if (newPresetIndex < 0)
+    {
+        newPresetIndex = presetList.size() - 1;
+    }
+    loadPreset (newPresetIndex);
+}
+
 const juce::String ToteBagPresetManager::getPresetName (int inPresetIndex)
 {
     return presetList[inPresetIndex];

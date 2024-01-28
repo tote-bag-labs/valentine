@@ -49,11 +49,11 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
 
     // set up preset iterator buttons
     mNextPreset.setButtonText (">");
-    mNextPreset.onClick = [this]() { incrementPreset(); };
+    mNextPreset.onClick = [this]() { presetManager.loadNextPreset(); };
     addAndMakeVisible (mNextPreset);
 
     mPreviousPreset.setButtonText ("<");
-    mPreviousPreset.onClick = [this]() { decrementPreset(); };
+    mPreviousPreset.onClick = [this]() { presetManager.loadPreviousPreset(); };
     addAndMakeVisible (mPreviousPreset);
 
     startTimerHz (20);
@@ -68,26 +68,6 @@ void PresetPanel::paint (juce::Graphics& g)
 {
     g.setColour (juce::Colours::darkgrey);
     g.fillAll();
-}
-
-void PresetPanel::incrementPreset()
-{
-    auto newPresetIndex = presetManager.getCurrentPresetIndex() + 1;
-    if (newPresetIndex > presetManager.getNumberOfPresets() - 1)
-    {
-        newPresetIndex = 0;
-    }
-    presetManager.loadPreset (newPresetIndex);
-}
-
-void PresetPanel::decrementPreset()
-{
-    auto newPresetIndex = presetManager.getCurrentPresetIndex() - 1;
-    if (newPresetIndex < 0)
-    {
-        newPresetIndex = presetManager.getNumberOfPresets() - 1;
-    }
-    presetManager.loadPreset (newPresetIndex);
 }
 
 void PresetPanel::savePreset()

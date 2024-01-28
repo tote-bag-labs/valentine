@@ -26,10 +26,6 @@ public:
 
     void paint (juce::Graphics& g) override;
 
-    void incrementPreset();
-
-    void decrementPreset();
-
     void savePreset();
 
     void loadPreset();

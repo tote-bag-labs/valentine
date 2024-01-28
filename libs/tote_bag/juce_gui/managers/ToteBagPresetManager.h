@@ -47,6 +47,10 @@ public:
 
     void loadPreset (int presetIndex);
 
+    void loadNextPreset();
+
+    void loadPreviousPreset();
+
     /** Returns the present name for a given index of the preset directory */
     const juce::String getPresetName (int inPresetIndex);
     /** Returns the name of the currently loaded preset */
