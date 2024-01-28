@@ -72,7 +72,7 @@ void PresetPanel::paint (juce::Graphics& g)
 
 void PresetPanel::loadPreset()
 {
-    juce::String currentPresetDirectory = presetManager.getCurrentPresetDirectory();
+    const juce::String currentPresetDirectory = presetManager.getCurrentPresetDirectory();
 
     if (currentPresetDirectory.isNotEmpty())
     {
@@ -83,9 +83,7 @@ void PresetPanel::loadPreset()
 
         if (chooser.browseForFileToOpen())
         {
-            juce::File presetToLoad (chooser.getResult());
-
-            presetManager.loadPreset (presetToLoad);
+            presetManager.loadPreset (chooser.getResult());
         }
     }
 }
