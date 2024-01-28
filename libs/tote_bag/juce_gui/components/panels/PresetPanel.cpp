@@ -70,14 +70,6 @@ void PresetPanel::paint (juce::Graphics& g)
     g.fillAll();
 }
 
-void PresetPanel::handlePresetDisplaySelection()
-{
-    if (mPresetDisplay.getSelectedItemIndex() != -1)
-    {
-        presetManager.loadPreset (mPresetDisplay.getSelectedItemIndex());
-    }
-}
-
 void PresetPanel::timerCallback()
 {
     auto presetNameInManager = presetManager.getCurrentPresetName();
@@ -174,6 +166,14 @@ void PresetPanel::loadPreset()
         {
             presetManager.loadPreset (chooser.getResult());
         }
+    }
+}
+
+void PresetPanel::handlePresetDisplaySelection()
+{
+    if (mPresetDisplay.getSelectedItemIndex() != -1)
+    {
+        presetManager.loadPreset (mPresetDisplay.getSelectedItemIndex());
     }
 }
 

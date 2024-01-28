@@ -26,8 +26,6 @@ public:
 
     void paint (juce::Graphics& g) override;
 
-    void handlePresetDisplaySelection();
-
     void resized() override;
 
     void timerCallback() override;
@@ -36,6 +34,8 @@ private:
     void savePreset();
 
     void loadPreset();
+
+    void handlePresetDisplaySelection();
 
     void updatePresetComboBox();
 
