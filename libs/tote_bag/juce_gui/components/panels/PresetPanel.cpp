@@ -70,24 +70,6 @@ void PresetPanel::paint (juce::Graphics& g)
     g.fillAll();
 }
 
-void PresetPanel::loadPreset()
-{
-    const juce::String currentPresetDirectory = presetManager.getCurrentPresetDirectory();
-
-    if (currentPresetDirectory.isNotEmpty())
-    {
-        juce::FileChooser chooser (
-            "Load a file: ",
-            juce::File (currentPresetDirectory),
-            static_cast<std::string> (presetFileExtensionWildcard));
-
-        if (chooser.browseForFileToOpen())
-        {
-            presetManager.loadPreset (chooser.getResult());
-        }
-    }
-}
-
 void PresetPanel::handlePresetDisplaySelection()
 {
     if (mPresetDisplay.getSelectedItemIndex() != -1)
@@ -175,6 +157,24 @@ void PresetPanel::savePreset()
     if (chooser.browseForFileToSave (true))
     {
         presetManager.savePreset (chooser.getResult());
+    }
+}
+
+void PresetPanel::loadPreset()
+{
+    const juce::String currentPresetDirectory = presetManager.getCurrentPresetDirectory();
+
+    if (currentPresetDirectory.isNotEmpty())
+    {
+        juce::FileChooser chooser (
+            "Load a file: ",
+            juce::File (currentPresetDirectory),
+            static_cast<std::string> (presetFileExtensionWildcard));
+
+        if (chooser.browseForFileToOpen())
+        {
+            presetManager.loadPreset (chooser.getResult());
+        }
     }
 }
 
