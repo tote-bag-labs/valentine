@@ -72,11 +72,9 @@ void PresetPanel::paint (juce::Graphics& g)
 
 void PresetPanel::savePreset()
 {
-    const auto presetName = presetManager.getCurrentPresetName();
-
-    juce::String currentPresetPath = presetManager.getCurrentPresetDirectory()
-                                     + static_cast<std::string> (directorySeparator)
-                                     + presetName;
+    const juce::String currentPresetPath = presetManager.getCurrentPresetDirectory()
+                                           + static_cast<std::string> (directorySeparator)
+                                           + presetManager.getCurrentPresetName();
 
     juce::FileChooser chooser ("Save a file: ",
                                juce::File (currentPresetPath),
@@ -84,9 +82,7 @@ void PresetPanel::savePreset()
 
     if (chooser.browseForFileToSave (true))
     {
-        juce::File presetToSave (chooser.getResult());
-
-        presetManager.savePreset (presetToSave);
+        presetManager.savePreset (chooser.getResult());
     }
 }
 
