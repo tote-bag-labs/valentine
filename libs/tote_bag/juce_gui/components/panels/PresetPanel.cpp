@@ -149,21 +149,6 @@ void PresetPanel::timerCallback()
     }
 }
 
-void PresetPanel::updatePresetComboBox()
-{
-    mPresetDisplay.clear (juce::dontSendNotification);
-
-    const int numPresets = presetManager.getNumberOfPresets();
-
-    for (int i = 0; i < numPresets; i++)
-    {
-        mPresetDisplay.addItem (presetManager.getPresetName (i), (i + 1));
-    }
-
-    mPresetDisplay.setText (presetManager.getCurrentPresetName(),
-                            juce::dontSendNotification);
-}
-
 void PresetPanel::resized()
 {
     const auto area = getLocalBounds();
@@ -217,4 +202,19 @@ void PresetPanel::resized()
                                                    - margin,
                                                h};
     mPresetDisplay.setBounds (presetSelectorBounds);
+}
+
+void PresetPanel::updatePresetComboBox()
+{
+    mPresetDisplay.clear (juce::dontSendNotification);
+
+    const int numPresets = presetManager.getNumberOfPresets();
+
+    for (int i = 0; i < numPresets; i++)
+    {
+        mPresetDisplay.addItem (presetManager.getPresetName (i), (i + 1));
+    }
+
+    mPresetDisplay.setText (presetManager.getCurrentPresetName(),
+                            juce::dontSendNotification);
 }

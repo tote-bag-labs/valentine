@@ -40,9 +40,9 @@ public:
 
     void timerCallback() override;
 
+private:
     void updatePresetComboBox();
 
-private:
     juce::TextButton mSavePresetButton;
     juce::TextButton mLoadPresetButton;
     juce::TextButton mPreviousPreset;
