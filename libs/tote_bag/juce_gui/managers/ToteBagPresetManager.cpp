@@ -28,7 +28,109 @@ ToteBagPresetManager::ToteBagPresetManager (juce::AudioProcessor* inProcessor)
     updatePresetList();
 }
 
-void ToteBagPresetManager::createNewPreset()
+void ToteBagPresetManager::savePresetToFile()
+{
+    const juce::String currentPresetPath = presetDirectory.getFullPathName()
+                                           + static_cast<std::string> (directorySeparator)
+                                           + currentPresetName;
+
+    juce::FileChooser chooser ("Save a file: ",
+                               juce::File (currentPresetPath),
+                               static_cast<std::string> (presetFileExtensionWildcard));
+
+    if (chooser.browseForFileToSave (true))
+    {
+        savePreset (chooser.getResult());
+    }
+}
+
+void ToteBagPresetManager::loadPresetFromFile()
+{
+    const juce::String currentPresetDirectory = presetDirectory.getFullPathName();
+
+    if (currentPresetDirectory.isNotEmpty())
+    {
+        juce::FileChooser chooser (
+            "Load a file: ",
+            juce::File (currentPresetDirectory),
+            static_cast<std::string> (presetFileExtensionWildcard));
+
+        if (chooser.browseForFileToOpen())
+        {
+            loadPreset (chooser.getResult());
+        }
+    }
+}
+
+void ToteBagPresetManager::loadPreset (juce::File presetToLoad)
+{
+    // if preset successfully loads, save its name and index
+    juce::MemoryBlock presetBinary;
+    if (presetToLoad.loadFileAsData (presetBinary))
+    {
+        currentPresetName = presetToLoad.getFileNameWithoutExtension();
+
+        // current preset name is set my set State Info
+        processor->setStateInformation (presetBinary.getData(),
+                                        static_cast<int> (presetBinary.getSize()));
+    }
+}
+
+void ToteBagPresetManager::loadPreset (int index)
+{
+    auto presetToLoad = juce::File (
+        presetDirectory.getFullPathName() + static_cast<std::string> (directorySeparator)
+        + getPresetName (index) + static_cast<std::string> (presetFileExtension));
+    loadPreset (presetToLoad);
+}
+
+void ToteBagPresetManager::loadNextPreset()
+{
+    auto newPresetIndex = mCurrentPresetIndex + 1;
+    if (newPresetIndex > presetList.size() - 1)
+    {
+        newPresetIndex = 0;
+    }
+    loadPreset (newPresetIndex);
+}
+
+void ToteBagPresetManager::loadPreviousPreset()
+{
+    auto newPresetIndex = mCurrentPresetIndex - 1;
+    if (newPresetIndex < 0)
+    {
+        newPresetIndex = presetList.size() - 1;
+    }
+    loadPreset (newPresetIndex);
+}
+
+const juce::String ToteBagPresetManager::getPresetName (int inPresetIndex)
+{
+    return presetList[inPresetIndex];
+}
+
+const juce::String ToteBagPresetManager::getCurrentPresetName()
+{
+    return currentPresetName;
+}
+
+int ToteBagPresetManager::getCurrentPresetIndex()
+{
+    return mCurrentPresetIndex;
+}
+
+const int ToteBagPresetManager::getNumberOfPresets()
+{
+    return presetList.size();
+}
+
+void ToteBagPresetManager::setLastChosenPresetName (juce::String newPresetName)
+{
+    currentPresetName = newPresetName;
+    mCurrentPresetIndex = findPresetIndex (currentPresetName);
+}
+
+void ToteBagPresetManager::createDefaultPreset()
 {
     auto& parameters = processor->getParameters();
 
@@ -64,59 +166,11 @@ void ToteBagPresetManager::savePreset (juce::File presetFile)
     presetFile.appendData (destinationData.getData(), destinationData.getSize());
 
     updatePresetList();
-}
 
-void ToteBagPresetManager::loadPreset (juce::File presetToLoad)
-{
-    // if preset successfully loads, save its name and index
-    juce::MemoryBlock presetBinary;
-    if (presetToLoad.loadFileAsData (presetBinary))
+    if (onPresetSaved)
     {
-        currentPresetName = presetToLoad.getFileNameWithoutExtension();
-
-        // current preset name is set my set State Info
-        processor->setStateInformation (presetBinary.getData(),
-                                        static_cast<int> (presetBinary.getSize()));
+        onPresetSaved();
     }
-}
-
-void ToteBagPresetManager::loadPreset (int index)
-{
-    auto presetToLoad = juce::File (
-        presetDirectory.getFullPathName() + static_cast<std::string> (directorySeparator)
-        + getPresetName (index) + static_cast<std::string> (presetFileExtension));
-    loadPreset (presetToLoad);
-}
-
-const juce::String ToteBagPresetManager::getPresetName (int inPresetIndex)
-{
-    return presetList[inPresetIndex];
-}
-
-const juce::String ToteBagPresetManager::getCurrentPresetName()
-{
-    return currentPresetName;
-}
-
-int ToteBagPresetManager::getCurrentPresetIndex()
-{
-    return mCurrentPresetIndex;
-}
-
-const int ToteBagPresetManager::getNumberOfPresets()
-{
-    return presetList.size();
-}
-
-const juce::String ToteBagPresetManager::getCurrentPresetDirectory()
-{
-    return presetDirectory.getFullPathName();
-}
-
-void ToteBagPresetManager::setLastChosenPresetName (juce::String newPresetName)
-{
-    currentPresetName = newPresetName;
-    mCurrentPresetIndex = findPresetIndex (currentPresetName);
 }
 
 void ToteBagPresetManager::updatePresetList()
@@ -143,4 +197,9 @@ int ToteBagPresetManager::findPresetIndex (const juce::String& presetName)
     }
 
     return 0;
+}
+
+void ToteBagPresetManager::setPresetSavedCallback (PresetSavedCallback callback)
+{
+    onPresetSaved = callback;
 }

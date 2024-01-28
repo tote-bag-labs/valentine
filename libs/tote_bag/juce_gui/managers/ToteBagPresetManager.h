@@ -31,19 +31,24 @@ class AudioProcessor;
 class ToteBagPresetManager
 {
 public:
+    using PresetSavedCallback = std::function<void()>;
+
     ToteBagPresetManager (juce::AudioProcessor* inProcessor);
 
     /** Returns the number of presets loaded to the local presets array */
     const int getNumberOfPresets();
 
-    /** Sets all parameters to default and sets preset name to "Untitled"*/
-    void createNewPreset();
+    /** Opens a modal window and saves preset to the selected location */
+    void savePresetToFile();
 
-    void savePreset (juce::File presetToSave);
-
-    void loadPreset (juce::File presetToLoad);
+    /** Opens a modal window and loads preset from the selected location */
+    void loadPresetFromFile();
 
     void loadPreset (int presetIndex);
+
+    void loadNextPreset();
+
+    void loadPreviousPreset();
 
     /** Returns the present name for a given index of the preset directory */
     const juce::String getPresetName (int inPresetIndex);
@@ -52,12 +57,19 @@ public:
 
     int getCurrentPresetIndex();
 
-    /** Returns the base Preset Directory */
-    const juce::String getCurrentPresetDirectory();
     /** Allows caller to set the name of the currently loaded preset. used to facilitate state restore */
     void setLastChosenPresetName (juce::String newPresetName);
 
+    void setPresetSavedCallback (PresetSavedCallback callback);
+
 private:
+    /** Resets the processor to its default state, creating an "Untitled" preset */
+    void createDefaultPreset();
+
+    void savePreset (juce::File presetToSave);
+
+    void loadPreset (juce::File presetToLoad);
+
     /** Iterates over the preset directory and adds the files to localPresets  */
     void updatePresetList();
 
@@ -69,6 +81,8 @@ private:
     juce::Array<juce::String> presetList;
 
     juce::AudioProcessor* processor;
+
+    PresetSavedCallback onPresetSaved;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ToteBagPresetManager)
 };
