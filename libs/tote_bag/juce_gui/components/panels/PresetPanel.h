@@ -15,8 +15,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 
 class ToteBagPresetManager;
-class PresetPanel : public juce::Component,
-                    public juce::Timer
+class PresetPanel : public juce::Component, public juce::Timer
 {
 public:
     PresetPanel (ToteBagPresetManager& pManager,
@@ -52,7 +51,7 @@ private:
 
     juce::ComboBox mPresetDisplay;
 
-    juce::String currentPresetName { "Untitled" };
+    juce::String currentPresetName {"Untitled"};
 
     ToteBagPresetManager& presetManager;
 

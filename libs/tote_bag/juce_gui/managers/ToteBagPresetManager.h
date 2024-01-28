@@ -64,8 +64,8 @@ private:
     int findPresetIndex (const juce::String& presetName);
 
     juce::File presetDirectory;
-    juce::String currentPresetName { "Untitled" };
-    int mCurrentPresetIndex { 0 };
+    juce::String currentPresetName {"Untitled"};
+    int mCurrentPresetIndex {0};
     juce::Array<juce::String> presetList;
 
     juce::AudioProcessor* processor;

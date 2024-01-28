@@ -15,9 +15,11 @@
 ToteBagPresetManager::ToteBagPresetManager (juce::AudioProcessor* inProcessor)
     : processor (inProcessor)
 {
-    presetDirectory = juce::File ((juce::File::getSpecialLocation (juce::File::userDocumentsDirectory)).getFullPathName()
-                                  + static_cast<std::string> (directorySeparator) + "Tote Bag"
-                                  + static_cast<std::string> (directorySeparator) + processor->getName());
+    presetDirectory = juce::File (
+        (juce::File::getSpecialLocation (juce::File::userDocumentsDirectory))
+            .getFullPathName()
+        + static_cast<std::string> (directorySeparator) + "Tote Bag"
+        + static_cast<std::string> (directorySeparator) + processor->getName());
 
     // checks if preset directory is there—if not, it creates the directory
     if (!presetDirectory.exists())
@@ -32,7 +34,8 @@ void ToteBagPresetManager::createNewPreset()
 
     for (int i = 0; i < parameters.size(); i++)
     {
-        auto parameter = (juce::AudioProcessorParameterWithID*) parameters.getUnchecked (i);
+        auto parameter =
+            (juce::AudioProcessorParameterWithID*) parameters.getUnchecked (i);
 
         const float defaultValue = parameter->getDefaultValue();
 
@@ -72,16 +75,16 @@ void ToteBagPresetManager::loadPreset (juce::File presetToLoad)
         currentPresetName = presetToLoad.getFileNameWithoutExtension();
 
         // current preset name is set my set State Info
-        processor->setStateInformation (presetBinary.getData(), static_cast<int> (presetBinary.getSize()));
+        processor->setStateInformation (presetBinary.getData(),
+                                        static_cast<int> (presetBinary.getSize()));
     }
 }
 
 void ToteBagPresetManager::loadPreset (int index)
 {
-    auto presetToLoad = juce::File (presetDirectory.getFullPathName()
-                                    + static_cast<std::string> (directorySeparator)
-                                    + getPresetName (index)
-                                    + static_cast<std::string> (presetFileExtension));
+    auto presetToLoad = juce::File (
+        presetDirectory.getFullPathName() + static_cast<std::string> (directorySeparator)
+        + getPresetName (index) + static_cast<std::string> (presetFileExtension));
     loadPreset (presetToLoad);
 }
 
@@ -120,10 +123,11 @@ void ToteBagPresetManager::updatePresetList()
 {
     presetList.clear();
 
-    auto directoryIterator = juce::RangedDirectoryIterator (juce::File (presetDirectory),
-                                                            false,
-                                                            static_cast<std::string> (presetFileExtensionWildcard),
-                                                            juce::File::TypesOfFileToFind::findFiles);
+    auto directoryIterator = juce::RangedDirectoryIterator (
+        juce::File (presetDirectory),
+        false,
+        static_cast<std::string> (presetFileExtensionWildcard),
+        juce::File::TypesOfFileToFind::findFiles);
 
     for (auto entry : directoryIterator)
         presetList.add (entry.getFile().getFileNameWithoutExtension());
@@ -131,9 +135,7 @@ void ToteBagPresetManager::updatePresetList()
 
 int ToteBagPresetManager::findPresetIndex (const juce::String& presetName)
 {
-    const auto foundPreset = std::find (presetList.begin(),
-                                        presetList.end(),
-                                        presetName);
+    const auto foundPreset = std::find (presetList.begin(), presetList.end(), presetName);
 
     if (foundPreset != presetList.end())
     {

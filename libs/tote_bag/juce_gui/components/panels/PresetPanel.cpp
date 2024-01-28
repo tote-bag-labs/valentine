@@ -15,37 +15,33 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
                           const juce::String& bypassButtonText,
                           const juce::String& bypassParameterId,
                           juce::AudioProcessorValueTreeState& treeState)
-    : mBypassButton (bypassButtonText,
-                     bypassParameterId,
-                     treeState)
+    : mBypassButton (bypassButtonText, bypassParameterId, treeState)
     , presetManager (pManager)
 {
     // set up save and load buttons
     mSavePresetButton.setButtonText ("Save");
-    mSavePresetButton.onClick = [this]() {
-        savePreset();
-    };
+    mSavePresetButton.onClick = [this]() { savePreset(); };
     addAndMakeVisible (mSavePresetButton);
 
     mLoadPresetButton.setButtonText ("Load");
-    mLoadPresetButton.onClick = [this]() {
-        loadPreset();
-    };
+    mLoadPresetButton.onClick = [this]() { loadPreset(); };
     addAndMakeVisible (mLoadPresetButton);
 
     addAndMakeVisible (mBypassButton);
 
     // set up preset combo box
-    mPresetDisplay.setColour (juce::ComboBox::ColourIds::backgroundColourId, juce::Colours::black);
-    mPresetDisplay.setColour (juce::ComboBox::ColourIds::textColourId, juce::Colours::darkgrey);
-    mPresetDisplay.setColour (juce::ComboBox::ColourIds::outlineColourId, juce::Colours::grey);
+    mPresetDisplay.setColour (juce::ComboBox::ColourIds::backgroundColourId,
+                              juce::Colours::black);
+    mPresetDisplay.setColour (juce::ComboBox::ColourIds::textColourId,
+                              juce::Colours::darkgrey);
+    mPresetDisplay.setColour (juce::ComboBox::ColourIds::outlineColourId,
+                              juce::Colours::grey);
 
     addAndMakeVisible (mPresetDisplay);
-    mPresetDisplay.onChange = [this]() {
-        handlePresetDisplaySelection();
-    };
+    mPresetDisplay.onChange = [this]() { handlePresetDisplaySelection(); };
     mPresetDisplay.setText (currentPresetName, juce::dontSendNotification);
-    mPresetDisplay.setSelectedItemIndex (presetManager.getCurrentPresetIndex(), juce::dontSendNotification);
+    mPresetDisplay.setSelectedItemIndex (presetManager.getCurrentPresetIndex(),
+                                         juce::dontSendNotification);
 
     updatePresetComboBox();
 
@@ -97,7 +93,8 @@ void PresetPanel::savePreset()
     const auto presetName = presetManager.getCurrentPresetName();
 
     juce::String currentPresetPath = presetManager.getCurrentPresetDirectory()
-                                     + static_cast<std::string> (directorySeparator) + presetName;
+                                     + static_cast<std::string> (directorySeparator)
+                                     + presetName;
 
     juce::FileChooser chooser ("Save a file: ",
                                juce::File (currentPresetPath),
@@ -119,9 +116,10 @@ void PresetPanel::loadPreset()
 
     if (currentPresetDirectory.isNotEmpty())
     {
-        juce::FileChooser chooser ("Load a file: ",
-                                   juce::File (currentPresetDirectory),
-                                   static_cast<std::string> (presetFileExtensionWildcard));
+        juce::FileChooser chooser (
+            "Load a file: ",
+            juce::File (currentPresetDirectory),
+            static_cast<std::string> (presetFileExtensionWildcard));
 
         if (chooser.browseForFileToOpen())
         {
@@ -162,7 +160,8 @@ void PresetPanel::updatePresetComboBox()
         mPresetDisplay.addItem (presetManager.getPresetName (i), (i + 1));
     }
 
-    mPresetDisplay.setText (presetManager.getCurrentPresetName(), juce::dontSendNotification);
+    mPresetDisplay.setText (presetManager.getCurrentPresetName(),
+                            juce::dontSendNotification);
 }
 
 void PresetPanel::resized()
@@ -185,14 +184,14 @@ void PresetPanel::resized()
 
     // Place bypass button
     const auto bypassButtonWidth = juce::roundToInt (bypassAreaWidth);
-    juce::Rectangle<int> bypassBounds { x, y, bypassButtonWidth, h };
+    juce::Rectangle<int> bypassBounds {x, y, bypassButtonWidth, h};
     mBypassButton.setBounds (bypassBounds);
     x += (bypassButtonWidth + margin);
 
     // Place save and load buttons
     const auto saveLoadButtonWidth = juce::roundToInt (saveLoadAreaWidth * .5f);
     juce::Rectangle<int> saveLoadBounds;
-    for (auto button : { &mSavePresetButton, &mLoadPresetButton })
+    for (auto button : {&mSavePresetButton, &mLoadPresetButton})
     {
         saveLoadBounds.setBounds (x, y, saveLoadButtonWidth, h);
         button->setBounds (saveLoadBounds);
@@ -201,8 +200,9 @@ void PresetPanel::resized()
 
     // Place increment and decrement buttons
     juce::Rectangle<int> incrementDecrementBounds;
-    const auto incrementDecrementButtonWidth = juce::roundToInt (incrementDecrementAreaWidth * .5f);
-    for (auto button : { &mPreviousPreset, &mNextPreset })
+    const auto incrementDecrementButtonWidth =
+        juce::roundToInt (incrementDecrementAreaWidth * .5f);
+    for (auto button : {&mPreviousPreset, &mNextPreset})
     {
         incrementDecrementBounds.setBounds (x, y, incrementDecrementButtonWidth, h);
         button->setBounds (incrementDecrementBounds);
@@ -211,6 +211,10 @@ void PresetPanel::resized()
 
     // Place preset selection window
     const auto presetAreaWidth = actualWidth - buttonAreaWidth;
-    juce::Rectangle<int> presetSelectorBounds { x, y, juce::roundToInt (presetAreaWidth) - margin, h };
+    juce::Rectangle<int> presetSelectorBounds {x,
+                                               y,
+                                               juce::roundToInt (presetAreaWidth)
+                                                   - margin,
+                                               h};
     mPresetDisplay.setBounds (presetSelectorBounds);
 }
