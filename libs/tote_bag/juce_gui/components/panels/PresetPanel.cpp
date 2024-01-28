@@ -18,13 +18,15 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
     : mBypassButton (bypassButtonText, bypassParameterId, treeState)
     , presetManager (pManager)
 {
+    presetManager.setPresetSavedCallback ([this]() { updatePresetComboBox(); });
+
     // set up save and load buttons
     mSavePresetButton.setButtonText ("Save");
-    mSavePresetButton.onClick = [this]() { savePreset(); };
+    mSavePresetButton.onClick = [this]() { presetManager.savePreset(); };
     addAndMakeVisible (mSavePresetButton);
 
     mLoadPresetButton.setButtonText ("Load");
-    mLoadPresetButton.onClick = [this]() { loadPreset(); };
+    mLoadPresetButton.onClick = [this]() { presetManager.loadPreset(); };
     addAndMakeVisible (mLoadPresetButton);
 
     addAndMakeVisible (mBypassButton);
@@ -47,11 +49,11 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
 
     // set up preset iterator buttons
     mNextPreset.setButtonText (">");
-    mNextPreset.onClick = [this]() { incrementPreset(); };
+    mNextPreset.onClick = [this]() { presetManager.loadNextPreset(); };
     addAndMakeVisible (mNextPreset);
 
     mPreviousPreset.setButtonText ("<");
-    mPreviousPreset.onClick = [this]() { decrementPreset(); };
+    mPreviousPreset.onClick = [this]() { presetManager.loadPreviousPreset(); };
     addAndMakeVisible (mPreviousPreset);
 
     startTimerHz (20);
@@ -68,77 +70,6 @@ void PresetPanel::paint (juce::Graphics& g)
     g.fillAll();
 }
 
-void PresetPanel::incrementPreset()
-{
-    auto newPresetIndex = presetManager.getCurrentPresetIndex() + 1;
-    if (newPresetIndex > presetManager.getNumberOfPresets() - 1)
-    {
-        newPresetIndex = 0;
-    }
-    presetManager.loadPreset (newPresetIndex);
-}
-
-void PresetPanel::decrementPreset()
-{
-    auto newPresetIndex = presetManager.getCurrentPresetIndex() - 1;
-    if (newPresetIndex < 0)
-    {
-        newPresetIndex = presetManager.getNumberOfPresets() - 1;
-    }
-    presetManager.loadPreset (newPresetIndex);
-}
-
-void PresetPanel::savePreset()
-{
-    const auto presetName = presetManager.getCurrentPresetName();
-
-    juce::String currentPresetPath = presetManager.getCurrentPresetDirectory()
-                                     + static_cast<std::string> (directorySeparator)
-                                     + presetName;
-
-    juce::FileChooser chooser ("Save a file: ",
-                               juce::File (currentPresetPath),
-                               static_cast<std::string> (presetFileExtensionWildcard));
-
-    if (chooser.browseForFileToSave (true))
-    {
-        juce::File presetToSave (chooser.getResult());
-
-        presetManager.savePreset (presetToSave);
-
-        updatePresetComboBox();
-    }
-}
-
-void PresetPanel::loadPreset()
-{
-    juce::String currentPresetDirectory = presetManager.getCurrentPresetDirectory();
-
-    if (currentPresetDirectory.isNotEmpty())
-    {
-        juce::FileChooser chooser (
-            "Load a file: ",
-            juce::File (currentPresetDirectory),
-            static_cast<std::string> (presetFileExtensionWildcard));
-
-        if (chooser.browseForFileToOpen())
-        {
-            juce::File presetToLoad (chooser.getResult());
-
-            presetManager.loadPreset (presetToLoad);
-        }
-    }
-}
-
-void PresetPanel::handlePresetDisplaySelection()
-{
-    if (mPresetDisplay.getSelectedItemIndex() != -1)
-    {
-        const int index = mPresetDisplay.getSelectedItemIndex();
-        presetManager.loadPreset (index);
-    }
-}
-
 void PresetPanel::timerCallback()
 {
     auto presetNameInManager = presetManager.getCurrentPresetName();
@@ -147,21 +78,6 @@ void PresetPanel::timerCallback()
         mPresetDisplay.setText (presetNameInManager, juce::dontSendNotification);
         currentPresetName = presetNameInManager;
     }
-}
-
-void PresetPanel::updatePresetComboBox()
-{
-    mPresetDisplay.clear (juce::dontSendNotification);
-
-    const int numPresets = presetManager.getNumberOfPresets();
-
-    for (int i = 0; i < numPresets; i++)
-    {
-        mPresetDisplay.addItem (presetManager.getPresetName (i), (i + 1));
-    }
-
-    mPresetDisplay.setText (presetManager.getCurrentPresetName(),
-                            juce::dontSendNotification);
 }
 
 void PresetPanel::resized()
@@ -217,4 +133,27 @@ void PresetPanel::resized()
                                                    - margin,
                                                h};
     mPresetDisplay.setBounds (presetSelectorBounds);
+}
+
+void PresetPanel::handlePresetDisplaySelection()
+{
+    if (mPresetDisplay.getSelectedItemIndex() != -1)
+    {
+        presetManager.loadPreset (mPresetDisplay.getSelectedItemIndex());
+    }
+}
+
+void PresetPanel::updatePresetComboBox()
+{
+    mPresetDisplay.clear (juce::dontSendNotification);
+
+    const int numPresets = presetManager.getNumberOfPresets();
+
+    for (int i = 0; i < numPresets; i++)
+    {
+        mPresetDisplay.addItem (presetManager.getPresetName (i), (i + 1));
+    }
+
+    mPresetDisplay.setText (presetManager.getCurrentPresetName(),
+                            juce::dontSendNotification);
 }
