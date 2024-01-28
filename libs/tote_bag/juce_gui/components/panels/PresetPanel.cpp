@@ -9,13 +9,15 @@
 */
 
 #include "PresetPanel.h"
+#include "tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h"
 #include "tote_bag/juce_gui/managers/ToteBagPresetManager.h"
 
 PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
                           const juce::String& bypassButtonText,
                           const juce::String& bypassParameterId,
                           juce::AudioProcessorValueTreeState& treeState)
-    : mBypassButton (bypassButtonText, bypassParameterId, treeState)
+    : borderThickness (0.0f)
+    , mBypassButton (bypassButtonText, bypassParameterId, treeState)
     , presetManager (pManager)
 {
     presetManager.setPresetSavedCallback ([this]() { updatePresetComboBox(); });
@@ -66,8 +68,11 @@ PresetPanel::~PresetPanel()
 
 void PresetPanel::paint (juce::Graphics& g)
 {
-    g.setColour (juce::Colours::darkgrey);
+    g.setColour (tote_bag::colours::plainWhite);
     g.fillAll();
+
+    g.setColour (tote_bag::colours::plainBlack);
+    g.drawRect (getBounds(), borderThickness);
 }
 
 void PresetPanel::timerCallback()
@@ -84,6 +89,7 @@ void PresetPanel::resized()
 {
     const auto area = getLocalBounds();
     const auto margin = juce::roundToInt (area.getHeight() * .1f);
+    borderThickness = juce::roundToInt (margin * .4f);
 
     // Adjust width to account for margins
     const auto actualWidth = area.getWidth() - (margin * 6);

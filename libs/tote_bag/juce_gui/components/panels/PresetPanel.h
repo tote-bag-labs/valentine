@@ -35,6 +35,9 @@ private:
 
     void updatePresetComboBox();
 
+    int borderThickness;
+    juce::Rectangle<int> outerBorder;
+
     juce::TextButton mSavePresetButton;
     juce::TextButton mLoadPresetButton;
     juce::TextButton mPreviousPreset;
