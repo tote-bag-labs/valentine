@@ -64,6 +64,11 @@ void ToteBagPresetManager::savePreset (juce::File presetFile)
     presetFile.appendData (destinationData.getData(), destinationData.getSize());
 
     updatePresetList();
+
+    if (onPresetSaved)
+    {
+        onPresetSaved();
+    }
 }
 
 void ToteBagPresetManager::loadPreset (juce::File presetToLoad)
@@ -143,4 +148,9 @@ int ToteBagPresetManager::findPresetIndex (const juce::String& presetName)
     }
 
     return 0;
+}
+
+void ToteBagPresetManager::setPresetSavedCallback (PresetSavedCallback callback)
+{
+    onPresetSaved = callback;
 }

@@ -18,6 +18,8 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
     : mBypassButton (bypassButtonText, bypassParameterId, treeState)
     , presetManager (pManager)
 {
+    presetManager.setPresetSavedCallback ([this]() { updatePresetComboBox(); });
+
     // set up save and load buttons
     mSavePresetButton.setButtonText ("Save");
     mSavePresetButton.onClick = [this]() { savePreset(); };
@@ -105,8 +107,6 @@ void PresetPanel::savePreset()
         juce::File presetToSave (chooser.getResult());
 
         presetManager.savePreset (presetToSave);
-
-        updatePresetComboBox();
     }
 }
 

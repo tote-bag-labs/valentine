@@ -31,6 +31,8 @@ class AudioProcessor;
 class ToteBagPresetManager
 {
 public:
+    using PresetSavedCallback = std::function<void()>;
+
     ToteBagPresetManager (juce::AudioProcessor* inProcessor);
 
     /** Returns the number of presets loaded to the local presets array */
@@ -57,6 +59,8 @@ public:
     /** Allows caller to set the name of the currently loaded preset. used to facilitate state restore */
     void setLastChosenPresetName (juce::String newPresetName);
 
+    void setPresetSavedCallback (PresetSavedCallback callback);
+
 private:
     /** Iterates over the preset directory and adds the files to localPresets  */
     void updatePresetList();
@@ -69,6 +73,8 @@ private:
     juce::Array<juce::String> presetList;
 
     juce::AudioProcessor* processor;
+
+    PresetSavedCallback onPresetSaved;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ToteBagPresetManager)
 };
