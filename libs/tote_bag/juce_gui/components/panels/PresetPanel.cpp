@@ -74,8 +74,7 @@ void PresetPanel::handlePresetDisplaySelection()
 {
     if (mPresetDisplay.getSelectedItemIndex() != -1)
     {
-        const int index = mPresetDisplay.getSelectedItemIndex();
-        presetManager.loadPreset (index);
+        presetManager.loadPreset (mPresetDisplay.getSelectedItemIndex());
     }
 }
 
