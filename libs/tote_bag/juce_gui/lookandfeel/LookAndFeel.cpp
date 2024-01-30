@@ -224,14 +224,18 @@ void LookAndFeel::drawButtonBackground (juce::Graphics& g,
                                         bool,
                                         bool)
 {
-    auto buttonArea = button.getLocalBounds();
+    auto buttonArea =
+        button.getLocalBounds().reduced (juce::roundToInt (button.getHeight() * .15));
     const auto h = buttonArea.getHeight();
 
-    const auto cornerSize = juce::roundToInt (h * .15);
+    const auto cornerSize = juce::roundToInt (h * .5f);
 
     g.setColour (backgroundColour);
-
     g.fillRoundedRectangle (buttonArea.toFloat(), cornerSize);
+
+    const auto borderThickness = juce::roundToInt (h * .05f);
+    g.setColour (tote_bag::colours::plainBlack);
+    g.drawRoundedRectangle (buttonArea.toFloat(), cornerSize, borderThickness);
 }
 
 void LookAndFeel::drawFlatButtonBackground (juce::Graphics& g,
