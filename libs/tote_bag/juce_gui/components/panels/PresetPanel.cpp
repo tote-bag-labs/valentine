@@ -31,6 +31,15 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
     mLoadPresetButton.onClick = [this]() { presetManager.loadPreset(); };
     addAndMakeVisible (mLoadPresetButton);
 
+    mBypassButton.setColour (juce::TextButton::ColourIds::buttonColourId,
+                             tote_bag::colours::slateGrey);
+    mBypassButton.setColour (juce::TextButton::ColourIds::buttonOnColourId,
+                             tote_bag::colours::slateGrey);
+    mBypassButton.setColour (juce::TextButton::ColourIds::textColourOffId,
+                             tote_bag::colours::plainWhite);
+    mBypassButton.setColour (juce::TextButton::ColourIds::textColourOnId,
+                             tote_bag::colours::plainWhite);
+
     addAndMakeVisible (mBypassButton);
 
     // set up preset combo box
