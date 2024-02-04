@@ -321,6 +321,24 @@ void LookAndFeel::drawButtonText (juce::Graphics& g,
                           2);
 }
 
+juce::Font LookAndFeel::getComboBoxFont (juce::ComboBox& box)
+{
+    // Font height is determined by the label that is used to
+    // draw text.
+    return fontHolder.getFont ("RobotoRegular_ttf");
+}
+
+void LookAndFeel::positionComboBoxText (juce::ComboBox& box, juce::Label& label)
+{
+    const auto h = box.getHeight() * .46;
+    const auto centreY = h * .5;
+    const auto yOffset = h * .125f;
+
+    label.setBounds (1, centreY + yOffset, box.getWidth() * .8f, box.getHeight() * .5f);
+
+    label.setFont (getComboBoxFont (box));
+}
+
 void LookAndFeel::drawComboBox (juce::Graphics& g,
                                 int,
                                 int height,
@@ -332,9 +350,6 @@ void LookAndFeel::drawComboBox (juce::Graphics& g,
                                 juce::ComboBox& box)
 {
     const auto boxBounds = box.getLocalBounds();
-
-    const auto fontHeight = juce::jmax (7.0f, height * 0.6f);
-    g.setFont (fontHolder.getFont ("RobotoRegular_ttf").withHeight (fontHeight));
 
     g.setColour (box.findColour (juce::ComboBox::backgroundColourId));
 
