@@ -201,8 +201,8 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
 
 juce::Font LookAndFeel::getTextButtonFont (juce::TextButton&, int buttonHeight)
 {
-    const auto fontHeight = juce::jmax (7.0f, buttonHeight * 0.8f);
-    return fontHolder.getFont ("RobotoMonoRegular_ttf").withHeight (fontHeight);
+    const auto fontHeight = juce::jmax (7.0f, buttonHeight * 0.40f);
+    return fontHolder.getFont ("RobotoRegular_ttf").withHeight (fontHeight);
 }
 
 juce::Font LookAndFeel::getLabelFont (juce::Label& l)

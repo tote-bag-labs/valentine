@@ -23,13 +23,31 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
     presetManager.setPresetSavedCallback ([this]() { updatePresetComboBox(); });
 
     // set up save and load buttons
-    mSavePresetButton.setButtonText ("Save");
+    mSavePresetButton.setButtonText ("SAVE");
     mSavePresetButton.onClick = [this]() { presetManager.savePreset(); };
     addAndMakeVisible (mSavePresetButton);
 
-    mLoadPresetButton.setButtonText ("Load");
+    mSavePresetButton.setColour (juce::TextButton::ColourIds::buttonColourId,
+                                 tote_bag::colours::plainWhite);
+    mSavePresetButton.setColour (juce::TextButton::ColourIds::buttonOnColourId,
+                                 tote_bag::colours::plainWhite);
+    mSavePresetButton.setColour (juce::TextButton::ColourIds::textColourOffId,
+                                 tote_bag::colours::plainBlack);
+    mSavePresetButton.setColour (juce::TextButton::ColourIds::textColourOnId,
+                                 tote_bag::colours::plainBlack);
+
+    mLoadPresetButton.setButtonText ("LOAD");
     mLoadPresetButton.onClick = [this]() { presetManager.loadPreset(); };
     addAndMakeVisible (mLoadPresetButton);
+
+    mLoadPresetButton.setColour (juce::TextButton::ColourIds::buttonColourId,
+                                 tote_bag::colours::plainWhite);
+    mLoadPresetButton.setColour (juce::TextButton::ColourIds::buttonOnColourId,
+                                 tote_bag::colours::plainWhite);
+    mLoadPresetButton.setColour (juce::TextButton::ColourIds::textColourOffId,
+                                 tote_bag::colours::plainBlack);
+    mLoadPresetButton.setColour (juce::TextButton::ColourIds::textColourOnId,
+                                 tote_bag::colours::plainBlack);
 
     mBypassButton.setColour (juce::TextButton::ColourIds::buttonColourId,
                              tote_bag::colours::slateGrey);
