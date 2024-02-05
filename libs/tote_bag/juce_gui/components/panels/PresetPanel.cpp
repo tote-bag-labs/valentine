@@ -62,11 +62,11 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
 
     // set up preset combo box
     mPresetDisplay.setColour (juce::ComboBox::ColourIds::backgroundColourId,
-                              juce::Colours::black);
+                              tote_bag::colours::slateGrey);
     mPresetDisplay.setColour (juce::ComboBox::ColourIds::textColourId,
-                              juce::Colours::darkgrey);
+                              tote_bag::colours::plainWhite);
     mPresetDisplay.setColour (juce::ComboBox::ColourIds::outlineColourId,
-                              juce::Colours::grey);
+                              tote_bag::colours::plainBlack);
 
     addAndMakeVisible (mPresetDisplay);
     mPresetDisplay.onChange = [this]() { handlePresetDisplaySelection(); };
