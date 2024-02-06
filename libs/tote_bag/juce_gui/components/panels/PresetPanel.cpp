@@ -77,13 +77,13 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
     updatePresetComboBox();
 
     // set up preset iterator buttons
-    mNextPreset.setButtonText (">");
-    mNextPreset.onClick = [this]() { presetManager.loadNextPreset(); };
-    addAndMakeVisible (mNextPreset);
-
     mPreviousPreset.setButtonText ("<");
     mPreviousPreset.onClick = [this]() { presetManager.loadPreviousPreset(); };
     addAndMakeVisible (mPreviousPreset);
+
+    mNextPreset.setButtonText (">");
+    mNextPreset.onClick = [this]() { presetManager.loadNextPreset(); };
+    addAndMakeVisible (mNextPreset);
 
     startTimerHz (20);
 }
