@@ -12,11 +12,15 @@
 #include "tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h"
 #include "tote_bag/juce_gui/managers/ToteBagPresetManager.h"
 
+#include <BinaryData.h>
+
 PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
                           const juce::String& bypassButtonText,
                           const juce::String& bypassParameterId,
                           juce::AudioProcessorValueTreeState& treeState)
     : borderThickness (0.0f)
+    , mPreviousPreset ("PreviousPreset", juce::DrawableButton::ButtonStyle::ImageFitted)
+    , mNextPreset ("NextPreset", juce::DrawableButton::ButtonStyle::ImageFitted)
     , mBypassButton (bypassButtonText, bypassParameterId, treeState)
     , presetManager (pManager)
 {
@@ -76,14 +80,7 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
 
     updatePresetComboBox();
 
-    // set up preset iterator buttons
-    mPreviousPreset.setButtonText ("<");
-    mPreviousPreset.onClick = [this]() { presetManager.loadPreviousPreset(); };
-    addAndMakeVisible (mPreviousPreset);
-
-    mNextPreset.setButtonText (">");
-    mNextPreset.onClick = [this]() { presetManager.loadNextPreset(); };
-    addAndMakeVisible (mNextPreset);
+    setupPresetIncrementButtons();
 
     startTimerHz (20);
 }
@@ -166,6 +163,23 @@ void PresetPanel::resized()
                                                    - margin,
                                                h};
     mPresetDisplay.setBounds (presetSelectorBounds);
+}
+
+void PresetPanel::setupPresetIncrementButtons()
+{
+    mPreviousPreset.onClick = [this]() { presetManager.loadPreviousPreset(); };
+    mPreviousPreset.setImages (
+        juce::Drawable::createFromImageData (BinaryData::left_arrow_svg,
+                                             BinaryData::left_arrow_svgSize)
+            .get());
+    addAndMakeVisible (mPreviousPreset);
+
+    mNextPreset.onClick = [this]() { presetManager.loadNextPreset(); };
+    mNextPreset.setImages (
+        juce::Drawable::createFromImageData (BinaryData::right_arrow_svg,
+                                             BinaryData::right_arrow_svgSize)
+            .get());
+    addAndMakeVisible (mNextPreset);
 }
 
 void PresetPanel::handlePresetDisplaySelection()

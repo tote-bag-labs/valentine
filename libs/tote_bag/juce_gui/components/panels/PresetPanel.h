@@ -31,6 +31,8 @@ public:
     void resized() override;
 
 private:
+    void setupPresetIncrementButtons();
+
     void handlePresetDisplaySelection();
 
     void updatePresetComboBox();
@@ -40,8 +42,8 @@ private:
 
     juce::TextButton mSavePresetButton;
     juce::TextButton mLoadPresetButton;
-    juce::TextButton mPreviousPreset;
-    juce::TextButton mNextPreset;
+    juce::DrawableButton mPreviousPreset;
+    juce::DrawableButton mNextPreset;
     ParameterTextButton mBypassButton;
 
     juce::ComboBox mPresetDisplay;
