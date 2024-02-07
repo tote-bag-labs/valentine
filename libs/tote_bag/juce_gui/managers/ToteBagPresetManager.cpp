@@ -61,6 +61,24 @@ void ToteBagPresetManager::savePreset()
     }
 }
 
+void ToteBagPresetManager::loadPreset()
+{
+    const juce::String currentPresetDirectory = presetDirectory.getFullPathName();
+
+    if (currentPresetDirectory.isNotEmpty())
+    {
+        juce::FileChooser chooser (
+            "Load a file: ",
+            juce::File (currentPresetDirectory),
+            static_cast<std::string> (presetFileExtensionWildcard));
+
+        if (chooser.browseForFileToOpen())
+        {
+            loadPreset (chooser.getResult());
+        }
+    }
+}
+
 void ToteBagPresetManager::loadPreset (juce::File presetToLoad)
 {
     // if preset successfully loads, save its name and index

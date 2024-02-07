@@ -31,8 +31,6 @@ public:
     void resized() override;
 
 private:
-    void loadPreset();
-
     void handlePresetDisplaySelection();
 
     void updatePresetComboBox();

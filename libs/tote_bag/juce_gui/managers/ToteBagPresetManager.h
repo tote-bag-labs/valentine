@@ -43,7 +43,7 @@ public:
 
     void savePreset();
 
-    void loadPreset (juce::File presetToLoad);
+    void loadPreset();
 
     void loadPreset (int presetIndex);
 
@@ -67,6 +67,8 @@ public:
 
 private:
     void savePreset (juce::File presetToSave);
+
+    void loadPreset (juce::File presetToLoad);
 
     /** Iterates over the preset directory and adds the files to localPresets  */
     void updatePresetList();
