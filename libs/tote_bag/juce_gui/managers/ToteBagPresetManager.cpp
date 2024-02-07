@@ -28,23 +28,6 @@ ToteBagPresetManager::ToteBagPresetManager (juce::AudioProcessor* inProcessor)
     updatePresetList();
 }
 
-void ToteBagPresetManager::createNewPreset()
-{
-    auto& parameters = processor->getParameters();
-
-    for (int i = 0; i < parameters.size(); i++)
-    {
-        auto parameter =
-            (juce::AudioProcessorParameterWithID*) parameters.getUnchecked (i);
-
-        const float defaultValue = parameter->getDefaultValue();
-
-        parameter->setValueNotifyingHost (defaultValue);
-    }
-
-    currentPresetName = "Untitled";
-}
-
 void ToteBagPresetManager::savePreset()
 {
     const juce::String currentPresetPath = presetDirectory.getFullPathName()
@@ -141,15 +124,27 @@ const int ToteBagPresetManager::getNumberOfPresets()
     return presetList.size();
 }
 
-const juce::String ToteBagPresetManager::getCurrentPresetDirectory()
-{
-    return presetDirectory.getFullPathName();
-}
-
 void ToteBagPresetManager::setLastChosenPresetName (juce::String newPresetName)
 {
     currentPresetName = newPresetName;
     mCurrentPresetIndex = findPresetIndex (currentPresetName);
+}
+
+void ToteBagPresetManager::createNewPreset()
+{
+    auto& parameters = processor->getParameters();
+
+    for (int i = 0; i < parameters.size(); i++)
+    {
+        auto parameter =
+            (juce::AudioProcessorParameterWithID*) parameters.getUnchecked (i);
+
+        const float defaultValue = parameter->getDefaultValue();
+
+        parameter->setValueNotifyingHost (defaultValue);
+    }
+
+    currentPresetName = "Untitled";
 }
 
 void ToteBagPresetManager::savePreset (juce::File presetFile)

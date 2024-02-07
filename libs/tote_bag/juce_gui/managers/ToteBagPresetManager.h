@@ -38,9 +38,6 @@ public:
     /** Returns the number of presets loaded to the local presets array */
     const int getNumberOfPresets();
 
-    /** Sets all parameters to default and sets preset name to "Untitled"*/
-    void createNewPreset();
-
     void savePreset();
 
     void loadPreset();
@@ -58,14 +55,15 @@ public:
 
     int getCurrentPresetIndex();
 
-    /** Returns the base Preset Directory */
-    const juce::String getCurrentPresetDirectory();
     /** Allows caller to set the name of the currently loaded preset. used to facilitate state restore */
     void setLastChosenPresetName (juce::String newPresetName);
 
     void setPresetSavedCallback (PresetSavedCallback callback);
 
 private:
+    /** Sets all parameters to default and sets preset name to "Untitled"*/
+    void createNewPreset();
+
     void savePreset (juce::File presetToSave);
 
     void loadPreset (juce::File presetToLoad);
