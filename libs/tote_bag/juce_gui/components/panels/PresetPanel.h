@@ -31,8 +31,6 @@ public:
     void resized() override;
 
 private:
-    void savePreset();
-
     void loadPreset();
 
     void handlePresetDisplaySelection();

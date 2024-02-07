@@ -22,7 +22,7 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
 
     // set up save and load buttons
     mSavePresetButton.setButtonText ("Save");
-    mSavePresetButton.onClick = [this]() { savePreset(); };
+    mSavePresetButton.onClick = [this]() { presetManager.savePreset(); };
     addAndMakeVisible (mSavePresetButton);
 
     mLoadPresetButton.setButtonText ("Load");
@@ -133,22 +133,6 @@ void PresetPanel::resized()
                                                    - margin,
                                                h};
     mPresetDisplay.setBounds (presetSelectorBounds);
-}
-
-void PresetPanel::savePreset()
-{
-    const juce::String currentPresetPath = presetManager.getCurrentPresetDirectory()
-                                           + static_cast<std::string> (directorySeparator)
-                                           + presetManager.getCurrentPresetName();
-
-    juce::FileChooser chooser ("Save a file: ",
-                               juce::File (currentPresetPath),
-                               static_cast<std::string> (presetFileExtensionWildcard));
-
-    if (chooser.browseForFileToSave (true))
-    {
-        presetManager.savePreset (chooser.getResult());
-    }
 }
 
 void PresetPanel::loadPreset()

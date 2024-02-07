@@ -41,7 +41,7 @@ public:
     /** Sets all parameters to default and sets preset name to "Untitled"*/
     void createNewPreset();
 
-    void savePreset (juce::File presetToSave);
+    void savePreset();
 
     void loadPreset (juce::File presetToLoad);
 
@@ -66,6 +66,8 @@ public:
     void setPresetSavedCallback (PresetSavedCallback callback);
 
 private:
+    void savePreset (juce::File presetToSave);
+
     /** Iterates over the preset directory and adds the files to localPresets  */
     void updatePresetList();
 

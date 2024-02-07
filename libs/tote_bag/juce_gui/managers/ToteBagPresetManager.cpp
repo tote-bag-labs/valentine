@@ -45,29 +45,19 @@ void ToteBagPresetManager::createNewPreset()
     currentPresetName = "Untitled";
 }
 
-void ToteBagPresetManager::savePreset (juce::File presetFile)
+void ToteBagPresetManager::savePreset()
 {
-    // check if the file passed in actually exists. if not, create it
-    if (!presetFile.exists())
-        presetFile.create();
-    else
-        presetFile.deleteFile();
+    const juce::String currentPresetPath = presetDirectory.getFullPathName()
+                                           + static_cast<std::string> (directorySeparator)
+                                           + currentPresetName;
 
-    // update preset name for GUI display
-    currentPresetName = presetFile.getFileNameWithoutExtension();
+    juce::FileChooser chooser ("Save a file: ",
+                               juce::File (currentPresetPath),
+                               static_cast<std::string> (presetFileExtensionWildcard));
 
-    // allocate memory on the stack, and fill it with our preset data
-    juce::MemoryBlock destinationData;
-    processor->getStateInformation (destinationData);
-
-    // write the preset data to file
-    presetFile.appendData (destinationData.getData(), destinationData.getSize());
-
-    updatePresetList();
-
-    if (onPresetSaved)
+    if (chooser.browseForFileToSave (true))
     {
-        onPresetSaved();
+        savePreset (chooser.getResult());
     }
 }
 
@@ -142,6 +132,32 @@ void ToteBagPresetManager::setLastChosenPresetName (juce::String newPresetName)
 {
     currentPresetName = newPresetName;
     mCurrentPresetIndex = findPresetIndex (currentPresetName);
+}
+
+void ToteBagPresetManager::savePreset (juce::File presetFile)
+{
+    // check if the file passed in actually exists. if not, create it
+    if (!presetFile.exists())
+        presetFile.create();
+    else
+        presetFile.deleteFile();
+
+    // update preset name for GUI display
+    currentPresetName = presetFile.getFileNameWithoutExtension();
+
+    // allocate memory on the stack, and fill it with our preset data
+    juce::MemoryBlock destinationData;
+    processor->getStateInformation (destinationData);
+
+    // write the preset data to file
+    presetFile.appendData (destinationData.getData(), destinationData.getSize());
+
+    updatePresetList();
+
+    if (onPresetSaved)
+    {
+        onPresetSaved();
+    }
 }
 
 void ToteBagPresetManager::updatePresetList()
