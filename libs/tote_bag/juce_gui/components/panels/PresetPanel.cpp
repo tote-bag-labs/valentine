@@ -123,11 +123,18 @@ void PresetPanel::resized()
     const auto totieButtonWidth = juce::roundToInt (presetBoundsWidth * .045f);
     const auto totieBypassGapWidth = juce::roundToInt (presetBoundsWidth * .005f);
     const auto bypassButtonWidth = juce::roundToInt (presetBoundsWidth * .15f);
+    const auto bypassSaveGap = juce::roundToInt (presetBoundsWidth * .10f);
+    const auto saveLoadButtonWidth = juce::roundToInt (presetBoundsWidth * .19f);
+    const auto saveLoadGapWidth = juce::roundToInt (presetBoundsWidth * .0127f);
 
     presetBounds.removeFromLeft (leftTotieGapWidth);
     presetBounds.removeFromLeft (totieButtonWidth);
     presetBounds.removeFromLeft (totieBypassGapWidth);
     mBypassButton.setBounds (presetBounds.removeFromLeft (bypassButtonWidth));
+    presetBounds.removeFromLeft (bypassSaveGap);
+    mSavePresetButton.setBounds (presetBounds.removeFromLeft (saveLoadButtonWidth));
+    presetBounds.removeFromLeft (saveLoadGapWidth);
+    mLoadPresetButton.setBounds (presetBounds.removeFromLeft (saveLoadButtonWidth));
 }
 
 void PresetPanel::setupPresetIncrementButtons()
