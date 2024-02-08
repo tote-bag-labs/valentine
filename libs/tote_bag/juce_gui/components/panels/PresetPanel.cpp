@@ -115,54 +115,19 @@ void PresetPanel::resized()
     const auto margin = juce::roundToInt (area.getHeight() * .1f);
     borderThickness = juce::roundToInt (margin * .4f);
 
-    // Adjust width to account for margins
-    const auto actualWidth = area.getWidth() - (margin * 6);
-    const auto buttonAreaWidth = actualWidth * .5f;
+    auto presetBounds = area.reduced (borderThickness);
 
-    // Get width button groups on left side. Coefficients should sum to 1.
-    const auto saveLoadAreaWidth = buttonAreaWidth * .7f;
-    const auto bypassAreaWidth = buttonAreaWidth * .2f;
-    const auto incrementDecrementAreaWidth = buttonAreaWidth * .1f;
+    const auto presetBoundsWidth = presetBounds.getWidth();
 
-    auto x = area.getX() + margin; // We update this while we place components
-    const auto y = area.getY() + margin;
-    const auto h = juce::roundToInt (area.getHeight() - (margin * 2.0f));
+    const auto leftTotieGapWidth = juce::roundToInt (presetBoundsWidth * .02f);
+    const auto totieButtonWidth = juce::roundToInt (presetBoundsWidth * .045f);
+    const auto totieBypassGapWidth = juce::roundToInt (presetBoundsWidth * .005f);
+    const auto bypassButtonWidth = juce::roundToInt (presetBoundsWidth * .15f);
 
-    // Place bypass button
-    const auto bypassButtonWidth = juce::roundToInt (bypassAreaWidth);
-    juce::Rectangle<int> bypassBounds {x, y, bypassButtonWidth, h};
-    mBypassButton.setBounds (bypassBounds);
-    x += (bypassButtonWidth + margin);
-
-    // Place save and load buttons
-    const auto saveLoadButtonWidth = juce::roundToInt (saveLoadAreaWidth * .5f);
-    juce::Rectangle<int> saveLoadBounds;
-    for (auto button : {&mSavePresetButton, &mLoadPresetButton})
-    {
-        saveLoadBounds.setBounds (x, y, saveLoadButtonWidth, h);
-        button->setBounds (saveLoadBounds);
-        x += (saveLoadButtonWidth + margin);
-    }
-
-    // Place increment and decrement buttons
-    juce::Rectangle<int> incrementDecrementBounds;
-    const auto incrementDecrementButtonWidth =
-        juce::roundToInt (incrementDecrementAreaWidth * .5f);
-    for (auto button : {&mPreviousPreset, &mNextPreset})
-    {
-        incrementDecrementBounds.setBounds (x, y, incrementDecrementButtonWidth, h);
-        button->setBounds (incrementDecrementBounds);
-        x += (incrementDecrementButtonWidth + margin);
-    }
-
-    // Place preset selection window
-    const auto presetAreaWidth = actualWidth - buttonAreaWidth;
-    juce::Rectangle<int> presetSelectorBounds {x,
-                                               y,
-                                               juce::roundToInt (presetAreaWidth)
-                                                   - margin,
-                                               h};
-    mPresetDisplay.setBounds (presetSelectorBounds);
+    presetBounds.removeFromLeft (leftTotieGapWidth);
+    presetBounds.removeFromLeft (totieButtonWidth);
+    presetBounds.removeFromLeft (totieBypassGapWidth);
+    mBypassButton.setBounds (presetBounds.removeFromLeft (bypassButtonWidth));
 }
 
 void PresetPanel::setupPresetIncrementButtons()
