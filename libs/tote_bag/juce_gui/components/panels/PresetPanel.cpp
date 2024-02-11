@@ -19,7 +19,7 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
                           const juce::String& bypassParameterId,
                           juce::AudioProcessorValueTreeState& treeState)
     : borderThickness (0.0f)
-    , mTotieButton ("ValentineInfo", juce::DrawableButton::ButtonStyle::ImageFitted)
+    , mInfoButton ("ValentineInfo", juce::DrawableButton::ButtonStyle::ImageFitted)
     , mPreviousPreset ("PreviousPreset", juce::DrawableButton::ButtonStyle::ImageFitted)
     , mNextPreset ("NextPreset", juce::DrawableButton::ButtonStyle::ImageFitted)
     , mBypassButton (bypassButtonText, bypassParameterId, treeState)
@@ -27,6 +27,7 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
 {
     presetManager.setPresetSavedCallback ([this]() { updatePresetDisplay(); });
 
+    setupValentineInfoButton();
     setupBypassButton();
     setupSaveAndLoadButtons();
     setupPresetIncrementButtons();
@@ -95,6 +96,15 @@ void PresetPanel::resized()
     mNextPreset.setBounds (presetBounds.removeFromLeft (prevNextButtonWidth));
     presetBounds.removeFromLeft (loadPrevGapWidth);
     mPresetDisplay.setBounds (presetBounds.removeFromLeft (presetBoxWidth));
+}
+
+void PresetPanel::setupValentineInfoButton()
+{
+    mInfoButton.setImages (
+        juce::Drawable::createFromImageData (BinaryData::totie_placeholder_svg,
+                                             BinaryData::totie_placeholder_svgSize)
+            .get());
+    addAndMakeVisible (mInfoButton);
 }
 
 void PresetPanel::setupBypassButton()

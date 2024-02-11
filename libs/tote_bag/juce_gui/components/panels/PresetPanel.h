@@ -31,6 +31,8 @@ public:
     void resized() override;
 
 private:
+    void setupValentineInfoButton();
+
     void setupBypassButton();
 
     void setupSaveAndLoadButtons();
@@ -46,6 +48,7 @@ private:
     int borderThickness;
     juce::Rectangle<int> outerBorder;
 
+    juce::DrawableButton mInfoButton;
     juce::TextButton mSavePresetButton;
     juce::TextButton mLoadPresetButton;
     juce::DrawableButton mPreviousPreset;

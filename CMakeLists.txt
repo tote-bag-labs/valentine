@@ -145,6 +145,7 @@ set(AssetFiles
     src/gui/assets/logos/val_totebag_logo.svg
     libs/tote_bag/assets/left_arrow.svg
     libs/tote_bag/assets/right_arrow.svg
+    libs/tote_bag/assets/totie_placeholder.svg
    )
 
 # Setup our binary data as a target
