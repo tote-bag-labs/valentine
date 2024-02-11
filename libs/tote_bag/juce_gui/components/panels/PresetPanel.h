@@ -31,7 +31,13 @@ public:
     void resized() override;
 
 private:
+    void setupBypassButton();
+
+    void setupSaveAndLoadButtons();
+
     void setupPresetIncrementButtons();
+
+    void setupPresetDisplay();
 
     void handlePresetDisplaySelection();
 
