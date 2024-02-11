@@ -19,12 +19,13 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
                           const juce::String& bypassParameterId,
                           juce::AudioProcessorValueTreeState& treeState)
     : borderThickness (0.0f)
+    , mTotieButton ("ValentineInfo", juce::DrawableButton::ButtonStyle::ImageFitted)
     , mPreviousPreset ("PreviousPreset", juce::DrawableButton::ButtonStyle::ImageFitted)
     , mNextPreset ("NextPreset", juce::DrawableButton::ButtonStyle::ImageFitted)
     , mBypassButton (bypassButtonText, bypassParameterId, treeState)
     , presetManager (pManager)
 {
-    presetManager.setPresetSavedCallback ([this]() { updatePresetComboBox(); });
+    presetManager.setPresetSavedCallback ([this]() { updatePresetDisplay(); });
 
     setupBypassButton();
     setupSaveAndLoadButtons();
@@ -172,7 +173,7 @@ void PresetPanel::setupPresetDisplay()
     mPresetDisplay.setSelectedItemIndex (presetManager.getCurrentPresetIndex(),
                                          juce::dontSendNotification);
 
-    updatePresetComboBox();
+    updatePresetDisplay();
 }
 
 void PresetPanel::handlePresetDisplaySelection()
@@ -183,7 +184,7 @@ void PresetPanel::handlePresetDisplaySelection()
     }
 }
 
-void PresetPanel::updatePresetComboBox()
+void PresetPanel::updatePresetDisplay()
 {
     mPresetDisplay.clear (juce::dontSendNotification);
 

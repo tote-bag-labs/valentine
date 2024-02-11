@@ -41,7 +41,7 @@ private:
 
     void handlePresetDisplaySelection();
 
-    void updatePresetComboBox();
+    void updatePresetDisplay();
 
     int borderThickness;
     juce::Rectangle<int> outerBorder;
