@@ -126,6 +126,10 @@ void PresetPanel::resized()
     const auto bypassSaveGap = juce::roundToInt (presetBoundsWidth * .10f);
     const auto saveLoadButtonWidth = juce::roundToInt (presetBoundsWidth * .19f);
     const auto saveLoadGapWidth = juce::roundToInt (presetBoundsWidth * .0127f);
+    const auto loadPrevGapWidth = juce::roundToInt (presetBoundsWidth * .028f);
+    const auto prevNextButtonWidth = juce::roundToInt (presetBoundsWidth * .0225f);
+    const auto prevNextGapWidth = juce::roundToInt (presetBoundsWidth * .0112f);
+    const auto presetBoxWidth = juce::roundToInt (presetBoundsWidth * .25f);
 
     presetBounds.removeFromLeft (leftTotieGapWidth);
     presetBounds.removeFromLeft (totieButtonWidth);
@@ -135,6 +139,12 @@ void PresetPanel::resized()
     mSavePresetButton.setBounds (presetBounds.removeFromLeft (saveLoadButtonWidth));
     presetBounds.removeFromLeft (saveLoadGapWidth);
     mLoadPresetButton.setBounds (presetBounds.removeFromLeft (saveLoadButtonWidth));
+    presetBounds.removeFromLeft (loadPrevGapWidth);
+    mPreviousPreset.setBounds (presetBounds.removeFromLeft (prevNextButtonWidth));
+    presetBounds.removeFromLeft (prevNextGapWidth);
+    mNextPreset.setBounds (presetBounds.removeFromLeft (prevNextButtonWidth));
+    presetBounds.removeFromLeft (loadPrevGapWidth);
+    mPresetDisplay.setBounds (presetBounds.removeFromLeft (presetBoxWidth));
 }
 
 void PresetPanel::setupPresetIncrementButtons()
