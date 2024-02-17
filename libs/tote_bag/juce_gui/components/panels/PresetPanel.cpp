@@ -12,6 +12,10 @@
 #include "tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h"
 #include "tote_bag/juce_gui/managers/ToteBagPresetManager.h"
 
+#if JUCE_ENABLE_LIVE_CONSTANT_EDITOR
+    #include <juce_gui_extra/juce_gui_extra.h>
+#endif // JUCE_ENABLE_LIVE_CONSTANT_EDITOR
+
 #include <BinaryData.h>
 
 PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
