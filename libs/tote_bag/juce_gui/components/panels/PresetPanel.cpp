@@ -24,8 +24,9 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
                           juce::AudioProcessorValueTreeState& treeState)
     : borderThickness (0.0f)
     , mInfoButton ("ValentineInfo", juce::DrawableButton::ButtonStyle::ImageFitted)
-    , mPreviousPreset ("PreviousPreset", juce::DrawableButton::ButtonStyle::ImageFitted)
-    , mNextPreset ("NextPreset", juce::DrawableButton::ButtonStyle::ImageFitted)
+    , mPreviousPreset ("PreviousPreset",
+                       juce::DrawableButton::ButtonStyle::ImageStretched)
+    , mNextPreset ("NextPreset", juce::DrawableButton::ButtonStyle::ImageStretched)
     , mBypassButton (bypassButtonText, bypassParameterId, treeState)
     , presetManager (pManager)
 {
@@ -73,6 +74,7 @@ void PresetPanel::resized()
     auto presetBounds = area.reduced (borderThickness);
 
     const auto presetBoundsWidth = presetBounds.getWidth();
+    const auto presetBoundsHeight = presetBounds.getHeight();
 
     const auto leftInfoButtonGapWidth = juce::roundToInt (presetBoundsWidth * .026f);
     const auto infoButtonWidth = juce::roundToInt (presetBoundsWidth * 0.05f);
@@ -95,9 +97,19 @@ void PresetPanel::resized()
     presetBounds.removeFromLeft (saveLoadGapWidth);
     mLoadPresetButton.setBounds (presetBounds.removeFromLeft (saveLoadButtonWidth));
     presetBounds.removeFromLeft (loadPrevGapWidth);
-    mPreviousPreset.setBounds (presetBounds.removeFromLeft (prevNextButtonWidth));
+
+    const auto prevNextButtonHeight = juce::roundToInt (presetBoundsHeight * .2f);
+    const auto prevNextButtonY = presetBounds.getCentreY() - prevNextButtonHeight / 2;
+    mPreviousPreset.setBounds (presetBounds.removeFromLeft (prevNextButtonWidth)
+                                   .withY (prevNextButtonY)
+                                   .withHeight (prevNextButtonHeight));
+
     presetBounds.removeFromLeft (prevNextGapWidth);
-    mNextPreset.setBounds (presetBounds.removeFromLeft (prevNextButtonWidth));
+
+    mNextPreset.setBounds (presetBounds.removeFromLeft (prevNextButtonWidth)
+                               .withY (prevNextButtonY)
+                               .withHeight (prevNextButtonHeight));
+
     presetBounds.removeFromLeft (loadPrevGapWidth);
     mPresetDisplay.setBounds (presetBounds.removeFromLeft (presetBoxWidth));
 }
