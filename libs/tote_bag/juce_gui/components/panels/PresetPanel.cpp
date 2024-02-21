@@ -69,7 +69,7 @@ void PresetPanel::resized()
 {
     const auto area = getLocalBounds();
     const auto margin = juce::roundToInt (area.getHeight() * .1f);
-    borderThickness = juce::roundToInt (margin * .4f);
+    borderThickness = juce::roundToInt (margin * .3f);
 
     auto presetBounds = area.reduced (borderThickness);
 
