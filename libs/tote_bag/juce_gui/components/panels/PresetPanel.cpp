@@ -18,12 +18,19 @@
 
 #include <BinaryData.h>
 
+namespace detail
+{
+constexpr auto kTotieWidth = 144.22f;
+constexpr auto kTotieHeight = 135.51;
+constexpr auto kTotieHWRatio = kTotieHeight / kTotieWidth;
+}
+
 PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
                           const juce::String& bypassButtonText,
                           const juce::String& bypassParameterId,
                           juce::AudioProcessorValueTreeState& treeState)
     : borderThickness (0.0f)
-    , mInfoButton ("ValentineInfo", juce::DrawableButton::ButtonStyle::ImageFitted)
+    , mInfoButton ("ValentineInfo", juce::DrawableButton::ButtonStyle::ImageStretched)
     , mPreviousPreset ("PreviousPreset",
                        juce::DrawableButton::ButtonStyle::ImageStretched)
     , mNextPreset ("NextPreset", juce::DrawableButton::ButtonStyle::ImageStretched)
@@ -75,9 +82,10 @@ void PresetPanel::resized()
 
     const auto presetBoundsWidth = presetBounds.getWidth();
     const auto presetBoundsHeight = presetBounds.getHeight();
+    const auto presetBoundsCentreY = presetBounds.getCentreY();
 
     const auto leftInfoButtonGapWidth = juce::roundToInt (presetBoundsWidth * .026f);
-    const auto infoButtonWidth = juce::roundToInt (presetBoundsWidth * 0.05f);
+
     const auto infoButtonBypassGapWidth = juce::roundToInt (presetBoundsWidth * 0.0027f);
     const auto bypassButtonWidth = juce::roundToInt (presetBoundsWidth * .134f);
     const auto bypassSaveGapWidth = juce::roundToInt (presetBoundsWidth * .0825f);
@@ -89,7 +97,15 @@ void PresetPanel::resized()
     const auto presetBoxWidth = juce::roundToInt (presetBoundsWidth * .27f);
 
     presetBounds.removeFromLeft (leftInfoButtonGapWidth);
-    mInfoButton.setBounds (presetBounds.removeFromLeft (infoButtonWidth));
+
+    const auto infoButtonWidth = juce::roundToInt (presetBoundsWidth * 0.05f);
+    const auto infoButtonHeight =
+        juce::roundToInt (infoButtonWidth * detail::kTotieHWRatio);
+    const auto infoButtonY = presetBoundsCentreY - infoButtonHeight / 2;
+    mInfoButton.setBounds (presetBounds.removeFromLeft (infoButtonWidth)
+                               .withY (infoButtonY)
+                               .withHeight (infoButtonHeight));
+
     presetBounds.removeFromLeft (infoButtonBypassGapWidth);
     mBypassButton.setBounds (presetBounds.removeFromLeft (bypassButtonWidth));
     presetBounds.removeFromLeft (bypassSaveGapWidth);
@@ -99,7 +115,7 @@ void PresetPanel::resized()
     presetBounds.removeFromLeft (loadPrevGapWidth);
 
     const auto prevNextButtonHeight = juce::roundToInt (presetBoundsHeight * .2f);
-    const auto prevNextButtonY = presetBounds.getCentreY() - prevNextButtonHeight / 2;
+    const auto prevNextButtonY = presetBoundsCentreY - prevNextButtonHeight / 2;
     mPreviousPreset.setBounds (presetBounds.removeFromLeft (prevNextButtonWidth)
                                    .withY (prevNextButtonY)
                                    .withHeight (prevNextButtonHeight));
