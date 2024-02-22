@@ -18,6 +18,25 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Support macOS down to High
 # Be sure the file has no newlines
 file(STRINGS VERSION CURRENT_VERSION)
 
+# Find Git and if possible, get the current commit hash
+find_package(Git QUIET)
+if(GIT_FOUND)
+  execute_process(
+    COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+else()
+  set(GIT_COMMIT_HASH "unknown")
+endif()
+
+# Configure a header file to pass the Git commit hash to the source code
+configure_file(
+  ${CMAKE_SOURCE_DIR}/version.h.in
+  ${CMAKE_BINARY_DIR}/generated/version.h
+)
+
 # For simplicity, the name of the project is also the name of the target
 project(${PROJECT_NAME} VERSION ${CURRENT_VERSION})
 
@@ -198,7 +217,8 @@ target_compile_definitions("${PROJECT_NAME}"
 target_include_directories("${PROJECT_NAME}"
                             PRIVATE
                            "${CMAKE_CURRENT_SOURCE_DIR}/src"
-                           "${CMAKE_CURRENT_SOURCE_DIR}/libs")
+                           "${CMAKE_CURRENT_SOURCE_DIR}/libs"
+                           "${CMAKE_BINARY_DIR}")
 
 target_link_libraries("${PROJECT_NAME}"
     PRIVATE
