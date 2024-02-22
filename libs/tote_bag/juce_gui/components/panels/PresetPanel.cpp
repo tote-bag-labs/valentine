@@ -141,7 +141,12 @@ void PresetPanel::resized()
                                .withHeight (prevNextButtonHeight));
 
     presetBounds.removeFromLeft (loadPrevGapWidth);
-    mPresetDisplay.setBounds (presetBounds.removeFromLeft (presetBoxWidth));
+
+    const auto presetDisplayHeight = juce::roundToInt (presetBoundsHeight * .85f);
+    const auto presetDisplayY = presetBoundsCentreY - presetDisplayHeight / 2;
+    mPresetDisplay.setBounds (presetBounds.removeFromLeft (presetBoxWidth)
+                                  .withY (presetDisplayY)
+                                  .withHeight (presetDisplayHeight));
 }
 
 void PresetPanel::setupValentineInfoButton()
