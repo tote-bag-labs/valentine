@@ -362,11 +362,6 @@ void LookAndFeel::drawComboBox (juce::Graphics& g,
     const auto h = boxBounds.getHeight();
     const auto cornerSize = h * .15f;
     g.fillRoundedRectangle (boxBounds.toFloat(), cornerSize);
-
-    g.setColour(box.findColour(juce::ComboBox::outlineColourId));
-
-    const auto lineThickness = h * .05;
-    g.drawRoundedRectangle(boxBounds.toFloat(), cornerSize, lineThickness);
 }
 
 void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
