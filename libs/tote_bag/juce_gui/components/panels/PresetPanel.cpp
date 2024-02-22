@@ -107,11 +107,25 @@ void PresetPanel::resized()
                                .withHeight (infoButtonHeight));
 
     presetBounds.removeFromLeft (infoButtonBypassGapWidth);
-    mBypassButton.setBounds (presetBounds.removeFromLeft (bypassButtonWidth));
+
+    const auto bypassSaveLoadHeight = juce::roundToInt (presetBoundsHeight * .8f);
+    const auto bypassSaveLoadY = presetBoundsCentreY - bypassSaveLoadHeight / 2;
+    mBypassButton.setBounds (presetBounds.removeFromLeft (bypassButtonWidth)
+                                 .withY (bypassSaveLoadY)
+                                 .withHeight (bypassSaveLoadHeight));
+
     presetBounds.removeFromLeft (bypassSaveGapWidth);
-    mSavePresetButton.setBounds (presetBounds.removeFromLeft (saveLoadButtonWidth));
+
+    mSavePresetButton.setBounds (presetBounds.removeFromLeft (saveLoadButtonWidth)
+                                     .withY (bypassSaveLoadY)
+                                     .withHeight (bypassSaveLoadHeight));
+
     presetBounds.removeFromLeft (saveLoadGapWidth);
-    mLoadPresetButton.setBounds (presetBounds.removeFromLeft (saveLoadButtonWidth));
+
+    mLoadPresetButton.setBounds (presetBounds.removeFromLeft (saveLoadButtonWidth)
+                                     .withY (bypassSaveLoadY)
+                                     .withHeight (bypassSaveLoadHeight));
+
     presetBounds.removeFromLeft (loadPrevGapWidth);
 
     const auto prevNextButtonHeight = juce::roundToInt (presetBoundsHeight * .2f);
