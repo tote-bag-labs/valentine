@@ -110,8 +110,10 @@ set(SourceFiles
     libs/tote_bag/dsp/EnvelopeDetector.cpp
     libs/tote_bag/dsp/Saturation.cpp
     
+    libs/tote_bag/juce_gui/components/panels/InfoPanel.h
     libs/tote_bag/juce_gui/components/panels/PresetPanel.h
     libs/tote_bag/juce_gui/components/panels/VerticalMeterPanel.h
+    libs/tote_bag/juce_gui/components/panels/InfoPanel.cpp
     libs/tote_bag/juce_gui/components/panels/PresetPanel.cpp
     libs/tote_bag/juce_gui/components/panels/VerticalMeterPanel.cpp
 
