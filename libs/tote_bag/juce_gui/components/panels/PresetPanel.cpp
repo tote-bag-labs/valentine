@@ -28,6 +28,7 @@ constexpr auto kTotieHWRatio = kTotieHeight / kTotieWidth;
 PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
                           const juce::String& bypassButtonText,
                           const juce::String& bypassParameterId,
+                          std::function<void()> infoButtonCallback,
                           juce::AudioProcessorValueTreeState& treeState)
     : borderThickness (0.0f)
     , mInfoButton ("ValentineInfo", juce::DrawableButton::ButtonStyle::ImageStretched)
@@ -36,8 +37,11 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
     , mNextPreset ("NextPreset", juce::DrawableButton::ButtonStyle::ImageStretched)
     , mBypassButton (bypassButtonText, bypassParameterId, treeState)
     , presetManager (pManager)
+    , minfoButtonCallback (infoButtonCallback)
 {
     presetManager.setPresetSavedCallback ([this]() { updatePresetDisplay(); });
+
+    mInfoButton.onClick = [this]() { minfoButtonCallback(); };
 
     setupValentineInfoButton();
     setupBypassButton();
