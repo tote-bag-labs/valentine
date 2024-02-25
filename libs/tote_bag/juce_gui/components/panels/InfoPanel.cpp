@@ -19,7 +19,7 @@ InfoPanel::~InfoPanel()
 void InfoPanel::paint (juce::Graphics& g)
 {
     g.setColour (colours::plainWhite);
-    g.fillRect (getBounds());
+    g.fillRect (getLocalBounds());
 }
 
 void InfoPanel::mouseUp (const juce::MouseEvent& e)

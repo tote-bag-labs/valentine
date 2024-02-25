@@ -12,6 +12,7 @@
 
 #include "ValentineCenterPanel.h"
 
+#include "tote_bag/juce_gui/components/panels/InfoPanel.h"
 #include "tote_bag/juce_gui/components/panels/PresetPanel.h"
 #include "tote_bag/juce_gui/components/panels/VerticalMeterPanel.h"
 #include "tote_bag/juce_gui/lookandfeel/LookAndFeel.h"
@@ -38,4 +39,5 @@ private:
     VerticalMeterPanel inputMeterPanel;
     VerticalMeterPanel outputMeterPanel;
     tote_bag::valentine::CenterPanel centerPanel;
+    tote_bag::InfoPanel infoPanel;
 };
