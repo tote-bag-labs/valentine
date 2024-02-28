@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "generated/version.h"
-
 #include <juce_gui_basics/juce_gui_basics.h>
 
 #include <functional>
