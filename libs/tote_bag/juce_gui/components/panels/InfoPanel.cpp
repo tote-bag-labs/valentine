@@ -2,6 +2,8 @@
 
 #include "InfoPanel.h"
 
+#include "generated/version.h"
+
 #include "tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h"
 
 namespace tote_bag
