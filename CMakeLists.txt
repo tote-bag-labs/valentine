@@ -214,6 +214,8 @@ target_compile_definitions("${PROJECT_NAME}"
     JUCE_REPORT_APP_USAGE=0
     JUCE_MODAL_LOOPS_PERMITTED=1
     JUCE_ENABLE_LIVE_CONSTANT_EDITOR=0
+    PRIVATE
+    "VALENTINE_VERSION=\"${CURRENT_VERSION}\""
     )
 
 target_include_directories("${PROJECT_NAME}"
