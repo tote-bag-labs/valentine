@@ -1,2 +1,4 @@
 #pragma once
+
+#define CURRENT_VERSION "@CURRENT_VERSION@"
 #define BUILD_ID "@GIT_COMMIT_HASH@"
