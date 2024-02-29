@@ -23,6 +23,9 @@ public:
 private:
     std::function<void()> onMouseUp;
 
+    juce::Rectangle<int> urlBounds;
+    juce::URL githubURL;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InfoPanel)
 };
 

@@ -11,6 +11,7 @@ namespace tote_bag
 
 InfoPanel::InfoPanel (std::function<void()> mouseUpCallback)
     : onMouseUp (mouseUpCallback)
+    , githubURL ("https://github.com/tote-bag-labs/valentine")
 {
 }
 
@@ -32,28 +33,40 @@ void InfoPanel::paint (juce::Graphics& g)
                                     juce::roundToInt (boundsHeight / 4.0f));
 
     const auto textAreaHeight = textArea.getHeight();
-    const auto textHeight = juce::roundToInt (textAreaHeight / 8.0f);
+    const auto textHeight = juce::roundToInt (textAreaHeight / 16.0f);
     const auto textMargin = juce::roundToInt (textAreaHeight / 64.0f);
 
     g.setColour (colours::plainBlack);
 
     const auto placeText = [&] (const juce::String& text) {
-        g.drawFittedText (text,
-                          textArea.removeFromTop (textHeight),
-                          juce::Justification::centredBottom,
-                          1);
+        const auto bounds = textArea.removeFromTop (textHeight);
+
+        g.drawFittedText (text, bounds, juce::Justification::centredBottom, 1);
+
         textArea.removeFromTop (textMargin);
+
+        return bounds;
     };
 
     placeText ("Valentine");
     placeText ("Tote Bag Labs");
     placeText (CURRENT_VERSION);
     placeText (juce::String ("Build: " + juce::String (BUILD_ID)));
+
+    g.setColour (colours::valentinePink);
+    urlBounds = placeText ("Github");
 }
 
 void InfoPanel::mouseUp (const juce::MouseEvent& e)
 {
-    onMouseUp();
+    if (urlBounds.contains (e.getPosition()))
+    {
+        githubURL.launchInDefaultBrowser();
+    }
+    else
+    {
+        onMouseUp();
+    }
 }
 
 } // namespace tote_bag
