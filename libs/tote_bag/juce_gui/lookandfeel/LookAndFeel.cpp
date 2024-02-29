@@ -51,6 +51,10 @@ LookAndFeel::LookAndFeel()
     // so we don't get background painting on drawable buttons
     setColour (juce::DrawableButton::backgroundOnColourId,
                juce::Colours::transparentWhite);
+
+    setColour(juce::ComboBox::ColourIds::backgroundColourId, slateGrey);
+    setColour(juce::ComboBox::ColourIds::textColourId, plainWhite);
+
 }
 
 void LookAndFeel::drawDrawableKnob (juce::Graphics& g,
@@ -201,8 +205,8 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
 
 juce::Font LookAndFeel::getTextButtonFont (juce::TextButton&, int buttonHeight)
 {
-    const auto fontHeight = juce::jmax (7.0f, buttonHeight * 0.8f);
-    return fontHolder.getFont ("RobotoMonoRegular_ttf").withHeight (fontHeight);
+    const auto fontHeight = juce::jmax (7.0f, buttonHeight * 0.40f);
+    return fontHolder.getFont ("RobotoRegular_ttf").withHeight (fontHeight);
 }
 
 juce::Font LookAndFeel::getLabelFont (juce::Label& l)
@@ -224,14 +228,18 @@ void LookAndFeel::drawButtonBackground (juce::Graphics& g,
                                         bool,
                                         bool)
 {
-    auto buttonArea = button.getLocalBounds();
+    auto buttonArea =
+        button.getLocalBounds().reduced (juce::roundToInt (button.getHeight() * .15));
     const auto h = buttonArea.getHeight();
 
-    const auto cornerSize = juce::roundToInt (h * .15);
+    const auto cornerSize = juce::roundToInt (h * .5f);
 
     g.setColour (backgroundColour);
-
     g.fillRoundedRectangle (buttonArea.toFloat(), cornerSize);
+
+    const auto borderThickness = juce::roundToInt (h * .05f);
+    g.setColour (tote_bag::colours::plainBlack);
+    g.drawRoundedRectangle (buttonArea.toFloat(), cornerSize, borderThickness);
 }
 
 void LookAndFeel::drawFlatButtonBackground (juce::Graphics& g,
@@ -317,6 +325,26 @@ void LookAndFeel::drawButtonText (juce::Graphics& g,
                           2);
 }
 
+juce::Font LookAndFeel::getComboBoxFont (juce::ComboBox& box)
+{
+    // Font height is determined by the label that is used to
+    // draw text.
+    return fontHolder.getFont ("RobotoRegular_ttf");
+}
+
+void LookAndFeel::positionComboBoxText (juce::ComboBox& box, juce::Label& label)
+{
+    const auto h = box.getHeight() * .46;
+    const auto w = box.getWidth();
+    const auto x = w * .03;
+    const auto centreY = h * .5;
+    const auto yOffset = h * .125f;
+
+    label.setBounds (x, centreY + yOffset, box.getWidth() * .8f, box.getHeight() * .5f);
+
+    label.setFont (getComboBoxFont (box));
+}
+
 void LookAndFeel::drawComboBox (juce::Graphics& g,
                                 int,
                                 int height,
@@ -327,16 +355,18 @@ void LookAndFeel::drawComboBox (juce::Graphics& g,
                                 int,
                                 juce::ComboBox& box)
 {
-    const auto boxBounds = box.getLocalBounds();
-
-    const auto fontHeight = juce::jmax (7.0f, height * 0.6f);
-    g.setFont (fontHolder.getFont ("RobotoRegular_ttf").withHeight (fontHeight));
+    const auto boxBounds = box.getLocalBounds().reduced(juce::roundToInt(box.getHeight() * .1f));
 
     g.setColour (box.findColour (juce::ComboBox::backgroundColourId));
 
     const auto h = boxBounds.getHeight();
     const auto cornerSize = h * .15f;
     g.fillRoundedRectangle (boxBounds.toFloat(), cornerSize);
+
+    g.setColour(box.findColour(juce::ComboBox::outlineColourId));
+
+    const auto lineThickness = h * .05;
+    g.drawRoundedRectangle(boxBounds.toFloat(), cornerSize, lineThickness);
 }
 
 void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
@@ -355,12 +385,15 @@ void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
 
     juce::Rectangle<int> r (area);
 
+    const auto comboBoxColour = findColour(juce::ComboBox::ColourIds::backgroundColourId);
+
     juce::Colour fillColour =
-        isHighlighted ? transparentMediumGrey : slightlyTransparentBlack;
+        isHighlighted ? comboBoxColour.brighter() : comboBoxColour;
     g.setColour (fillColour);
     g.fillRect (r.getX(), r.getY(), r.getWidth(), r.getHeight() - 1);
 
-    juce::Colour myTextColour = isTicked ? lightGrey : mediumGrey;
+    const auto comboBoxTextColour = findColour(juce::ComboBox::ColourIds::textColourId);
+    juce::Colour myTextColour = isTicked ? comboBoxTextColour : comboBoxTextColour.darker();
     g.setColour (myTextColour);
 
     auto fHeight = juce::jmax (7.0f, r.getHeight() * 0.6f);

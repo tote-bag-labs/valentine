@@ -14,21 +14,29 @@
 
 #include "tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h"
 
+#if JUCE_ENABLE_LIVE_CONSTANT_EDITOR
+    #include <juce_gui_extra/juce_gui_extra.h>
+#endif // JUCE_ENABLE_LIVE_CONSTANT_EDITOR
+
 VMainPanel::VMainPanel (ValentineAudioProcessor& processor)
-    : presetPanel (processor.getPresetManager(),
-                   FFCompParameterLabel()[getParameterIndex (VParameter::bypass)],
-                   tote_bag::valentine::parameterID (VParameter::bypass),
-                   processor.treeState)
+    : presetPanel (
+        processor.getPresetManager(),
+        FFCompParameterLabel()[getParameterIndex (VParameter::bypass)],
+        tote_bag::valentine::parameterID (VParameter::bypass),
+        [this]() { infoPanel.setVisible (true); },
+        processor.treeState)
     , inputMeterPanel (ReductionMeterPlacement::Right, &processor.getInputMeterSource())
     , outputMeterPanel (ReductionMeterPlacement::Left,
                         &processor.getOutputMeterSource(),
                         &processor.getGrMeterSource())
     , centerPanel (processor)
+    , infoPanel ([this]() { infoPanel.setVisible (false); })
 {
     addAndMakeVisible (presetPanel);
     addAndMakeVisible (centerPanel);
     addAndMakeVisible (inputMeterPanel);
     addAndMakeVisible (outputMeterPanel);
+    addChildComponent (infoPanel, -1);
 
     setLookAndFeel (&lookAndFeel);
 }
@@ -47,8 +55,10 @@ void VMainPanel::resized()
 {
     auto panelBounds = getLocalBounds();
 
+    infoPanel.setBounds (panelBounds);
+
     const auto presetBounds =
-        panelBounds.removeFromTop (juce::roundToInt (panelBounds.getHeight() * .075f));
+        panelBounds.removeFromTop (juce::roundToInt (panelBounds.getHeight() * .11f));
     presetPanel.setBounds (presetBounds);
 
     const auto resizerMargin = juce::roundToInt (panelBounds.getHeight() * .03f);

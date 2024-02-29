@@ -14,47 +14,57 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
+#include <memory>
+
 class ToteBagPresetManager;
-class PresetPanel : public juce::Component,
-                    public juce::Timer
+class PresetPanel : public juce::Component, public juce::Timer
 {
 public:
     PresetPanel (ToteBagPresetManager& pManager,
                  const juce::String& bypassButtonText,
                  const juce::String& bypassParameterId,
+                 std::function<void()> infoButtonCallback,
                  juce::AudioProcessorValueTreeState& treeState);
     ~PresetPanel() override;
 
     void paint (juce::Graphics& g) override;
 
-    void incrementPreset();
-
-    void decrementPreset();
-
-    void savePreset();
-
-    void loadPreset();
-
-    void handlePresetDisplaySelection();
+    void timerCallback() override;
 
     void resized() override;
 
-    void timerCallback() override;
-
-    void updatePresetComboBox();
-
 private:
+    void setupValentineInfoButton();
+
+    void setupBypassButton();
+
+    void setupSaveAndLoadButtons();
+
+    void setupPresetIncrementButtons();
+
+    void setupPresetDisplay();
+
+    void handlePresetDisplaySelection();
+
+    void updatePresetDisplay();
+
+    int borderThickness;
+    juce::Rectangle<int> outerBorder;
+
+    juce::DrawableButton mInfoButton;
     juce::TextButton mSavePresetButton;
     juce::TextButton mLoadPresetButton;
-    juce::TextButton mPreviousPreset;
-    juce::TextButton mNextPreset;
+    juce::DrawableButton mPreviousPreset;
+    juce::DrawableButton mNextPreset;
     ParameterTextButton mBypassButton;
 
     juce::ComboBox mPresetDisplay;
 
-    juce::String currentPresetName { "Untitled" };
+    juce::String currentPresetName {"Untitled"};
 
     ToteBagPresetManager& presetManager;
+
+    std::function<void()> minfoButtonCallback;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PresetPanel)
 };
