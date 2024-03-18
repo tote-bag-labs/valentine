@@ -55,7 +55,7 @@ PresetPanel::~PresetPanel()
 
 void PresetPanel::paint (juce::Graphics& g)
 {
-    g.setColour (tote_bag::colours::plainWhite);
+    g.setColour (tote_bag::colours::offWhite);
     g.fillAll();
 
     g.setColour (tote_bag::colours::plainBlack);
