@@ -52,9 +52,8 @@ LookAndFeel::LookAndFeel()
     setColour (juce::DrawableButton::backgroundOnColourId,
                juce::Colours::transparentWhite);
 
-    setColour(juce::ComboBox::ColourIds::backgroundColourId, slateGrey);
-    setColour(juce::ComboBox::ColourIds::textColourId, plainWhite);
-
+    setColour (juce::ComboBox::ColourIds::backgroundColourId, slateGrey);
+    setColour (juce::ComboBox::ColourIds::textColourId, plainWhite);
 }
 
 void LookAndFeel::drawDrawableKnob (juce::Graphics& g,
@@ -356,7 +355,8 @@ void LookAndFeel::drawComboBox (juce::Graphics& g,
                                 int,
                                 juce::ComboBox& box)
 {
-    const auto boxBounds = box.getLocalBounds().reduced(juce::roundToInt(box.getHeight() * .1f));
+    const auto boxBounds =
+        box.getLocalBounds().reduced (juce::roundToInt (box.getHeight() * .1f));
 
     g.setColour (box.findColour (juce::ComboBox::backgroundColourId));
 
@@ -381,15 +381,16 @@ void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
 
     juce::Rectangle<int> r (area);
 
-    const auto comboBoxColour = findColour(juce::ComboBox::ColourIds::backgroundColourId);
+    const auto comboBoxColour =
+        findColour (juce::ComboBox::ColourIds::backgroundColourId);
 
-    juce::Colour fillColour =
-        isHighlighted ? comboBoxColour.brighter() : comboBoxColour;
+    juce::Colour fillColour = isHighlighted ? comboBoxColour.brighter() : comboBoxColour;
     g.setColour (fillColour);
     g.fillRect (r.getX(), r.getY(), r.getWidth(), r.getHeight() - 1);
 
-    const auto comboBoxTextColour = findColour(juce::ComboBox::ColourIds::textColourId);
-    juce::Colour myTextColour = isTicked ? comboBoxTextColour : comboBoxTextColour.darker();
+    const auto comboBoxTextColour = findColour (juce::ComboBox::ColourIds::textColourId);
+    juce::Colour myTextColour =
+        isTicked ? comboBoxTextColour : comboBoxTextColour.darker();
     g.setColour (myTextColour);
 
     auto fHeight = juce::jmax (7.0f, r.getHeight() * 0.6f);
