@@ -28,6 +28,9 @@ const juce::Colour transparentGrey (0x33393838);
 const juce::Colour transparentMediumGrey (0x4D696969);
 const juce::Colour slateGrey (0xff383838);
 const juce::Colour mediumGrey (0xff696969);
+const juce::Colour bypassGrey (0xff404040);
+const juce::Colour bypassInGrey (0xff808080);
+const juce::Colour bypassInTextGrey (0xffd2d2d2);
 const juce::Colour slightlyTransparentBlack (0x99000000);
 const juce::Colour plainBlack (0xff000000);
 } // colours

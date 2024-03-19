@@ -298,8 +298,9 @@ void LookAndFeel::drawButtonText (juce::Graphics& g,
     auto font = getTextButtonFont (button, button.getHeight());
     g.setFont (font);
     g.setColour (button
-                     .findColour (isButtonDown ? juce::TextButton::textColourOnId
-                                               : juce::TextButton::textColourOffId)
+                     .findColour (button.getToggleState()
+                                      ? juce::TextButton::textColourOnId
+                                      : juce::TextButton::textColourOffId)
                      .withMultipliedAlpha (button.isEnabled() ? 1.0f : 0.5f));
 
     auto yIndent = juce::jmin (4, button.proportionOfHeight (0.5f));

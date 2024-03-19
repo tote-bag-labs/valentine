@@ -161,13 +161,13 @@ void PresetPanel::setupValentineInfoButton()
 void PresetPanel::setupBypassButton()
 {
     mBypassButton.setColour (juce::TextButton::ColourIds::buttonColourId,
-                             tote_bag::colours::slateGrey);
-    mBypassButton.setColour (juce::TextButton::ColourIds::buttonOnColourId,
-                             tote_bag::colours::slateGrey);
+                             tote_bag::colours::bypassGrey);
     mBypassButton.setColour (juce::TextButton::ColourIds::textColourOffId,
                              tote_bag::colours::plainWhite);
+    mBypassButton.setColour (juce::TextButton::ColourIds::buttonOnColourId,
+                             tote_bag::colours::bypassInGrey);
     mBypassButton.setColour (juce::TextButton::ColourIds::textColourOnId,
-                             tote_bag::colours::plainWhite);
+                             tote_bag::colours::bypassInTextGrey);
 
     addAndMakeVisible (mBypassButton);
 }
