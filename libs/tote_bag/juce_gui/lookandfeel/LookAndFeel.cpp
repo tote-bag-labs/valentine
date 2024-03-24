@@ -225,7 +225,7 @@ void LookAndFeel::drawButtonBackground (juce::Graphics& g,
                                         juce::Button& button,
                                         const juce::Colour& backgroundColour,
                                         bool,
-                                        bool)
+                                        bool shouldDrawButtonAsDown)
 {
     auto buttonArea =
         button.getLocalBounds().reduced (juce::roundToInt (button.getHeight() * .15));
@@ -233,7 +233,10 @@ void LookAndFeel::drawButtonBackground (juce::Graphics& g,
 
     const auto cornerSize = juce::roundToInt (h * .5f);
 
-    g.setColour (backgroundColour);
+    g.setColour (shouldDrawButtonAsDown
+                     ? button.findColour (juce::TextButton::buttonOnColourId)
+                     : backgroundColour);
+
     g.fillRoundedRectangle (buttonArea.toFloat(), cornerSize);
 
     const auto borderThickness = juce::roundToInt (h * .05f);

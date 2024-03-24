@@ -58,7 +58,7 @@ public:
                                juce::Button& button,
                                const juce::Colour& backgroundColour,
                                bool,
-                               bool) override;
+                               bool shouldDrawButtonAsDown) override;
 
     void drawFlatButtonBackground (juce::Graphics& g,
                                    tote_bag::FlatTextButton& button,

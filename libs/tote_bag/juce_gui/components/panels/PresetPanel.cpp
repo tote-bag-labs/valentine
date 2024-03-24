@@ -181,7 +181,7 @@ void PresetPanel::setupSaveAndLoadButtons()
     mSavePresetButton.setColour (juce::TextButton::ColourIds::buttonColourId,
                                  tote_bag::colours::plainWhite);
     mSavePresetButton.setColour (juce::TextButton::ColourIds::buttonOnColourId,
-                                 tote_bag::colours::plainWhite);
+                                 tote_bag::colours::offWhite);
     mSavePresetButton.setColour (juce::TextButton::ColourIds::textColourOffId,
                                  tote_bag::colours::plainBlack);
     mSavePresetButton.setColour (juce::TextButton::ColourIds::textColourOnId,
@@ -194,7 +194,7 @@ void PresetPanel::setupSaveAndLoadButtons()
     mLoadPresetButton.setColour (juce::TextButton::ColourIds::buttonColourId,
                                  tote_bag::colours::plainWhite);
     mLoadPresetButton.setColour (juce::TextButton::ColourIds::buttonOnColourId,
-                                 tote_bag::colours::plainWhite);
+                                 tote_bag::colours::offWhite);
     mLoadPresetButton.setColour (juce::TextButton::ColourIds::textColourOffId,
                                  tote_bag::colours::plainBlack);
     mLoadPresetButton.setColour (juce::TextButton::ColourIds::textColourOnId,
