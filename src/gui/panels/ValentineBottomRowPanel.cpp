@@ -57,7 +57,7 @@ BottomRowPanel::~BottomRowPanel()
 
 void BottomRowPanel::paint (juce::Graphics& g)
 {
-    g.setColour (colours::transparentGrey);
+    g.setColour (colours::dividerGrey);
 
     g.fillRect (divider);
 }
