@@ -50,7 +50,8 @@ void CenterPanel::resized()
     topRowBorder =
         localBounds.removeFromTop (juce::roundToInt (localBounds.getHeight() * .50f));
 
-    borderLineThickness = topRowBorder.getHeight() * .01f;
+    borderLineThickness = topRowBorder.getHeight() * .005f;
+
     borderCornerSize = topRowBorder.getHeight() * .060f;
 
     topRow.setBounds (topRowBorder.reduced (juce::roundToInt (margin)));
