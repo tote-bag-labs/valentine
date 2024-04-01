@@ -163,6 +163,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${SourceFiles})
 set(AssetFiles
     src/gui/assets/fonts/Roboto-Regular.ttf
     src/gui/assets/fonts/RobotoMono-Regular.ttf
+    src/gui/assets/fonts/RobotoMono-Medium.ttf
     src/gui/assets/logos/val_totebag_logo.svg
     libs/tote_bag/assets/arrow_left.svg
     libs/tote_bag/assets/arrow_right.svg

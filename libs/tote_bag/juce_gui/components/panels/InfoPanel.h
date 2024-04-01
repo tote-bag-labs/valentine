@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "tote_bag/juce_gui/utilities/tbl_font.h"
+
 #include <juce_gui_basics/juce_gui_basics.h>
 
 #include <functional>
@@ -21,7 +23,12 @@ public:
     void mouseUp (const juce::MouseEvent& e) override;
 
 private:
+    void drawInfoText (juce::Graphics& g);
+
     std::function<void()> onMouseUp;
+
+    juce::Rectangle<int> urlBounds;
+    juce::URL githubURL;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InfoPanel)
 };
