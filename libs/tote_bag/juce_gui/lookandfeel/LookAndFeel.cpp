@@ -51,6 +51,9 @@ LookAndFeel::LookAndFeel()
     // so we don't get background painting on drawable buttons
     setColour (juce::DrawableButton::backgroundOnColourId,
                juce::Colours::transparentWhite);
+
+    setColour (juce::ComboBox::ColourIds::backgroundColourId, slateGrey);
+    setColour (juce::ComboBox::ColourIds::textColourId, plainWhite);
 }
 
 void LookAndFeel::drawDrawableKnob (juce::Graphics& g,
@@ -201,8 +204,8 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
 
 juce::Font LookAndFeel::getTextButtonFont (juce::TextButton&, int buttonHeight)
 {
-    const auto fontHeight = juce::jmax (7.0f, buttonHeight * 0.8f);
-    return fontHolder.getFont ("RobotoMonoRegular_ttf").withHeight (fontHeight);
+    const auto fontHeight = juce::jmax (7.0f, buttonHeight * 0.40f);
+    return fontHolder.getFont ("RobotoRegular_ttf").withHeight (fontHeight);
 }
 
 juce::Font LookAndFeel::getLabelFont (juce::Label& l)
@@ -222,16 +225,22 @@ void LookAndFeel::drawButtonBackground (juce::Graphics& g,
                                         juce::Button& button,
                                         const juce::Colour& backgroundColour,
                                         bool,
-                                        bool)
+                                        bool shouldDrawButtonAsDown)
 {
-    auto buttonArea = button.getLocalBounds();
+    auto buttonArea =
+        button.getLocalBounds().reduced (juce::roundToInt (button.getHeight() * .15));
     const auto h = buttonArea.getHeight();
 
-    const auto cornerSize = juce::roundToInt (h * .15);
+    const auto cornerSize = juce::roundToInt (h * .5f);
 
-    g.setColour (backgroundColour);
+    g.setColour (shouldDrawButtonAsDown
+                     ? button.findColour (juce::TextButton::buttonOnColourId)
+                     : backgroundColour);
 
     g.fillRoundedRectangle (buttonArea.toFloat(), cornerSize);
+
+    g.setColour (tote_bag::colours::plainBlack);
+    g.drawRoundedRectangle (buttonArea.toFloat(), cornerSize, 1);
 }
 
 void LookAndFeel::drawFlatButtonBackground (juce::Graphics& g,
@@ -290,8 +299,9 @@ void LookAndFeel::drawButtonText (juce::Graphics& g,
     auto font = getTextButtonFont (button, button.getHeight());
     g.setFont (font);
     g.setColour (button
-                     .findColour (isButtonDown ? juce::TextButton::textColourOnId
-                                               : juce::TextButton::textColourOffId)
+                     .findColour (button.getToggleState()
+                                      ? juce::TextButton::textColourOnId
+                                      : juce::TextButton::textColourOffId)
                      .withMultipliedAlpha (button.isEnabled() ? 1.0f : 0.5f));
 
     auto yIndent = juce::jmin (4, button.proportionOfHeight (0.5f));
@@ -317,6 +327,26 @@ void LookAndFeel::drawButtonText (juce::Graphics& g,
                           2);
 }
 
+juce::Font LookAndFeel::getComboBoxFont (juce::ComboBox&)
+{
+    // Font height is determined by the label that is used to
+    // draw text.
+    return fontHolder.getFont ("RobotoRegular_ttf");
+}
+
+void LookAndFeel::positionComboBoxText (juce::ComboBox& box, juce::Label& label)
+{
+    const auto w = juce::roundToInt (box.getWidth() * .8f);
+    const auto x = juce::roundToInt (w * .06);
+    const auto h = juce::roundToInt (box.getHeight() * .4f);
+    const auto yOffset = juce::roundToInt (h * .1f);
+    const auto y = ((box.getHeight() - h) / 2) + yOffset;
+
+    label.setBounds (x, y, w, h);
+
+    label.setFont (getComboBoxFont (box));
+}
+
 void LookAndFeel::drawComboBox (juce::Graphics& g,
                                 int,
                                 int height,
@@ -327,15 +357,13 @@ void LookAndFeel::drawComboBox (juce::Graphics& g,
                                 int,
                                 juce::ComboBox& box)
 {
-    const auto boxBounds = box.getLocalBounds();
-
-    const auto fontHeight = juce::jmax (7.0f, height * 0.6f);
-    g.setFont (fontHolder.getFont ("RobotoRegular_ttf").withHeight (fontHeight));
+    const auto boxBounds =
+        box.getLocalBounds().reduced (juce::roundToInt (box.getHeight() * .1f));
 
     g.setColour (box.findColour (juce::ComboBox::backgroundColourId));
 
     const auto h = boxBounds.getHeight();
-    const auto cornerSize = h * .15f;
+    const auto cornerSize = h * .075f;
     g.fillRoundedRectangle (boxBounds.toFloat(), cornerSize);
 }
 
@@ -355,12 +383,16 @@ void LookAndFeel::drawPopupMenuItem (juce::Graphics& g,
 
     juce::Rectangle<int> r (area);
 
-    juce::Colour fillColour =
-        isHighlighted ? transparentMediumGrey : slightlyTransparentBlack;
+    const auto comboBoxColour =
+        findColour (juce::ComboBox::ColourIds::backgroundColourId);
+
+    juce::Colour fillColour = isHighlighted ? comboBoxColour.brighter() : comboBoxColour;
     g.setColour (fillColour);
     g.fillRect (r.getX(), r.getY(), r.getWidth(), r.getHeight() - 1);
 
-    juce::Colour myTextColour = isTicked ? lightGrey : mediumGrey;
+    const auto comboBoxTextColour = findColour (juce::ComboBox::ColourIds::textColourId);
+    juce::Colour myTextColour =
+        isTicked ? comboBoxTextColour : comboBoxTextColour.darker();
     g.setColour (myTextColour);
 
     auto fHeight = juce::jmax (7.0f, r.getHeight() * 0.6f);

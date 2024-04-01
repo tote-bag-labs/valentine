@@ -9,54 +9,42 @@
 */
 
 #include "PresetPanel.h"
+#include "tote_bag/juce_gui/lookandfeel/LookAndFeelConstants.h"
 #include "tote_bag/juce_gui/managers/ToteBagPresetManager.h"
+
+#if JUCE_ENABLE_LIVE_CONSTANT_EDITOR
+    #include <juce_gui_extra/juce_gui_extra.h>
+#endif // JUCE_ENABLE_LIVE_CONSTANT_EDITOR
+
+#include <BinaryData.h>
+
+namespace detail
+{
+constexpr auto kTotieWidth = 144.22f;
+constexpr auto kTotieHeight = 135.51f;
+constexpr auto kTotieHWRatio = kTotieHeight / kTotieWidth;
+
+constexpr auto kBorderThickness = 1;
+}
 
 PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
                           const juce::String& bypassButtonText,
                           const juce::String& bypassParameterId,
                           juce::AudioProcessorValueTreeState& treeState)
-    : mBypassButton (bypassButtonText,
-                     bypassParameterId,
-                     treeState)
+    : mInfoButton ("ValentineInfo", juce::DrawableButton::ButtonStyle::ImageStretched)
+    , mPreviousPreset ("PreviousPreset",
+                       juce::DrawableButton::ButtonStyle::ImageStretched)
+    , mNextPreset ("NextPreset", juce::DrawableButton::ButtonStyle::ImageStretched)
+    , mBypassButton (bypassButtonText, bypassParameterId, treeState)
     , presetManager (pManager)
 {
-    // set up save and load buttons
-    mSavePresetButton.setButtonText ("Save");
-    mSavePresetButton.onClick = [this]() {
-        savePreset();
-    };
-    addAndMakeVisible (mSavePresetButton);
+    presetManager.setPresetSavedCallback ([this]() { updatePresetDisplay(); });
 
-    mLoadPresetButton.setButtonText ("Load");
-    mLoadPresetButton.onClick = [this]() {
-        loadPreset();
-    };
-    addAndMakeVisible (mLoadPresetButton);
-
-    addAndMakeVisible (mBypassButton);
-
-    // set up preset combo box
-    mPresetDisplay.setColour (juce::ComboBox::ColourIds::backgroundColourId, juce::Colours::black);
-    mPresetDisplay.setColour (juce::ComboBox::ColourIds::textColourId, juce::Colours::darkgrey);
-    mPresetDisplay.setColour (juce::ComboBox::ColourIds::outlineColourId, juce::Colours::grey);
-
-    addAndMakeVisible (mPresetDisplay);
-    mPresetDisplay.onChange = [this]() {
-        handlePresetDisplaySelection();
-    };
-    mPresetDisplay.setText (currentPresetName, juce::dontSendNotification);
-    mPresetDisplay.setSelectedItemIndex (presetManager.getCurrentPresetIndex(), juce::dontSendNotification);
-
-    updatePresetComboBox();
-
-    // set up preset iterator buttons
-    mNextPreset.setButtonText (">");
-    mNextPreset.onClick = [this]() { incrementPreset(); };
-    addAndMakeVisible (mNextPreset);
-
-    mPreviousPreset.setButtonText ("<");
-    mPreviousPreset.onClick = [this]() { decrementPreset(); };
-    addAndMakeVisible (mPreviousPreset);
+    setupValentineInfoButton();
+    setupBypassButton();
+    setupSaveAndLoadButtons();
+    setupPresetIncrementButtons();
+    setupPresetDisplay();
 
     startTimerHz (20);
 }
@@ -68,77 +56,11 @@ PresetPanel::~PresetPanel()
 
 void PresetPanel::paint (juce::Graphics& g)
 {
-    g.setColour (juce::Colours::darkgrey);
+    g.setColour (tote_bag::colours::offWhite);
     g.fillAll();
-}
 
-void PresetPanel::incrementPreset()
-{
-    auto newPresetIndex = presetManager.getCurrentPresetIndex() + 1;
-    if (newPresetIndex > presetManager.getNumberOfPresets() - 1)
-    {
-        newPresetIndex = 0;
-    }
-    presetManager.loadPreset (newPresetIndex);
-}
-
-void PresetPanel::decrementPreset()
-{
-    auto newPresetIndex = presetManager.getCurrentPresetIndex() - 1;
-    if (newPresetIndex < 0)
-    {
-        newPresetIndex = presetManager.getNumberOfPresets() - 1;
-    }
-    presetManager.loadPreset (newPresetIndex);
-}
-
-void PresetPanel::savePreset()
-{
-    const auto presetName = presetManager.getCurrentPresetName();
-
-    juce::String currentPresetPath = presetManager.getCurrentPresetDirectory()
-                                     + static_cast<std::string> (directorySeparator) + presetName;
-
-    juce::FileChooser chooser ("Save a file: ",
-                               juce::File (currentPresetPath),
-                               static_cast<std::string> (presetFileExtensionWildcard));
-
-    if (chooser.browseForFileToSave (true))
-    {
-        juce::File presetToSave (chooser.getResult());
-
-        presetManager.savePreset (presetToSave);
-
-        updatePresetComboBox();
-    }
-}
-
-void PresetPanel::loadPreset()
-{
-    juce::String currentPresetDirectory = presetManager.getCurrentPresetDirectory();
-
-    if (currentPresetDirectory.isNotEmpty())
-    {
-        juce::FileChooser chooser ("Load a file: ",
-                                   juce::File (currentPresetDirectory),
-                                   static_cast<std::string> (presetFileExtensionWildcard));
-
-        if (chooser.browseForFileToOpen())
-        {
-            juce::File presetToLoad (chooser.getResult());
-
-            presetManager.loadPreset (presetToLoad);
-        }
-    }
-}
-
-void PresetPanel::handlePresetDisplaySelection()
-{
-    if (mPresetDisplay.getSelectedItemIndex() != -1)
-    {
-        const int index = mPresetDisplay.getSelectedItemIndex();
-        presetManager.loadPreset (index);
-    }
+    g.setColour (tote_bag::colours::plainBlack);
+    g.drawRect (getBounds(), detail::kBorderThickness);
 }
 
 void PresetPanel::timerCallback()
@@ -151,7 +73,185 @@ void PresetPanel::timerCallback()
     }
 }
 
-void PresetPanel::updatePresetComboBox()
+void PresetPanel::resized()
+{
+    const auto area = getLocalBounds();
+
+    auto presetBounds = area.reduced (detail::kBorderThickness);
+
+    const auto presetBoundsWidth = presetBounds.getWidth();
+    const auto presetBoundsHeight = presetBounds.getHeight();
+    const auto presetBoundsCentreY = presetBounds.getCentreY();
+
+    const auto leftInfoButtonGapWidth = juce::roundToInt (presetBoundsWidth * .026f);
+    presetBounds.removeFromLeft (leftInfoButtonGapWidth);
+
+    const auto infoButtonWidth = juce::roundToInt (presetBoundsWidth * 0.05f);
+    const auto infoButtonHeight =
+        juce::roundToInt (infoButtonWidth * detail::kTotieHWRatio);
+    const auto infoButtonY = presetBoundsCentreY - infoButtonHeight / 2;
+
+    mInfoButton.setBounds (presetBounds.removeFromLeft (infoButtonWidth)
+                               .withY (infoButtonY)
+                               .withHeight (infoButtonHeight));
+
+    const auto infoButtonBypassGapWidth = juce::roundToInt (presetBoundsWidth * 0.0027f);
+    presetBounds.removeFromLeft (infoButtonBypassGapWidth);
+
+    const auto bypassSaveLoadButtonHeight = juce::roundToInt (presetBoundsHeight * .8f);
+    const auto bypassSaveLoadButtonY =
+        presetBoundsCentreY - bypassSaveLoadButtonHeight / 2;
+
+    const auto bypassButtonWidth = juce::roundToInt (presetBoundsWidth * .134f);
+
+    mBypassButton.setBounds (presetBounds.removeFromLeft (bypassButtonWidth)
+                                 .withY (bypassSaveLoadButtonY)
+                                 .withHeight (bypassSaveLoadButtonHeight));
+
+    const auto bypassSaveGapWidth = juce::roundToInt (presetBoundsWidth * .0825f);
+    presetBounds.removeFromLeft (bypassSaveGapWidth);
+
+    const auto saveLoadButtonWidth = juce::roundToInt (presetBoundsWidth * .157f);
+
+    mSavePresetButton.setBounds (presetBounds.removeFromLeft (saveLoadButtonWidth)
+                                     .withY (bypassSaveLoadButtonY)
+                                     .withHeight (bypassSaveLoadButtonHeight));
+
+    const auto saveLoadGapWidth = juce::roundToInt (presetBoundsWidth * .007f);
+    presetBounds.removeFromLeft (saveLoadGapWidth);
+
+    mLoadPresetButton.setBounds (presetBounds.removeFromLeft (saveLoadButtonWidth)
+                                     .withY (bypassSaveLoadButtonY)
+                                     .withHeight (bypassSaveLoadButtonHeight));
+
+    // This is used to set the gap between load button and previous button as well
+    // as next button and preset display box
+    const auto loadPrevBoxGapWidth = juce::roundToInt (presetBoundsWidth * .016f);
+    presetBounds.removeFromLeft (loadPrevBoxGapWidth);
+
+    const auto prevNextButtonHeight = juce::roundToInt (presetBoundsHeight * .2f);
+    const auto prevNextButtonY = presetBoundsCentreY - prevNextButtonHeight / 2;
+    const auto prevNextButtonWidth = juce::roundToInt (presetBoundsWidth * .024f);
+
+    mPreviousPreset.setBounds (presetBounds.removeFromLeft (prevNextButtonWidth)
+                                   .withY (prevNextButtonY)
+                                   .withHeight (prevNextButtonHeight));
+
+    const auto prevNextGapWidth = juce::roundToInt (presetBoundsWidth * .0117f);
+    presetBounds.removeFromLeft (prevNextGapWidth);
+
+    mNextPreset.setBounds (presetBounds.removeFromLeft (prevNextButtonWidth)
+                               .withY (prevNextButtonY)
+                               .withHeight (prevNextButtonHeight));
+
+    presetBounds.removeFromLeft (loadPrevBoxGapWidth);
+
+    const auto presetDisplayHeight = juce::roundToInt (presetBoundsHeight * .85f);
+    const auto presetDisplayY = presetBoundsCentreY - presetDisplayHeight / 2;
+    const auto presetBoxWidth = juce::roundToInt (presetBoundsWidth * .27f);
+
+    mPresetDisplay.setBounds (presetBounds.removeFromLeft (presetBoxWidth)
+                                  .withY (presetDisplayY)
+                                  .withHeight (presetDisplayHeight));
+}
+
+void PresetPanel::setupValentineInfoButton()
+{
+    mInfoButton.setImages (
+        juce::Drawable::createFromImageData (BinaryData::totie_pink_svg,
+                                             BinaryData::totie_pink_svgSize)
+            .get());
+    addAndMakeVisible (mInfoButton);
+}
+
+void PresetPanel::setupBypassButton()
+{
+    mBypassButton.setColour (juce::TextButton::ColourIds::buttonColourId,
+                             tote_bag::colours::bypassGrey);
+    mBypassButton.setColour (juce::TextButton::ColourIds::textColourOffId,
+                             tote_bag::colours::plainWhite);
+    mBypassButton.setColour (juce::TextButton::ColourIds::buttonOnColourId,
+                             tote_bag::colours::bypassInGrey);
+    mBypassButton.setColour (juce::TextButton::ColourIds::textColourOnId,
+                             tote_bag::colours::bypassInTextGrey);
+
+    addAndMakeVisible (mBypassButton);
+}
+
+void PresetPanel::setupSaveAndLoadButtons()
+{
+    mSavePresetButton.setButtonText ("SAVE");
+    mSavePresetButton.onClick = [this]() { presetManager.savePresetToFile(); };
+    addAndMakeVisible (mSavePresetButton);
+
+    mSavePresetButton.setColour (juce::TextButton::ColourIds::buttonColourId,
+                                 tote_bag::colours::plainWhite);
+    mSavePresetButton.setColour (juce::TextButton::ColourIds::buttonOnColourId,
+                                 tote_bag::colours::offWhite);
+    mSavePresetButton.setColour (juce::TextButton::ColourIds::textColourOffId,
+                                 tote_bag::colours::plainBlack);
+    mSavePresetButton.setColour (juce::TextButton::ColourIds::textColourOnId,
+                                 tote_bag::colours::plainBlack);
+
+    mLoadPresetButton.setButtonText ("LOAD");
+    mLoadPresetButton.onClick = [this]() { presetManager.loadPresetFromFile(); };
+    addAndMakeVisible (mLoadPresetButton);
+
+    mLoadPresetButton.setColour (juce::TextButton::ColourIds::buttonColourId,
+                                 tote_bag::colours::plainWhite);
+    mLoadPresetButton.setColour (juce::TextButton::ColourIds::buttonOnColourId,
+                                 tote_bag::colours::offWhite);
+    mLoadPresetButton.setColour (juce::TextButton::ColourIds::textColourOffId,
+                                 tote_bag::colours::plainBlack);
+    mLoadPresetButton.setColour (juce::TextButton::ColourIds::textColourOnId,
+                                 tote_bag::colours::plainBlack);
+}
+
+void PresetPanel::setupPresetIncrementButtons()
+{
+    mPreviousPreset.onClick = [this]() { presetManager.loadPreviousPreset(); };
+    mPreviousPreset.setImages (
+        juce::Drawable::createFromImageData (BinaryData::arrow_left_svg,
+                                             BinaryData::arrow_left_svgSize)
+            .get());
+    addAndMakeVisible (mPreviousPreset);
+
+    mNextPreset.onClick = [this]() { presetManager.loadNextPreset(); };
+    mNextPreset.setImages (
+        juce::Drawable::createFromImageData (BinaryData::arrow_right_svg,
+                                             BinaryData::arrow_right_svgSize)
+            .get());
+    addAndMakeVisible (mNextPreset);
+}
+
+void PresetPanel::setupPresetDisplay()
+{
+    // set up preset combo box
+    mPresetDisplay.setColour (juce::ComboBox::ColourIds::backgroundColourId,
+                              tote_bag::colours::slateGrey);
+    mPresetDisplay.setColour (juce::ComboBox::ColourIds::textColourId,
+                              tote_bag::colours::plainWhite);
+    mPresetDisplay.setColour (juce::ComboBox::ColourIds::outlineColourId,
+                              tote_bag::colours::plainBlack);
+
+    addAndMakeVisible (mPresetDisplay);
+    mPresetDisplay.onChange = [this]() { handlePresetDisplaySelection(); };
+    mPresetDisplay.setText (currentPresetName, juce::dontSendNotification);
+    mPresetDisplay.setSelectedItemIndex (presetManager.getCurrentPresetIndex(),
+                                         juce::dontSendNotification);
+
+    updatePresetDisplay();
+}
+
+void PresetPanel::handlePresetDisplaySelection()
+{
+    if (mPresetDisplay.getSelectedItemIndex() != -1)
+    {
+        presetManager.loadPreset (mPresetDisplay.getSelectedItemIndex());
+    }
+}
+
+void PresetPanel::updatePresetDisplay()
 {
     mPresetDisplay.clear (juce::dontSendNotification);
 
@@ -162,55 +262,6 @@ void PresetPanel::updatePresetComboBox()
         mPresetDisplay.addItem (presetManager.getPresetName (i), (i + 1));
     }
 
-    mPresetDisplay.setText (presetManager.getCurrentPresetName(), juce::dontSendNotification);
-}
-
-void PresetPanel::resized()
-{
-    const auto area = getLocalBounds();
-    const auto margin = juce::roundToInt (area.getHeight() * .1f);
-
-    // Adjust width to account for margins
-    const auto actualWidth = area.getWidth() - (margin * 6);
-    const auto buttonAreaWidth = actualWidth * .5f;
-
-    // Get width button groups on left side. Coefficients should sum to 1.
-    const auto saveLoadAreaWidth = buttonAreaWidth * .7f;
-    const auto bypassAreaWidth = buttonAreaWidth * .2f;
-    const auto incrementDecrementAreaWidth = buttonAreaWidth * .1f;
-
-    auto x = area.getX() + margin; // We update this while we place components
-    const auto y = area.getY() + margin;
-    const auto h = juce::roundToInt (area.getHeight() - (margin * 2.0f));
-
-    // Place bypass button
-    const auto bypassButtonWidth = juce::roundToInt (bypassAreaWidth);
-    juce::Rectangle<int> bypassBounds { x, y, bypassButtonWidth, h };
-    mBypassButton.setBounds (bypassBounds);
-    x += (bypassButtonWidth + margin);
-
-    // Place save and load buttons
-    const auto saveLoadButtonWidth = juce::roundToInt (saveLoadAreaWidth * .5f);
-    juce::Rectangle<int> saveLoadBounds;
-    for (auto button : { &mSavePresetButton, &mLoadPresetButton })
-    {
-        saveLoadBounds.setBounds (x, y, saveLoadButtonWidth, h);
-        button->setBounds (saveLoadBounds);
-        x += (saveLoadButtonWidth + margin);
-    }
-
-    // Place increment and decrement buttons
-    juce::Rectangle<int> incrementDecrementBounds;
-    const auto incrementDecrementButtonWidth = juce::roundToInt (incrementDecrementAreaWidth * .5f);
-    for (auto button : { &mPreviousPreset, &mNextPreset })
-    {
-        incrementDecrementBounds.setBounds (x, y, incrementDecrementButtonWidth, h);
-        button->setBounds (incrementDecrementBounds);
-        x += (incrementDecrementButtonWidth + margin);
-    }
-
-    // Place preset selection window
-    const auto presetAreaWidth = actualWidth - buttonAreaWidth;
-    juce::Rectangle<int> presetSelectorBounds { x, y, juce::roundToInt (presetAreaWidth) - margin, h };
-    mPresetDisplay.setBounds (presetSelectorBounds);
+    mPresetDisplay.setText (presetManager.getCurrentPresetName(),
+                            juce::dontSendNotification);
 }

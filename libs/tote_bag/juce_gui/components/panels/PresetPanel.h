@@ -15,8 +15,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 
 class ToteBagPresetManager;
-class PresetPanel : public juce::Component,
-                    public juce::Timer
+class PresetPanel : public juce::Component, public juce::Timer
 {
 public:
     PresetPanel (ToteBagPresetManager& pManager,
@@ -27,32 +26,37 @@ public:
 
     void paint (juce::Graphics& g) override;
 
-    void incrementPreset();
-
-    void decrementPreset();
-
-    void savePreset();
-
-    void loadPreset();
-
-    void handlePresetDisplaySelection();
+    void timerCallback() override;
 
     void resized() override;
 
-    void timerCallback() override;
-
-    void updatePresetComboBox();
-
 private:
+    void setupValentineInfoButton();
+
+    void setupBypassButton();
+
+    void setupSaveAndLoadButtons();
+
+    void setupPresetIncrementButtons();
+
+    void setupPresetDisplay();
+
+    void handlePresetDisplaySelection();
+
+    void updatePresetDisplay();
+
+    juce::Rectangle<int> outerBorder;
+
+    juce::DrawableButton mInfoButton;
     juce::TextButton mSavePresetButton;
     juce::TextButton mLoadPresetButton;
-    juce::TextButton mPreviousPreset;
-    juce::TextButton mNextPreset;
+    juce::DrawableButton mPreviousPreset;
+    juce::DrawableButton mNextPreset;
     ParameterTextButton mBypassButton;
 
     juce::ComboBox mPresetDisplay;
 
-    juce::String currentPresetName { "Untitled" };
+    juce::String currentPresetName {"Untitled"};
 
     ToteBagPresetManager& presetManager;
 
