@@ -19,10 +19,13 @@
 #endif // JUCE_ENABLE_LIVE_CONSTANT_EDITOR
 
 VMainPanel::VMainPanel (ValentineAudioProcessor& processor)
-    : presetPanel (processor.getPresetManager(),
-                   FFCompParameterLabel()[getParameterIndex (VParameter::bypass)],
-                   tote_bag::valentine::parameterID (VParameter::bypass),
-                   processor.treeState)
+    : presetPanel (
+        processor.getPresetManager(),
+        FFCompParameterLabel()[getParameterIndex (VParameter::bypass)],
+        tote_bag::valentine::parameterID (VParameter::bypass),
+        [this]() { infoPanel.setVisible (true); },
+        processor.treeState)
+    , infoPanel ([this]() { infoPanel.setVisible (false); })
     , inputMeterPanel (ReductionMeterPlacement::Right, &processor.getInputMeterSource())
     , outputMeterPanel (ReductionMeterPlacement::Left,
                         &processor.getOutputMeterSource(),
@@ -33,6 +36,7 @@ VMainPanel::VMainPanel (ValentineAudioProcessor& processor)
     addAndMakeVisible (centerPanel);
     addAndMakeVisible (inputMeterPanel);
     addAndMakeVisible (outputMeterPanel);
+    addChildComponent (infoPanel, -1);
 
     setLookAndFeel (&lookAndFeel);
 }
@@ -50,6 +54,8 @@ void VMainPanel::paint (juce::Graphics& g)
 void VMainPanel::resized()
 {
     auto panelBounds = getLocalBounds();
+
+    infoPanel.setBounds (panelBounds);
 
     const auto presetBounds =
         panelBounds.removeFromTop (juce::roundToInt (panelBounds.getHeight() * .11f));
