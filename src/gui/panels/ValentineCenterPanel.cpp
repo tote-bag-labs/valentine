@@ -68,7 +68,7 @@ void CenterPanel::resized()
 
     topRow.setBounds (getPanelBounds (topRowBorder, juce::roundToInt (margin)));
 
-    localBounds.removeFromTop (juce::roundToInt (margin * 2));
+    localBounds.removeFromTop (juce::roundToInt (margin * .50f));
 
     bottomRowBorder = localBounds;
 
