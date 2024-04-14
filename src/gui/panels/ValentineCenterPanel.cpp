@@ -70,9 +70,15 @@ void CenterPanel::resized()
 
     localBounds.removeFromTop (juce::roundToInt (margin * .50f));
 
-    bottomRowBorder = localBounds;
+    const auto bottomRowArea = localBounds;
+    const auto bottomRowBorderHeight =
+        juce::roundToInt (bottomRowArea.getHeight() * .84f);
+    const auto bottomRowBorderY = bottomRowArea.getCentreY() - bottomRowBorderHeight / 2;
 
-    bottomRow.setBounds (bottomRowBorder.reduced (juce::roundToInt (margin)));
+    bottomRowBorder =
+        bottomRowArea.withY (bottomRowBorderY).withHeight (bottomRowBorderHeight);
+
+    bottomRow.setBounds (getPanelBounds (bottomRowBorder, juce::roundToInt (margin)));
 }
 } // namespace tote_bag
 } // namespace valentine
