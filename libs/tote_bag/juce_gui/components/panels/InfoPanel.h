@@ -24,8 +24,11 @@ public:
 
 private:
     void drawInfoText (juce::Graphics& g);
+    void drawWatermark (juce::Graphics& g);
 
     std::function<void()> onMouseUp;
+
+    std::unique_ptr<juce::Drawable> totieWatermark;
 
     juce::Rectangle<int> urlBounds;
     juce::URL githubURL;
