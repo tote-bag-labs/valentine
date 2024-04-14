@@ -47,14 +47,26 @@ void CenterPanel::resized()
     localBounds.reduce (juce::roundToInt (margin * 1.6f),
                         juce::roundToInt (margin * 1.3f));
 
-    topRowBorder =
+    const auto topRowArea =
         localBounds.removeFromTop (juce::roundToInt (localBounds.getHeight() * .50f));
+    const auto topRowBorderHeight = juce::roundToInt (topRowArea.getHeight() * .90f);
+    const auto topRowBorderY = topRowArea.getCentreY() - topRowBorderHeight / 2;
 
+    topRowBorder = topRowArea.withY (topRowBorderY).withHeight (topRowBorderHeight);
     borderLineThickness = topRowBorder.getHeight() * .005f;
-
     borderCornerSize = topRowBorder.getHeight() * .060f;
 
-    topRow.setBounds (topRowBorder.reduced (juce::roundToInt (margin)));
+    const auto getPanelBounds = [] (const juce::Rectangle<int> borderBounds,
+                                    const int borderMargin) {
+        const auto panelHeight = borderBounds.getHeight() * .7725f;
+        const auto panelY = borderBounds.getCentreY() - panelHeight / 2;
+
+        return borderBounds.reduced (borderMargin, 0)
+            .withY (panelY)
+            .withHeight (panelHeight);
+    };
+
+    topRow.setBounds (getPanelBounds (topRowBorder, juce::roundToInt (margin)));
 
     localBounds.removeFromTop (juce::roundToInt (margin * 2));
 
