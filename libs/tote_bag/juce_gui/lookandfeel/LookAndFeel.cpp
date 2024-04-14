@@ -498,4 +498,10 @@ juce::Slider::SliderLayout LookAndFeel::getSliderLayout (juce::Slider& slider)
 
     return layout;
 }
+
+juce::Font LookAndFeel::getInfoTextFont()
+{
+    return fontHolder.getFont ("RobotoMonoMedium_ttf").withExtraKerningFactor (.05f);
+}
+
 } // namespace tote_bag

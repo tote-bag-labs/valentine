@@ -30,6 +30,7 @@ constexpr auto kBorderThickness = 1;
 PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
                           const juce::String& bypassButtonText,
                           const juce::String& bypassParameterId,
+                          std::function<void()> infoButtonCallback,
                           juce::AudioProcessorValueTreeState& treeState)
     : mInfoButton ("ValentineInfo", juce::DrawableButton::ButtonStyle::ImageStretched)
     , mPreviousPreset ("PreviousPreset",
@@ -37,8 +38,11 @@ PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
     , mNextPreset ("NextPreset", juce::DrawableButton::ButtonStyle::ImageStretched)
     , mBypassButton (bypassButtonText, bypassParameterId, treeState)
     , presetManager (pManager)
+    , minfoButtonCallback (infoButtonCallback)
 {
     presetManager.setPresetSavedCallback ([this]() { updatePresetDisplay(); });
+
+    mInfoButton.onClick = [this]() { minfoButtonCallback(); };
 
     setupValentineInfoButton();
     setupBypassButton();

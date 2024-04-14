@@ -110,6 +110,8 @@ public:
         pointerColourId = 0x1001801
     };
 
+    juce::Font getInfoTextFont();
+
 private:
     void drawRotarySliderMeter (juce::Graphics& g,
                                 const juce::Rectangle<float> bounds,

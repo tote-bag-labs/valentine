@@ -14,6 +14,8 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
+#include <functional>
+
 class ToteBagPresetManager;
 class PresetPanel : public juce::Component, public juce::Timer
 {
@@ -21,6 +23,7 @@ public:
     PresetPanel (ToteBagPresetManager& pManager,
                  const juce::String& bypassButtonText,
                  const juce::String& bypassParameterId,
+                 std::function<void()> infoButtonCallback,
                  juce::AudioProcessorValueTreeState& treeState);
     ~PresetPanel() override;
 
@@ -59,6 +62,8 @@ private:
     juce::String currentPresetName {"Untitled"};
 
     ToteBagPresetManager& presetManager;
+
+    std::function<void()> minfoButtonCallback;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PresetPanel)
 };

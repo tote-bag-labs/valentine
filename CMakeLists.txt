@@ -18,6 +18,25 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Support macOS down to High
 # Be sure the file has no newlines
 file(STRINGS VERSION CURRENT_VERSION)
 
+# Find Git and if possible, get the current commit hash
+find_package(Git QUIET)
+if(GIT_FOUND)
+  execute_process(
+    COMMAND ${GIT_EXECUTABLE} rev-parse --short=7 HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+else()
+  set(GIT_COMMIT_HASH "unknown")
+endif()
+
+# Generate a header with version information based on a template
+configure_file(
+  ${CMAKE_SOURCE_DIR}/version.h.in
+  ${CMAKE_BINARY_DIR}/generated/version.h
+)
+
 # For simplicity, the name of the project is also the name of the target
 project(${PROJECT_NAME} VERSION ${CURRENT_VERSION})
 
@@ -91,8 +110,10 @@ set(SourceFiles
     libs/tote_bag/dsp/EnvelopeDetector.cpp
     libs/tote_bag/dsp/Saturation.cpp
     
+    libs/tote_bag/juce_gui/components/panels/InfoPanel.h
     libs/tote_bag/juce_gui/components/panels/PresetPanel.h
     libs/tote_bag/juce_gui/components/panels/VerticalMeterPanel.h
+    libs/tote_bag/juce_gui/components/panels/InfoPanel.cpp
     libs/tote_bag/juce_gui/components/panels/PresetPanel.cpp
     libs/tote_bag/juce_gui/components/panels/VerticalMeterPanel.cpp
 
@@ -142,10 +163,12 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${SourceFiles})
 set(AssetFiles
     src/gui/assets/fonts/Roboto-Regular.ttf
     src/gui/assets/fonts/RobotoMono-Regular.ttf
+    src/gui/assets/fonts/RobotoMono-Medium.ttf
     src/gui/assets/logos/val_totebag_logo.svg
     libs/tote_bag/assets/arrow_left.svg
     libs/tote_bag/assets/arrow_right.svg
     libs/tote_bag/assets/totie_pink.svg
+    libs/tote_bag/assets/totie_watermark.svg
    )
 
 # Setup our binary data as a target
@@ -198,7 +221,8 @@ target_compile_definitions("${PROJECT_NAME}"
 target_include_directories("${PROJECT_NAME}"
                             PRIVATE
                            "${CMAKE_CURRENT_SOURCE_DIR}/src"
-                           "${CMAKE_CURRENT_SOURCE_DIR}/libs")
+                           "${CMAKE_CURRENT_SOURCE_DIR}/libs"
+                           "${CMAKE_BINARY_DIR}")
 
 target_link_libraries("${PROJECT_NAME}"
     PRIVATE
