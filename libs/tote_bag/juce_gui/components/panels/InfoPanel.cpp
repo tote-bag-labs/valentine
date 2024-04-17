@@ -59,12 +59,12 @@ void InfoPanel::mouseUp (const juce::MouseEvent& e)
 void InfoPanel::drawInfoText (juce::Graphics& g)
 {
     const auto bounds = getLocalBounds();
-    const auto boundsWidth = bounds.getWidth();
     const auto boundsHeight = bounds.getHeight();
 
     const auto textLineHeight = juce::roundToInt (boundsHeight / 32.0f);
-    const auto textAreaHeight = textLineHeight * detail::kNumInfoTextLines;
-    const auto textAreaY = bounds.getCentreY() - textAreaHeight / 2.0;
+    const auto textAreaHeight =
+        juce::roundToInt (textLineHeight * detail::kNumInfoTextLines);
+    const auto textAreaY = juce::roundToInt (bounds.getCentreY() - textAreaHeight / 2.0);
 
     auto textBounds = bounds.withY (textAreaY).withHeight (textAreaHeight);
 
@@ -81,11 +81,11 @@ void InfoPanel::drawInfoText (juce::Graphics& g)
     }
 
     const auto placeText = [&] (const juce::String& text) {
-        const auto bounds = textBounds.removeFromTop (textLineHeight);
+        const auto placedBounds = textBounds.removeFromTop (textLineHeight);
 
-        g.drawFittedText (text, bounds, juce::Justification::centredBottom, 1);
+        g.drawFittedText (text, placedBounds, juce::Justification::centredBottom, 1);
 
-        return bounds;
+        return placedBounds;
     };
 
     placeText ("Valentine");
@@ -105,14 +105,14 @@ void InfoPanel::drawWatermark (juce::Graphics& g)
         const auto boundsWidth = bounds.getWidth();
         const auto boundsHeight = bounds.getHeight();
 
-        const auto totieX = bounds.getX() + (boundsWidth * .28f);
-        const auto totieY = bounds.getY() - (boundsHeight * .08f);
-        const auto totieHeight = boundsHeight * 1.22f;
-        const auto totieBounds =
-            bounds.withX (totieX)
-                .withY (totieY)
-                .withHeight (totieHeight)
-                .withWidth (totieHeight * detail::kTotieWidthHeightRatio);
+        const auto totieX = juce::roundToInt (bounds.getX() + (boundsWidth * .28f));
+        const auto totieY = juce::roundToInt (bounds.getY() - (boundsHeight * .08f));
+        const auto totieHeight = juce::roundToInt (boundsHeight * 1.22f);
+        const auto totieBounds = bounds.withX (totieX)
+                                     .withY (totieY)
+                                     .withHeight (totieHeight)
+                                     .withWidth (juce::roundToInt (
+                                         totieHeight * detail::kTotieWidthHeightRatio));
 
         totieWatermark->drawWithin (g,
                                     totieBounds.toFloat(),
