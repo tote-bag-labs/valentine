@@ -23,8 +23,6 @@ namespace detail
 constexpr auto kTotieWidth = 144.22f;
 constexpr auto kTotieHeight = 135.51f;
 constexpr auto kTotieHWRatio = kTotieHeight / kTotieWidth;
-
-constexpr auto kBorderThickness = 1;
 }
 
 PresetPanel::PresetPanel (ToteBagPresetManager& pManager,
@@ -64,7 +62,7 @@ void PresetPanel::paint (juce::Graphics& g)
     g.fillAll();
 
     g.setColour (tote_bag::colours::plainBlack);
-    g.drawRect (getBounds(), detail::kBorderThickness);
+    g.drawRect (getBounds(), mBorderThickness);
 }
 
 void PresetPanel::timerCallback()
@@ -81,7 +79,9 @@ void PresetPanel::resized()
 {
     const auto area = getLocalBounds();
 
-    auto presetBounds = area.reduced (detail::kBorderThickness);
+    mBorderThickness = juce::roundToInt (area.getHeight() * .04f);
+
+    auto presetBounds = area.reduced (mBorderThickness);
 
     const auto presetBoundsWidth = presetBounds.getWidth();
     const auto presetBoundsHeight = presetBounds.getHeight();

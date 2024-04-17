@@ -49,6 +49,7 @@ private:
     void updatePresetDisplay();
 
     juce::Rectangle<int> outerBorder;
+    int mBorderThickness = 0;
 
     juce::DrawableButton mInfoButton;
     juce::TextButton mSavePresetButton;
