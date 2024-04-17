@@ -53,7 +53,7 @@ void CenterPanel::resized()
     const auto topRowBorderY = topRowArea.getCentreY() - topRowBorderHeight / 2;
 
     topRowBorder = topRowArea.withY (topRowBorderY).withHeight (topRowBorderHeight);
-    borderLineThickness = topRowBorder.getHeight() * .005f;
+    borderLineThickness = topRowBorder.getHeight() * .01f;
     borderCornerSize = topRowBorder.getHeight() * .060f;
 
     const auto getPanelBounds = [] (const juce::Rectangle<int> borderBounds,
