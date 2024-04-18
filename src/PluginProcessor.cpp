@@ -33,7 +33,7 @@ inline juce::String getPrecisionAdjustedValueString (float value)
 
     if (absValue < 10.0f)
     {
-        return juce::String (value, 2);
+        return juce::String (absValue < .001 ? 0.0f : value, 2);
     }
     if (absValue < 100.0f)
     {

@@ -291,10 +291,7 @@ void LookAndFeel::drawFlatButtonBackground (juce::Graphics& g,
     }
 }
 
-void LookAndFeel::drawButtonText (juce::Graphics& g,
-                                  juce::TextButton& button,
-                                  bool,
-                                  bool isButtonDown)
+void LookAndFeel::drawButtonText (juce::Graphics& g, juce::TextButton& button, bool, bool)
 {
     auto font = getTextButtonFont (button, button.getHeight());
     g.setFont (font);
@@ -349,7 +346,7 @@ void LookAndFeel::positionComboBoxText (juce::ComboBox& box, juce::Label& label)
 
 void LookAndFeel::drawComboBox (juce::Graphics& g,
                                 int,
-                                int height,
+                                int,
                                 bool,
                                 int,
                                 int,
