@@ -188,7 +188,7 @@ static constexpr std::array<float, numParams> FFCompParameterMax = {
     10.0f,
     1.0f,
     kRatioParameterMax,
-    30.0f,
+    50.0f,
     1100.0f,
     24.0f,
     100.0f,
