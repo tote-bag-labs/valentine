@@ -58,7 +58,7 @@ void CenterPanel::resized()
 
     const auto getPanelBounds = [] (const juce::Rectangle<int> borderBounds,
                                     const int borderMargin) {
-        const auto panelHeight = borderBounds.getHeight() * .7725f;
+        const auto panelHeight = juce::roundToInt (borderBounds.getHeight() * .7725f);
         const auto panelY = borderBounds.getCentreY() - panelHeight / 2;
 
         return borderBounds.reduced (borderMargin, 0)
