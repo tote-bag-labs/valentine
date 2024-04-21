@@ -33,6 +33,11 @@ const juce::Colour mediumGrey (0xff696969);
 const juce::Colour bypassGrey (0xff404040);
 const juce::Colour bypassInGrey (0xff808080);
 const juce::Colour bypassInTextGrey (0xffd2d2d2);
+
+// This is the colour currently used for our meter
+// background. See note about this in MeterLookAndFeelMethods.h
+const juce::Colour valentinePinkGrey (0xffe0a3d3);
+
 const juce::Colour slightlyTransparentBlack (0x99000000);
 const juce::Colour plainBlack (0xff000000);
 } // colours

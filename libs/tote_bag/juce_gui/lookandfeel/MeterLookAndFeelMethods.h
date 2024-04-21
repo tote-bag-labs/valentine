@@ -21,7 +21,12 @@ void setupDefaultMeterColours() override
     setColour (FFAU::LevelMeter::lmBackgroundClipColour, juce::Colours::red);
     setColour (FFAU::LevelMeter::lmMeterForegroundColour, juce::Colours::green);
     setColour (FFAU::LevelMeter::lmMeterOutlineColour, juce::Colours::lightgrey);
-    setColour (FFAU::LevelMeter::lmMeterBackgroundColour, juce::Colours::darkgrey);
+
+    // Corresponds to valentinePinkGrey in LookAndFeelConstants. Not used directly
+    // because including that file makes things blow up! This isn't ideal, but
+    // I want to write new meters anyway. Famous last words.
+    setColour (FFAU::LevelMeter::lmMeterBackgroundColour, juce::Colour(0xffe0a3d3));
+
     setColour (FFAU::LevelMeter::lmMeterMaxNormalColour, juce::Colours::lightgrey);
     setColour (FFAU::LevelMeter::lmMeterMaxWarnColour, juce::Colours::orange);
     setColour (FFAU::LevelMeter::lmMeterMaxOverColour, juce::Colours::darkred);
