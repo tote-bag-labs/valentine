@@ -168,6 +168,7 @@ set(AssetFiles
     libs/tote_bag/assets/arrow_left.svg
     libs/tote_bag/assets/arrow_right.svg
     libs/tote_bag/assets/totie_pink.svg
+    libs/tote_bag/assets/totie_outline.svg
     libs/tote_bag/assets/totie_watermark.svg
    )
 
