@@ -169,7 +169,7 @@ inline const std::array<juce::String, numParams>& VParameterUnit()
 static constexpr std::array<float, numParams> FFCompParameterMin = {
     1.0f,
     0.0f,
-    -24.0f,
+    -21.0f,
     1.0f,
     0.0f,
     kRatioMin,
