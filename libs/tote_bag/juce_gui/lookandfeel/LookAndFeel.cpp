@@ -36,7 +36,7 @@ LookAndFeel::LookAndFeel()
 
     // slider text box colours
     setColour (juce::Slider::backgroundColourId, sliderGrey);
-    setColour (juce::Slider::thumbColourId, juce::Colour (0xffe7e7e7));
+    setColour (juce::Slider::thumbColourId, puttyGrey);
     setColour (juce::Slider::textBoxTextColourId, juce::Colours::black);
     setColour (juce::Slider::textBoxOutlineColourId, valentinePink);
     setColour (juce::Slider::rotarySliderOutlineColourId, valentinePinkDark);
