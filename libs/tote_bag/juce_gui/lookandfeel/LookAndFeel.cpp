@@ -25,6 +25,9 @@ LookAndFeel::LookAndFeel()
 {
     using namespace tote_bag::colours;
 
+    // Set up some default colours. These may be overriden
+    // in client code.
+
     setupDefaultMeterColours();
 
     // slider colours
