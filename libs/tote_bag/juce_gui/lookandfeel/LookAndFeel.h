@@ -66,8 +66,7 @@ public:
                                    bool,
                                    bool isButtonDown);
 
-    void
-        drawButtonText (juce::Graphics& g, juce::TextButton& button, bool, bool) override;
+    void drawButtonText (juce::Graphics& g, juce::TextButton& button, bool, bool) override;
 
     juce::Font getComboBoxFont (juce::ComboBox&) override;
 
