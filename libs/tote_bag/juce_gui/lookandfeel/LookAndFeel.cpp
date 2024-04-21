@@ -25,15 +25,18 @@ LookAndFeel::LookAndFeel()
 {
     using namespace tote_bag::colours;
 
+    // Set up some default colours. These may be overriden
+    // in client code.
+
     setupDefaultMeterColours();
 
     // slider colours
-    setColour (ColourIds::knobColourId, juce::Colours::grey);
+    setColour (ColourIds::knobColourId, sliderGrey);
     setColour (ColourIds::pointerColourId, juce::Colours::black);
 
     // slider text box colours
-    setColour (juce::Slider::backgroundColourId, juce::Colour (0xff2f2f2f));
-    setColour (juce::Slider::thumbColourId, juce::Colour (0xffe7e7e7));
+    setColour (juce::Slider::backgroundColourId, sliderGrey);
+    setColour (juce::Slider::thumbColourId, puttyGrey);
     setColour (juce::Slider::textBoxTextColourId, juce::Colours::black);
     setColour (juce::Slider::textBoxOutlineColourId, valentinePink);
     setColour (juce::Slider::rotarySliderOutlineColourId, valentinePinkDark);

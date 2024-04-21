@@ -162,6 +162,9 @@ void PresetPanel::resized()
 void PresetPanel::setupValentineInfoButton()
 {
     mInfoButton.setImages (
+        juce::Drawable::createFromImageData (BinaryData::totie_outline_svg,
+                                             BinaryData::totie_outline_svgSize)
+            .get(),
         juce::Drawable::createFromImageData (BinaryData::totie_pink_svg,
                                              BinaryData::totie_pink_svgSize)
             .get());
@@ -232,7 +235,7 @@ void PresetPanel::setupPresetDisplay()
 {
     // set up preset combo box
     mPresetDisplay.setColour (juce::ComboBox::ColourIds::backgroundColourId,
-                              tote_bag::colours::slateGrey);
+                              tote_bag::colours::sliderGrey);
     mPresetDisplay.setColour (juce::ComboBox::ColourIds::textColourId,
                               tote_bag::colours::plainWhite);
     mPresetDisplay.setColour (juce::ComboBox::ColourIds::outlineColourId,
