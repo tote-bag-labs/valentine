@@ -83,18 +83,27 @@ void BottomRowPanel::resized()
                   .withX (dividerCentreX)
                   .withWidth (dividerThickness);
 
-    const auto buttonSpacer =
-        juce::roundToInt ((bounds.getHeight() - clipButtonWidth) * .5f);
-
     const auto buttonNudge = juce::roundToInt (clipButtonWidth / 8.0f);
 
     const auto clipButtonInitialX = bounds.getX();
-    const auto clipButtonBounds = bounds.removeFromLeft (clipButtonWidth)
-                                      .reduced (0, buttonSpacer)
-                                      .withX (clipButtonInitialX + buttonNudge);
+    const auto clipButtonX = clipButtonInitialX + buttonNudge;
+    const auto clipButtonY = bounds.getCentreY() - clipButtonWidth / 2;
 
-    clipEnableButton.setBounds (clipButtonBounds);
-    outputSlider.setBounds (bounds.removeFromLeft (sliderWidth).reduced (buttonNudge, 0));
+    clipEnableButton.setBounds (bounds.removeFromLeft (clipButtonWidth)
+                                    .withX (clipButtonX)
+                                    .withY (clipButtonY)
+                                    .withHeight (clipButtonWidth));
+
+    const auto outputSliderArea = bounds.removeFromLeft (sliderWidth);
+
+    // We have to do this because the slider will otherwise intercept
+    // button clips.
+    const auto outputSliderWidth = sliderWidth - buttonNudge;
+    const auto outputSliderX = outputSliderArea.getCentreX() - outputSliderWidth / 2;
+
+    outputSlider.setBounds (
+        outputSliderArea.withX (outputSliderX).withWidth (outputSliderWidth));
+
     mixSlider.setBounds (bounds.removeFromLeft (sliderWidth));
 }
 
