@@ -66,7 +66,7 @@ void BottomRowPanel::resized()
 {
     auto bounds = getLocalBounds();
 
-    const auto clipButtonWidth = juce::roundToInt (bounds.getWidth() / 60.0f);
+    const auto clipButtonWidth = juce::roundToInt (bounds.getWidth() / 46.0f);
     const auto adjustedComponentWidth = bounds.getWidth() - clipButtonWidth;
     const auto sliderWidth = juce::roundToInt (adjustedComponentWidth / 6.0f);
 
@@ -83,7 +83,7 @@ void BottomRowPanel::resized()
                   .withX (dividerCentreX)
                   .withWidth (dividerThickness);
 
-    const auto buttonNudge = juce::roundToInt (sliderWidth / 14.0f);
+    const auto buttonNudge = juce::roundToInt (sliderWidth / 15.0f);
 
     const auto clipButtonInitialX = bounds.getX();
     const auto clipButtonX = clipButtonInitialX + buttonNudge;
