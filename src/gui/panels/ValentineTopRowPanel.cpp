@@ -59,7 +59,7 @@ void TopRowPanel::resized()
     const auto buttonWidth = juce::roundToInt (sliders.getWidth() * .033f);
     const auto adjustedComponentWidth = sliders.getWidth() - (buttonWidth * 2.0f);
     const auto sliderInitialWidth = juce::roundToInt (adjustedComponentWidth / 3.0f);
-    const auto buttonNudge = juce::roundToInt (buttonWidth / 5.0f);
+    const auto buttonNudge = juce::roundToInt (sliderInitialWidth / 12.0f);
 
     const auto setButtonAndSliderBounds = [&] (auto& button, auto& slider) {
         const auto initialButtonX = sliders.getX();
