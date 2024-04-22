@@ -56,10 +56,10 @@ void TopRowPanel::resized()
     auto bounds = getLocalBounds();
 
     auto sliders = bounds.removeFromLeft (juce::roundToInt (bounds.getWidth() * .65f));
-    const auto buttonWidth = juce::roundToInt (sliders.getWidth() * .033f);
+    const auto buttonWidth = juce::roundToInt (sliders.getWidth() * .035f);
     const auto adjustedComponentWidth = sliders.getWidth() - (buttonWidth * 2.0f);
     const auto sliderInitialWidth = juce::roundToInt (adjustedComponentWidth / 3.0f);
-    const auto buttonNudge = juce::roundToInt (sliderInitialWidth / 12.0f);
+    const auto buttonNudge = juce::roundToInt (sliderInitialWidth / 9.25f);
 
     const auto setButtonAndSliderBounds = [&] (auto& button, auto& slider) {
         const auto initialButtonX = sliders.getX();
