@@ -83,7 +83,7 @@ void BottomRowPanel::resized()
                   .withX (dividerCentreX)
                   .withWidth (dividerThickness);
 
-    const auto buttonNudge = juce::roundToInt (clipButtonWidth / 8.0f);
+    const auto buttonNudge = juce::roundToInt (sliderWidth / 14.0f);
 
     const auto clipButtonInitialX = bounds.getX();
     const auto clipButtonX = clipButtonInitialX + buttonNudge;
