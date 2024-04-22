@@ -58,31 +58,29 @@ void TopRowPanel::resized()
     auto sliders = bounds.removeFromLeft (juce::roundToInt (bounds.getWidth() * .65f));
     const auto buttonWidth = juce::roundToInt (sliders.getWidth() * .033f);
     const auto adjustedComponentWidth = sliders.getWidth() - (buttonWidth * 2.0f);
-    const auto sliderWidth = juce::roundToInt (adjustedComponentWidth / 3.0f);
-
-    const auto buttonSpacer =
-        juce::roundToInt ((sliders.getHeight() - buttonWidth) * .5f);
-
-    // See below note about horizontal LabelSlider dimensions and button placement.
+    const auto sliderInitialWidth = juce::roundToInt (adjustedComponentWidth / 3.0f);
     const auto buttonNudge = juce::roundToInt (buttonWidth / 5.0f);
-    const auto initialCrushButtonX = sliders.getX();
-    const auto crushEnableButtonBounds = sliders.removeFromLeft (buttonWidth)
-                                             .reduced (0, buttonSpacer)
-                                             .withX (initialCrushButtonX + buttonNudge);
 
-    crushEnableButton.setBounds (crushEnableButtonBounds);
-    crushSlider.setBounds (sliders.removeFromLeft (sliderWidth).reduced (buttonNudge, 0));
-    compressSlider.setBounds (sliders.removeFromLeft (sliderWidth));
+    const auto setButtonAndSliderBounds = [&] (auto& button, auto& slider) {
+        const auto initialButtonX = sliders.getX();
+        const auto buttonX = initialButtonX + buttonNudge;
+        const auto buttonY = sliders.getCentreY() - buttonWidth / 2;
 
-    const auto initialSaturateButtonX = sliders.getX();
-    const auto saturateEnableButtonBounds =
-        sliders.removeFromLeft (buttonWidth)
-            .reduced (0, buttonSpacer)
-            .withX (initialSaturateButtonX + buttonNudge);
+        button.setBounds (sliders.removeFromLeft (buttonWidth)
+                              .withX (buttonX)
+                              .withY (buttonY)
+                              .withHeight (buttonWidth));
 
-    saturateEnableButton.setBounds (saturateEnableButtonBounds);
-    saturateSlider.setBounds (
-        sliders.removeFromLeft (sliderWidth).reduced (buttonNudge, 0));
+        const auto sliderArea = sliders.removeFromLeft (sliderInitialWidth);
+        const auto sliderWidth = sliderInitialWidth - buttonNudge;
+        const auto sliderX = sliderArea.getCentreX() - sliderWidth / 2;
+
+        slider.setBounds (sliderArea.withX (sliderX).withWidth (sliderWidth));
+    };
+
+    setButtonAndSliderBounds (crushEnableButton, crushSlider);
+    compressSlider.setBounds (sliders.removeFromLeft (sliderInitialWidth));
+    setButtonAndSliderBounds (saturateEnableButton, saturateSlider);
 
     const auto logoHeight = bounds.getHeight() * .25f;
     const auto logoWidth = bounds.getWidth() * .75f;
