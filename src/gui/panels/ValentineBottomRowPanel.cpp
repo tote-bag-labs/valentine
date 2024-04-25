@@ -66,7 +66,9 @@ void BottomRowPanel::resized()
 {
     auto bounds = getLocalBounds();
 
+    // Adjust this to set button width
     const auto clipButtonWidth = juce::roundToInt (bounds.getWidth() / 46.0f);
+
     const auto adjustedComponentWidth = bounds.getWidth() - clipButtonWidth;
     const auto sliderWidth = juce::roundToInt (adjustedComponentWidth / 6.0f);
 
@@ -83,6 +85,7 @@ void BottomRowPanel::resized()
                   .withX (dividerCentreX)
                   .withWidth (dividerThickness);
 
+    // Adjust this to set spacing between button and slider
     const auto buttonNudge = juce::roundToInt (sliderWidth / 15.0f);
 
     const auto clipButtonInitialX = bounds.getX();
