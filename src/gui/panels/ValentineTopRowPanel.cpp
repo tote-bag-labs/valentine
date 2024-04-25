@@ -56,33 +56,43 @@ void TopRowPanel::resized()
     auto bounds = getLocalBounds();
 
     auto sliders = bounds.removeFromLeft (juce::roundToInt (bounds.getWidth() * .65f));
-    const auto buttonWidth = juce::roundToInt (sliders.getWidth() * .033f);
+
+    // Adjust this to set button width
+    const auto buttonWidth = juce::roundToInt (sliders.getWidth() * .035f);
+
     const auto adjustedComponentWidth = sliders.getWidth() - (buttonWidth * 2.0f);
-    const auto sliderWidth = juce::roundToInt (adjustedComponentWidth / 3.0f);
+    const auto sliderInitialWidth = juce::roundToInt (adjustedComponentWidth / 3.0f);
 
-    const auto buttonSpacer =
-        juce::roundToInt ((sliders.getHeight() - buttonWidth) * .5f);
+    // Adjust this to set spacing between button and slider
+    const auto buttonNudge = juce::roundToInt (sliderInitialWidth / 9.25f);
 
-    // See below note about horizontal LabelSlider dimensions and button placement.
-    const auto buttonNudge = juce::roundToInt (buttonWidth / 5.0f);
-    const auto initialCrushButtonX = sliders.getX();
-    const auto crushEnableButtonBounds = sliders.removeFromLeft (buttonWidth)
-                                             .reduced (0, buttonSpacer)
-                                             .withX (initialCrushButtonX + buttonNudge);
+    const auto setButtonAndSliderBounds = [&] (auto& button, auto& slider) {
+        const auto initialButtonX = sliders.getX();
+        const auto buttonX = initialButtonX + buttonNudge;
+        const auto buttonY = sliders.getCentreY() - buttonWidth / 2;
 
-    crushEnableButton.setBounds (crushEnableButtonBounds);
-    crushSlider.setBounds (sliders.removeFromLeft (sliderWidth).reduced (buttonNudge, 0));
-    compressSlider.setBounds (sliders.removeFromLeft (sliderWidth));
+        button.setBounds (sliders.removeFromLeft (buttonWidth)
+                              .withX (buttonX)
+                              .withY (buttonY)
+                              .withHeight (buttonWidth));
 
-    const auto initialSaturateButtonX = sliders.getX();
-    const auto saturateEnableButtonBounds =
-        sliders.removeFromLeft (buttonWidth)
-            .reduced (0, buttonSpacer)
-            .withX (initialSaturateButtonX + buttonNudge);
+        const auto sliderArea = sliders.removeFromLeft (sliderInitialWidth);
 
-    saturateEnableButton.setBounds (saturateEnableButtonBounds);
-    saturateSlider.setBounds (
-        sliders.removeFromLeft (sliderWidth).reduced (buttonNudge, 0));
+        // We have to do this because the slider will otherwise intercept
+        // button clips.
+        const auto sliderWidth = sliderInitialWidth - buttonNudge;
+        const auto sliderX = sliderArea.getCentreX() - sliderWidth / 2;
+
+        slider.setBounds (sliderArea.withX (sliderX).withWidth (sliderWidth));
+    };
+
+    setButtonAndSliderBounds (crushEnableButton, crushSlider);
+
+    // This ends up displaying at the same size of the other sliders because
+    // this is setting the width of the labelSliderComponent. The slider ends
+    // up being sized according to height, which is the same for all our sliders.
+    compressSlider.setBounds (sliders.removeFromLeft (sliderInitialWidth));
+    setButtonAndSliderBounds (saturateEnableButton, saturateSlider);
 
     const auto logoHeight = bounds.getHeight() * .25f;
     const auto logoWidth = bounds.getWidth() * .75f;
@@ -93,7 +103,7 @@ void TopRowPanel::resized()
     const auto logoHorizontalSpacer = (bounds.getWidth() - logoWidth) / 2.0f;
 
     // logoHorizontalSpacer is the amount we hypothetically should remove from left
-    // in order to have the log centred. However, the spacing is fudged here to account
+    // in order to have the logo centred. However, the spacing is fudged here to account
     // for the fact that our sliders don't take up all of the horizontal space given
     // to them.
     const auto horizontalKludgeQuotient = .8f;

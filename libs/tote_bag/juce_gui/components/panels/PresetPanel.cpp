@@ -130,8 +130,8 @@ void PresetPanel::resized()
 
     // This is used to set the gap between load button and previous button as well
     // as next button and preset display box
-    const auto loadPrevBoxGapWidth = juce::roundToInt (presetBoundsWidth * .016f);
-    presetBounds.removeFromLeft (loadPrevBoxGapWidth);
+    const auto prevNextButtonAreaGapWidth = juce::roundToInt (presetBoundsWidth * .016f);
+    presetBounds.removeFromLeft (prevNextButtonAreaGapWidth);
 
     const auto prevNextButtonHeight = juce::roundToInt (presetBoundsHeight * .2f);
     const auto prevNextButtonY = presetBoundsCentreY - prevNextButtonHeight / 2;
@@ -148,7 +148,7 @@ void PresetPanel::resized()
                                .withY (prevNextButtonY)
                                .withHeight (prevNextButtonHeight));
 
-    presetBounds.removeFromLeft (loadPrevBoxGapWidth);
+    presetBounds.removeFromLeft (prevNextButtonAreaGapWidth);
 
     const auto presetDisplayHeight = juce::roundToInt (presetBoundsHeight * .85f);
     const auto presetDisplayY = presetBoundsCentreY - presetDisplayHeight / 2;
