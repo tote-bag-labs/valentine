@@ -101,7 +101,7 @@ void BottomRowPanel::resized()
 
     // We have to do this because the slider will otherwise intercept
     // button clips.
-    const auto outputSliderWidth = sliderWidth - buttonNudge;
+    const auto outputSliderWidth = sliderWidth - juce::roundToInt (buttonNudge * 2.1f);
     const auto outputSliderX = outputSliderArea.getCentreX() - outputSliderWidth / 2;
 
     outputSlider.setBounds (
