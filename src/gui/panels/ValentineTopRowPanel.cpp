@@ -80,7 +80,7 @@ void TopRowPanel::resized()
 
         // We have to do this because the slider will otherwise intercept
         // button clips.
-        const auto sliderWidth = sliderInitialWidth - buttonNudge;
+        const auto sliderWidth = sliderInitialWidth - buttonNudge * 2.1f;
         const auto sliderX = sliderArea.getCentreX() - sliderWidth / 2;
 
         slider.setBounds (sliderArea.withX (sliderX).withWidth (sliderWidth));
