@@ -109,6 +109,8 @@ public:
 
     juce::Font getInfoTextFont();
 
+    juce::TypefaceMetricsKind getDefaultMetricsKind() const override;
+
 private:
     void drawRotarySliderMeter (juce::Graphics& g,
                                 const juce::Rectangle<float> bounds,
