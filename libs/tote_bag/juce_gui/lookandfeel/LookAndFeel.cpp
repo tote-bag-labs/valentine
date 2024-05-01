@@ -80,6 +80,11 @@ void LookAndFeel::drawDrawableKnob (juce::Graphics& g,
     sliderImage.drawAt (g, cX, cY, 1.0f);
 }
 
+juce::TypefaceMetricsKind LookAndFeel::getDefaultMetricsKind() const
+{
+    return juce::TypefaceMetricsKind::legacy;
+}
+
 void LookAndFeel::drawRotarySliderMeter (juce::Graphics& g,
                                          const juce::Rectangle<float> bounds,
                                          const float lineWidth,
