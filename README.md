@@ -12,7 +12,11 @@ louder, more compressed, and more saturated. Turning crush up adds digital disto
 The real fun is in processing signal with some ambience, be it a room or a reverb. With the right input gain
 and release settings, you can introduce pumping and breathing artifacts.
 
-I'm writing about the development process [here](https://josediazrohena.github.io/).
+Though designed for aggressive (over) application, Valentine is flexible enough to use in a wide variety of 
+applications. Try it today!
+
+I stream and make videos about the development process on [YouTube](https://maps.app.goo.gl/m4TwNJUNDj2CvtMt6).
+I also wrote a few blog posts about it [here](https://josediazrohena.github.io/).
 
 Getting Valentine
 =================
@@ -32,15 +36,13 @@ to get your desired result. Here it is:
 
 Parameters
 ----------
-- **Crush**: increases the amount of bit crushing. Downsamples the signal to 27.5kHz. Activated using the "On" button underneath Crush slider.
-- **Compress**: sets the gain before compresison. Use this to increase the amount of compression and distortion affecting the signal.
-- **Saturate**: sets the amount of gain applied to signal before Valentine's waveshaper. Gain is compensated to prevent huge volume boost
-when you just want more dirt. Activates using the "On" button underneath Saturate slider.
-- **Ratio**: sets the compression ratio. "Infinity" is more like 1000:1. Increasing this also increases the threshold and decreases the knee.
+- **Crush**: increases the amount of bit crushing. Downsamples the signal to 27.5kHz. Enabled using the Crush button.
+- **Compress**: sets the gain applied to signal before compression. Use this to increase the amount of compression and distortion affecting the signal.
+- **Saturate**: sets the amount of gain applied to signal before Valentine's waveshaper. Gain is compensated to prevent huge volume boost when you just want more dirt. Enabled using the Crush Enable Button.
+- **Ratio**: sets the compression ratio. "Infinity" is more like 1000:1. Increasing this also increases threshold and decreases knee.
 - **Attack**: sets compression attack time.
 - **Release**: sets compression release time.
-- **Output**: sets the wet signal's output gain before mix.
-- **Clip**: Activates output clipping.
+- **Output**: sets wet signal output gain before mix. Output clipping can be enabled with the Clip button.
 - **Mix**:  increases the amount of wet signal in the processor's output.
 - **Bypass**: bypasses all processing.
 
@@ -74,25 +76,3 @@ Contributing to Valentine
 If you'd like to get involved, take a look at [issues.](https://github.com/tote-bag-labs/valentine/issues) I could use help on anything marked [bug](https://github.com/tote-bag-labs/valentine/labels/bug) or [enhancement](https://github.com/tote-bag-labs/valentine/labels/enhancement).
 
 I'm currently not taking pull requests for new features.
-
-
-TODO for Valentine v1.0.0
-=========================
-
-- Clean up code
-
-- Write tests
-
-- Finalize parameters and parameter ranges
-
-- Tweak the algorithm
-
-- Write an instruction manual
-
-- Finalize UI
-    - Colors
-    - Text size/positioning
-    - Component size/placement
-    - Logos
-
-- Windows installer signing
