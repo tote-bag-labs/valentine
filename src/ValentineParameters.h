@@ -139,7 +139,7 @@ inline const std::array<juce::String, numParams>& FFCompParameterLabel()
         "Release",
         "Output",
         "Mix",
-        "BYPASS",
+        "Bypass",
         "Clip",
     };
 
