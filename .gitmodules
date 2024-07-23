@@ -5,3 +5,7 @@
 [submodule "ff_meters"]
 	path = libs/ff_meters
 	url = https://github.com/ffAudio/ff_meters.git
+[submodule "libs/clap-juce-extensions"]
+	path = libs/clap-juce-extensions
+	url = https://github.com/free-audio/clap-juce-extensions.git
+	branch = main
