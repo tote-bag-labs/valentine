@@ -56,6 +56,7 @@ option(JUCE_ENABLE_MODULE_SOURCE_GROUPS "Show all module sources in IDE projects
 # and `git submodule update --remote --merge` to keep it up to date
 # On Github Actions, it's managed by actions/checkout
 add_subdirectory(libs/JUCE)
+add_subdirectory(libs/clap-juce-extensions EXCLUDE_FROM_ALL)
 
 # Also using Foley's Finest meters
 juce_add_module(libs/ff_meters)
@@ -77,6 +78,10 @@ juce_add_plugin("${PROJECT_NAME}"
     PLUGIN_CODE V001                            # A unique four-character plugin id with at least one upper-case character
     FORMATS "${FORMATS}"
     PRODUCT_NAME "${PROJECT_NAME}")        # The name of the final executable, which can differ from the target name
+
+clap_juce_extensions_plugin(TARGET "${PROJECT_NAME}"
+  CLAP_ID "com.ToteBagLabs.Valentine"
+  CLAP_FEATURES "audio-effect")
 
 # C++20 please
 target_compile_features("${PROJECT_NAME}" PRIVATE cxx_std_20)
