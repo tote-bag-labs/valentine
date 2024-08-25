@@ -68,7 +68,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3.3.0
       with:
-        submodules: true # Gotta get JUCE populated
+        submodules: 'recursive' # Gotta get JUCE populated
 
     - name: Setup Environment Variables
       shell: bash
