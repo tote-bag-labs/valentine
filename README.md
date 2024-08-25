@@ -15,7 +15,7 @@ and release settings, you can introduce pumping and breathing artifacts.
 Though designed for aggressive (over) application, Valentine is flexible enough to use in a wide variety of 
 applications. Try it today!
 
-I stream and make videos about the development process on [YouTube](https://maps.app.goo.gl/m4TwNJUNDj2CvtMt6).
+I stream and make videos about the development process on [YouTube](https://www.youtube.com/@ToteBagLabs).
 I also wrote a few blog posts about it [here](https://josediazrohena.github.io/).
 
 Getting Valentine
