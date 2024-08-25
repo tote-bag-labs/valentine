@@ -73,6 +73,8 @@ If you'd rather just build it from the command line, run
 Contributing to Valentine
 =========================
 
+Note: I'm putting a pause on pull requests until I've written CI that external contributors can use.
+
 If you'd like to get involved, take a look at [issues.](https://github.com/tote-bag-labs/valentine/issues) I could use help on anything marked [bug](https://github.com/tote-bag-labs/valentine/labels/bug) or [enhancement](https://github.com/tote-bag-labs/valentine/labels/enhancement).
 
 I'm currently not taking pull requests for new features.
