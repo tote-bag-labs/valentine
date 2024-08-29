@@ -78,6 +78,7 @@ jobs:
         echo "VST3_PATH=${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/VST3/${{ env.PROJECT_NAME }}.vst3" >> $GITHUB_ENV
         echo "AU_PATH=${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/AU/${{ env.PROJECT_NAME }}.component" >> $GITHUB_ENV
         echo "AUV3_PATH=${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/AUv3/${{ env.PROJECT_NAME }}.appex" >> $GITHUB_ENV
+        echo "CLAP_PATH=${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/CLAP/${{ env.PROJECT_NAME }}.clap" >> $GITHUB_ENV
         PRODUCTFILE=`echo ${{ env.PROJECT_NAME }} | tr ' ' '-' | tr '[:upper:]' '[:lower:]'`
         echo "OUTPUT_FILENAME=$PRODUCTFILE-$VERSION-${{ matrix.name }}" >> $GITHUB_ENV
         echo "VERSION_NUMBER=$VERSION" >> $GITHUB_ENV
@@ -152,6 +153,7 @@ jobs:
         # Each plugin must be code signed
         codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v ${{ env.VST3_PATH }} --deep --strict --options=runtime --timestamp
         codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v ${{ env.AU_PATH }} --deep --strict --options=runtime --timestamp
+        codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v ${{ env.CLAP_PATH }} --deep --strict --options=runtime --timestamp
 
     - name: Create Installer Package (macOS)
       if: ${{ matrix.name == 'macOS' }}
@@ -207,23 +209,23 @@ jobs:
       working-directory: ${{ env.ARTIFACTS_PATH }}
       run: 7z a -tzip ${{ env.OUTPUT_FILENAME }}.zip .
 
-    - name: Generate Installer (Windows) # and Sign with EV cert on Azure (Windows)
-      if: ${{ matrix.name == 'Windows' }}
-      shell: bash
-      env:
-        INSTALLER_DIR: "scripts/installer_win"
-      run: |
-        iscc "$INSTALLER_DIR/installer.iss"
-        mv "$INSTALLER_DIR/Output/${{ env.OUTPUT_FILENAME }}.exe" "${{ env.ARTIFACTS_PATH }}/"
-      # dotnet tool install --global AzureSignTool
-      # AzureSignTool sign -kvu "${{ secrets.AZURE_KEY_VAULT_URI }}" -kvi "${{ secrets.AZURE_CLIENT_ID }}" -kvt "${{ secrets.AZURE_TENANT_ID }}" -kvs "${{ secrets.AZURE_CLIENT_SECRET }}" -kvc ${{ secrets.AZURE_CERT_NAME }} -tr http://timestamp.digicert.com -v "${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILENA }}.exe"
+    # - name: Generate Installer (Windows) # and Sign with EV cert on Azure (Windows)
+    #   if: ${{ matrix.name == 'Windows' }}
+    #   shell: bash
+    #   env:
+    #     INSTALLER_DIR: "scripts/installer_win"
+    #   run: |
+    #     iscc "$INSTALLER_DIR/installer.iss"
+    #     mv "$INSTALLER_DIR/Output/${{ env.OUTPUT_FILENAME }}.exe" "${{ env.ARTIFACTS_PATH }}/"
+    #   # dotnet tool install --global AzureSignTool
+    #   # AzureSignTool sign -kvu "${{ secrets.AZURE_KEY_VAULT_URI }}" -kvi "${{ secrets.AZURE_CLIENT_ID }}" -kvt "${{ secrets.AZURE_TENANT_ID }}" -kvs "${{ secrets.AZURE_CLIENT_SECRET }}" -kvc ${{ secrets.AZURE_CERT_NAME }} -tr http://timestamp.digicert.com -v "${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILENA }}.exe"
 
-    - name: Upload Exe (Windows)
-      if: ${{ matrix.name == 'Windows' }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ env.OUTPUT_FILENAME }}.exe
-        path: '${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILENAME }}.exe'
+    # - name: Upload Exe (Windows)
+    #   if: ${{ matrix.name == 'Windows' }}
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: ${{ env.OUTPUT_FILENAME }}.exe
+    #     path: '${{ env.ARTIFACTS_PATH }}/${{ env.OUTPUT_FILENAME }}.exe'
 
     - name: Upload Zip (Linux)
       if: ${{ matrix.name == 'Linux' }}

@@ -17,6 +17,7 @@ echo "MAKE from $INDIR $RESOURCES_DIR into $TARGET_DIR with $VERSION"
 
 VST3="${PRODUCT}.vst3"
 AU="${PRODUCT}.component"
+CLAP="${PRODUCT}.clap"
 
 PRODUCTFILE=`echo $PRODUCT | tr ' ' '-' | tr '[:upper:]' '[:lower:]'`
 echo "PRODUCTFILE is ${PRODUCTFILE}"
@@ -68,6 +69,10 @@ if [[ -d $INDIR/"AU"/$AU ]]; then
     build_flavor "AU" "$AU" "com.tote-bag-labs.${PRODUCTFILE}.component.pkg" "/Library/Audio/Plug-Ins/Components"
 fi
 
+if [[ -d $INDIR/"CLAP"/$CLAP ]]; then
+    build_flavor "CLAP" "$CLAP" "com.tote-bag-labs.${PRODUCTFILE}.clap.pkg" "/Library/Audio/Plug-Ins/CLAP"
+fi
+
 
 echo --- Sub Packages Created ---
 ls "${TMPDIR}"
@@ -84,6 +89,11 @@ if [[ -d $INDIR/"AU"/$AU ]]; then
 	AU_CHOICE="<line choice=\"com.tote-bag-labs.${PRODUCTFILE}.component.pkg\"/>"
 	AU_CHOICE_DEF="<choice id=\"com.tote-bag-labs.${PRODUCTFILE}.component.pkg\" visible=\"true\" start_selected=\"true\" title=\"${PRODUCT} Audio Unit\"><pkg-ref id=\"com.tote-bag-labs.${PRODUCTFILE}.component.pkg\"/></choice><pkg-ref id=\"com.tote-bag-labs.${PRODUCTFILE}.component.pkg\" version=\"${VERSION}\" onConclusion=\"none\">${PRODUCTFILE}_AU.pkg</pkg-ref>"
 fi
+if [[ -d $INDIR/"CLAP"/$CLAP ]]; then
+	CLAP_PKG_REF="<pkg-ref id=\"com.tote-bag-labs.${PRODUCTFILE}.clap.pkg\"/>"
+	CLAP_CHOICE="<line choice=\"com.tote-bag-labs.${PRODUCTFILE}.clap.pkg\"/>"
+	CLAP_CHOICE_DEF="<choice id=\"com.tote-bag-labs.${PRODUCTFILE}.component.pkg\" visible=\"true\" start_selected=\"true\" title=\"${PRODUCT} CLAP\"><pkg-ref id=\"com.tote-bag-labs.${PRODUCTFILE}.clap.pkg\"/></choice><pkg-ref id=\"com.tote-bag-labs.${PRODUCTFILE}.clap.pkg\" version=\"${VERSION}\" onConclusion=\"none\">${PRODUCTFILE}_CLAP.pkg</pkg-ref>"
+fi
 
 cat > $TMPDIR/distribution.xml << XMLEND
 <?xml version="1.0" encoding="utf-8"?>
@@ -93,13 +103,16 @@ cat > $TMPDIR/distribution.xml << XMLEND
     <readme file="Readme.rtf" />
     ${VST3_PKG_REF}
     ${AU_PKG_REF}
+    ${CLAP_PKG_REF}
     <options require-scripts="false" customize="always" />
     <choices-outline>
         ${VST3_CHOICE}
         ${AU_CHOICE}
+        ${CLAP_CHOICE}
     </choices-outline>
     ${VST3_CHOICE_DEF}
     ${AU_CHOICE_DEF}
+    ${CLAP_CHOICE_DEF}
 </installer-gui-script>
 XMLEND
 
