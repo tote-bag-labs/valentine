@@ -62,7 +62,8 @@ void Compressor::setOversampleMultiplier (const int o)
     overSampleMultiplier = o - 1;
 }
 
-inline void Compressor::makeMonoSidechain (const juce::dsp::AudioBlock<float>& inAudio, juce::AudioBuffer<float>& scSignal)
+inline void Compressor::makeMonoSidechain (const juce::dsp::AudioBlock<float>& inAudio,
+                                           juce::AudioBuffer<float>& scSignal)
 {
     scSignal.clear();
     auto* scWritePointer = scSignal.getWritePointer (0);
@@ -101,7 +102,9 @@ inline float Compressor::calculateGain (float inputSample)
 
         else if (abs (doubleOvershoot) <= W)
         {
-            cvOutput = inputSample + ((1.0f / R - 1.0f) * powf (overshoot + W / 2.0f, 2)) / (2.0f * W);
+            cvOutput =
+                inputSample
+                + ((1.0f / R - 1.0f) * powf (overshoot + W / 2.0f, 2)) / (2.0f * W);
         }
         else
         {
@@ -132,7 +135,8 @@ void Compressor::process (juce::dsp::AudioBlock<float>& inAudio)
     {
         auto controlVoltage = juce::Decibels::gainToDecibels (abs (sidechain[sample]));
         // TODO: level detector methods should be float or templated
-        controlVoltage = static_cast<float> (levelDetector.processSampleDecoupledBranched (controlVoltage));
+        controlVoltage = static_cast<float> (
+            levelDetector.processSampleDecoupledBranched (controlVoltage));
 
         controlVoltage = calculateGain (controlVoltage);
         controlVoltage = juce::Decibels::decibelsToGain (controlVoltage);

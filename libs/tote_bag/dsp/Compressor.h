@@ -29,7 +29,8 @@ public:
                     float inThreshold,
                     float inKnee);
 
-    void makeMonoSidechain (const juce::dsp::AudioBlock<float>& inAudio, juce::AudioBuffer<float>& scSignal);
+    void makeMonoSidechain (const juce::dsp::AudioBlock<float>& inAudio,
+                            juce::AudioBuffer<float>& scSignal);
 
     void makeKneeCoeffs();
 
@@ -51,16 +52,13 @@ public:
 private:
     juce::WeakReference<FFAU::LevelMeterSource> meterSource;
 
-    juce::Atomic<float> ratio { -1.0f },
-        knee { -1.0f },
-        msAttack { -1.0f },
-        msRelease { -1.0f },
-        threshold { -1.0 };
+    juce::Atomic<float> ratio {-1.0f}, knee {-1.0f}, msAttack {-1.0f}, msRelease {-1.0f},
+        threshold {-1.0};
 
     EnvelopeDetector levelDetector;
     juce::AudioBuffer<float> analysisSignal;
 
-    int overSampleMultiplier { 1 };
+    int overSampleMultiplier {1};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Compressor)
 };
