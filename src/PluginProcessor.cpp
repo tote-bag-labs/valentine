@@ -84,6 +84,9 @@ ValentineAudioProcessor::ValentineAudioProcessor()
     , presetManager (this)
     , processedDelayLine (32)
     , cleanDelayLine (32)
+    , sidechainOversampler (2,
+                            detail::kOversampleFactor,
+                            Oversampling::filterHalfBandPolyphaseIIR)
 #endif
 {
     initializeDSP();
@@ -254,6 +257,8 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
     oversampler->reset();
     oversampler->initProcessing (static_cast<size_t> (samplesPerBlock));
+    sidechainOversampler.reset();
+    sidechainOversampler.initProcessing (static_cast<size_t> (samplesPerBlock));
 
     saturator->reset (sampleRate);
     boundedSaturator->reset (sampleRate);
@@ -370,8 +375,17 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     juce::dsp::AudioBlock<float> highSampleRateBlock =
         oversampler->processSamplesUp (processBlock);
 
-    // No external sidechain
-    ffCompressor->process (highSampleRateBlock, highSampleRateBlock);
+    if (sidechainBuffer.getNumChannels() > 0)
+    {
+        juce::dsp::AudioBlock<float> upsampledSidechain =
+            sidechainOversampler.processSamplesUp (sidechainBuffer);
+
+        ffCompressor->process (highSampleRateBlock, upsampledSidechain);
+    }
+    else
+    {
+        ffCompressor->process (highSampleRateBlock, highSampleRateBlock);
+    }
 
     if (saturateOn.get())
     {
