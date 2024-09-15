@@ -307,8 +307,12 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                                             juce::MidiBuffer&)
 {
     juce::ScopedNoDenormals noDenormals;
+
+    auto numMainBusChannels = getMainBusNumInputChannels();
+
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
+
     auto bufferSize = buffer.getNumSamples();
     auto currentSamplesPerBlock = bufferSize;
 
@@ -322,19 +326,15 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     // oversampling latency. Copying into the process buffer after this, then, would undo the
     // purpose of the delay: maintaining phase coherence between processed and unprocessed
     // signals.
-    processBuffer.setSize (totalNumOutputChannels,
-                           currentSamplesPerBlock,
-                           true,
-                           true,
-                           true);
-    for (auto channel = 0; channel < totalNumInputChannels; ++channel)
+    processBuffer.setSize (numMainBusChannels, currentSamplesPerBlock, true, true, true);
+    for (auto channel = 0; channel < numMainBusChannels; ++channel)
         processBuffer.copyFrom (channel,
                                 0,
                                 buffer.getReadPointer (channel),
                                 buffer.getNumSamples());
 
     prepareInputBuffer (buffer,
-                        totalNumInputChannels,
+                        numMainBusChannels,
                         totalNumOutputChannels,
                         currentSamplesPerBlock);
 
