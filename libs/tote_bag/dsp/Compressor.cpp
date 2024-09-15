@@ -124,9 +124,10 @@ inline float Compressor::getMakeupGain()
     return -threshold.get() * (1.0f / ratio.get() - 1.0f) / 2.0f;
 }
 
-void Compressor::process (juce::dsp::AudioBlock<float>& inAudio)
+void Compressor::process (juce::dsp::AudioBlock<float>& inAudio,
+                          juce::dsp::AudioBlock<float>& sidechainAudio)
 {
-    makeMonoSidechain (inAudio, analysisSignal);
+    makeMonoSidechain (sidechainAudio, analysisSignal);
     auto numSamples = inAudio.getNumSamples();
     auto numChannels = inAudio.getNumChannels();
 
