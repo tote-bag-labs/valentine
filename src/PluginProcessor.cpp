@@ -366,8 +366,22 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     }
 
     auto g = compressValue.get();
-    for (int i = 0; i < totalNumOutputChannels; ++i)
-        processBuffer.applyGainRamp (i, 0, bufferSize, currentGain, g);
+
+    if (sidechainBuffer.getNumChannels() > 0)
+    {
+        for (int i = 0; i < totalNumOutputChannels; ++i)
+        {
+            sidechainBuffer.applyGainRamp (i, 0, bufferSize, currentGain, g);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < totalNumOutputChannels; ++i)
+        {
+            processBuffer.applyGainRamp (i, 0, bufferSize, currentGain, g);
+        }
+    }
+
     currentGain = g;
 
     // Upsample then do non-linear processing
