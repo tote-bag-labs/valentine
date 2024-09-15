@@ -265,7 +265,7 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
     const auto rmsWindow =
         juce::roundToInt (detail::kRmsTime * 0.001f * sampleRate / samplesPerBlock);
-    inputMeterSource.resize (getTotalNumInputChannels(), rmsWindow);
+    inputMeterSource.resize (getMainBusNumInputChannels(), rmsWindow);
 
     grMeterSource.resize (1, rmsWindow);
     ffCompressor->setMeterSource (&grMeterSource);
@@ -313,6 +313,9 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
+    auto mainInputOutputBuffer = getBusBuffer (buffer, true, 0);
+    auto sidechainBuffer = getBusBuffer (buffer, true, 1);
+
     auto bufferSize = buffer.getNumSamples();
     auto currentSamplesPerBlock = bufferSize;
 
@@ -343,7 +346,7 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         return;
     }
 
-    inputMeterSource.measureBlock (buffer);
+    inputMeterSource.measureBlock (sidechainBuffer);
 
     // "Downsample" and Bitcrush processing
     if (crushOn.get())
