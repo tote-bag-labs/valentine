@@ -346,7 +346,7 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         return;
     }
 
-    inputMeterSource.measureBlock (sidechainBuffer);
+    inputMeterSource.measureBlock (mainInputOutputBuffer);
 
     // "Downsample" and Bitcrush processing
     if (crushOn.get())
@@ -370,7 +370,8 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     juce::dsp::AudioBlock<float> highSampleRateBlock =
         oversampler->processSamplesUp (processBlock);
 
-    ffCompressor->process (highSampleRateBlock);
+    // No external sidechain
+    ffCompressor->process (highSampleRateBlock, highSampleRateBlock);
 
     if (saturateOn.get())
     {
