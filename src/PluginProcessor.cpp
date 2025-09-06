@@ -75,6 +75,7 @@ ValentineAudioProcessor::ValentineAudioProcessor()
     #if !JucePlugin_IsMidiEffect
         #if !JucePlugin_IsSynth
                           .withInput ("Input", juce::AudioChannelSet::stereo(), true)
+                          .withInput ("Sidechain", juce::AudioChannelSet::stereo(), true)
         #endif
                           .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
     #endif
@@ -83,6 +84,9 @@ ValentineAudioProcessor::ValentineAudioProcessor()
     , presetManager (this)
     , processedDelayLine (32)
     , cleanDelayLine (32)
+    , sidechainOversampler (2,
+                            detail::kOversampleFactor,
+                            Oversampling::filterHalfBandPolyphaseIIR)
 #endif
 {
     initializeDSP();
@@ -253,6 +257,8 @@ void ValentineAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
     oversampler->reset();
     oversampler->initProcessing (static_cast<size_t> (samplesPerBlock));
+    sidechainOversampler.reset();
+    sidechainOversampler.initProcessing (static_cast<size_t> (samplesPerBlock));
 
     saturator->reset (sampleRate);
     boundedSaturator->reset (sampleRate);
@@ -308,7 +314,13 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-    auto bufferSize = buffer.getNumSamples();
+
+    auto inputOutputBuffer = getBusBuffer (buffer, true, 0);
+    auto sideChainBuffer = getBusBuffer (buffer, true, 1);
+
+    const auto numMainInputChannels = inputOutputBuffer.getNumChannels();
+
+    auto bufferSize = inputOutputBuffer.getNumSamples();
     auto currentSamplesPerBlock = bufferSize;
 
     if (latencyChanged.get())
@@ -321,19 +333,19 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     // oversampling latency. Copying into the process buffer after this, then, would undo the
     // purpose of the delay: maintaining phase coherence between processed and unprocessed
     // signals.
-    processBuffer.setSize (totalNumOutputChannels,
+    processBuffer.setSize (numMainInputChannels,
                            currentSamplesPerBlock,
                            true,
                            true,
                            true);
-    for (auto channel = 0; channel < totalNumInputChannels; ++channel)
+    for (auto channel = 0; channel < numMainInputChannels; ++channel)
         processBuffer.copyFrom (channel,
                                 0,
-                                buffer.getReadPointer (channel),
-                                buffer.getNumSamples());
+                                inputOutputBuffer.getReadPointer (channel),
+                                inputOutputBuffer.getNumSamples());
 
-    prepareInputBuffer (buffer,
-                        totalNumInputChannels,
+    prepareInputBuffer (inputOutputBuffer,
+                        numMainInputChannels,
                         totalNumOutputChannels,
                         currentSamplesPerBlock);
 
@@ -357,8 +369,23 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     }
 
     auto g = compressValue.get();
-    for (int i = 0; i < totalNumOutputChannels; ++i)
-        processBuffer.applyGainRamp (i, 0, bufferSize, currentGain, g);
+
+    if (sideChainBuffer.getNumChannels() > 0)
+    {
+        for (int i = 0; i < totalNumOutputChannels; ++i)
+        {
+            sideChainBuffer.applyGainRamp (i, 0, bufferSize, currentGain, g);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < totalNumOutputChannels; ++i)
+            processBuffer.applyGainRamp (i, 0, bufferSize, currentGain, g);
+    }
+
+    // for (int i = 0; i < totalNumOutputChannels; ++i)
+    //     processBuffer.applyGainRamp (i, 0, bufferSize, currentGain, g);
+
     currentGain = g;
 
     // Upsample then do non-linear processing
@@ -366,7 +393,17 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     juce::dsp::AudioBlock<float> highSampleRateBlock =
         oversampler->processSamplesUp (processBlock);
 
-    ffCompressor->process (highSampleRateBlock);
+    if (sideChainBuffer.getNumChannels() > 0)
+    {
+        juce::dsp::AudioBlock<float> sidechain (sideChainBuffer);
+        juce::dsp::AudioBlock<float> highSampleRateSideChain =
+            sidechainOversampler.processSamplesUp (sideChainBuffer);
+        ffCompressor->process (highSampleRateBlock, &highSampleRateSideChain);
+    }
+    else
+    {
+        ffCompressor->process (highSampleRateBlock);
+    }
 
     if (saturateOn.get())
     {
@@ -428,11 +465,14 @@ void ValentineAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             auto processed = processBuffer.getSample (i, j);
             auto unprocessed = buffer.getSample (i, j);
 
-            buffer.setSample (i, j, mix * processed + (1.0f - currentMix) * unprocessed);
+            inputOutputBuffer.setSample (i,
+                                         j,
+                                         mix * processed
+                                             + (1.0f - currentMix) * unprocessed);
         }
     }
 
-    outputMeterSource.measureBlock (buffer);
+    outputMeterSource.measureBlock (inputOutputBuffer);
 }
 
 void ValentineAudioProcessor::processBlockBypassed (juce::AudioBuffer<float>& buffer,
