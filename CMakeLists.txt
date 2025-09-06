@@ -74,7 +74,7 @@ juce_add_plugin("${PROJECT_NAME}"
     # EDITOR_WANTS_KEYBOARD_FOCUS FALSE    # Does the editor need keyboard focus?
     COPY_PLUGIN_AFTER_BUILD TRUE # On MacOS, plugin will be copied to /Users/you/Library/Audio/Plug-Ins/
     PLUGIN_MANUFACTURER_CODE Valn               # This has to be one uppercase, rest lower for AU formats
-    PLUGIN_CODE V001                            # A unique four-character plugin id with at least one upper-case character
+    PLUGIN_CODE V091                            # A unique four-character plugin id with at least one upper-case character
     FORMATS "${FORMATS}"
     PRODUCT_NAME "${PROJECT_NAME}")        # The name of the final executable, which can differ from the target name
 

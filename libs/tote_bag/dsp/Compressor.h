@@ -36,7 +36,8 @@ public:
 
     float calculateGain (float analysisSample);
 
-    void process (juce::dsp::AudioBlock<float>& inAudio);
+    void process (juce::dsp::AudioBlock<float>& inAudio,
+                  juce::dsp::AudioBlock<float>& sidechainInput);
 
     float getMakeupGain();
 

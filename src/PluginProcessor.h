@@ -209,6 +209,7 @@ private:
     // DSP objects
     std::unique_ptr<tote_bag::audio_helpers::SimpleOnePole<float>> dryWetFilter;
     std::unique_ptr<Oversampling> oversampler;
+    Oversampling sidechainOversampler;
     std::unique_ptr<Compressor> ffCompressor;
     std::unique_ptr<Saturation> saturator;
     std::unique_ptr<Saturation> boundedSaturator;
